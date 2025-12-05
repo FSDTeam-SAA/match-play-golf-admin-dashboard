@@ -123,14 +123,17 @@ export function TeamFormModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent
+        style={{ width: '50vw', maxWidth: '55vw' }}
+        className="max-h-[90vh] bg-gray-50 overflow-y-auto p-6 space-y-6"
+      >
         <DialogHeader>
           <DialogTitle>
             {mode === 'create' ? 'Add New Team Member' : 'Edit Team Member'}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-2">
             <Label htmlFor="memberName">Member Name</Label>
             <Input

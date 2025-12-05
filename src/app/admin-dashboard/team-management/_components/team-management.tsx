@@ -9,23 +9,32 @@ import { DataTable } from '@/components/data-table/data-table'
 import { teamColumns } from './team-columns'
 import { TeamFormModal } from './team-form-modal'
 import { Button } from '@/components/ui/button'
-import { Loader2, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import TableSkeleton from '@/components/reusable/TableSkeleton'
+import ErrorState from '@/components/reusable/ErrorState'
 
 export default function TeamManagementPage() {
+  const [page, setPage] = useState(1)
   const [addOpen, setAddOpen] = useState(false)
   const { data: session } = useSession()
   const accessToken = session?.user?.accessToken || ''
 
-  const { data, isLoading } = useGetTeamMembers(accessToken)
+  const { data, isLoading, isError } = useGetTeamMembers(accessToken)
 
   if (isLoading) {
-    return (
-      <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    )
+    return <TableSkeleton />
   }
 
+  // Error State
+  if (isError) {
+    return (
+      <ErrorState
+        title="Failed to load articles"
+        message="Please try again later or check your network connection."
+        onRetry={() => window.location.reload()}
+      />
+    )
+  }
   return (
     <div className="container mx-auto py-5">
       <div className="mb-6 flex items-center justify-end">
@@ -35,7 +44,16 @@ export default function TeamManagementPage() {
         </Button>
       </div>
 
-      <DataTable columns={teamColumns} data={data?.data || []} />
+      <DataTable
+        columns={teamColumns}
+        data={data?.data || []}
+        pagination={{
+          page,
+          pageSize: 10,
+          total: data?.pagination.total || 0,
+          onPageChange: setPage,
+        }}
+      />
 
       <TeamFormModal mode="create" open={addOpen} onOpenChange={setAddOpen} />
     </div>

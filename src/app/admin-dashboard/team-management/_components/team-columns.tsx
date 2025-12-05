@@ -9,6 +9,12 @@ import Image from 'next/image'
 
 export const teamColumns: ColumnDef<TeamMember>[] = [
   {
+    accessorKey: 'memberName',
+    header: '',
+    enableHiding: true,
+    cell: () => null,
+  },
+  {
     accessorKey: 'image',
     header: 'Member',
     cell: ({ row }) => {

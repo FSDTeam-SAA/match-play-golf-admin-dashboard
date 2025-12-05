@@ -17,6 +17,12 @@ export interface TeamResponse {
   success: boolean
   count: number
   data: TeamMember[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
 }
 
 export interface SingleTeamResponse {
