@@ -13,8 +13,8 @@ interface ProfileFormProps {
   username: string
   setUsername: (value: string) => void
   email: string
-  phoneNumber: string
-  setPhoneNumber: (value: string) => void
+  phone: string
+  setPhone: (value: string) => void
   role?: string
   setRole: (value: string) => void
   isUpdating: boolean
@@ -29,8 +29,8 @@ export function ProfileForm({
   setFullName,
   setUsername,
   email,
-  phoneNumber,
-  setPhoneNumber,
+  phone,
+  setPhone,
   role,
   setRole,
   isUpdating,
@@ -80,8 +80,8 @@ export function ProfileForm({
           <Label htmlFor="phoneNumber">Phone Number</Label>
           <Input
             id="phoneNumber"
-            value={phoneNumber}
-            onChange={e => setPhoneNumber(e.target.value)}
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
             placeholder="+1 (555) 000-0000"
             className="mt-1 border border-[#DF1020] bg-white text-gray-600"
           />

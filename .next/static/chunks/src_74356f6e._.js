@@ -413,10 +413,11 @@ function UserHeader() {
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["usePathname"])();
     const getPageContent = ()=>{
         const rules = [
+            // 🎯 Exact match — dashboard home only
             {
-                match: [
+                exact: [
                     '/admin-dashboard',
-                    '/'
+                    '/admin-dashboard/'
                 ],
                 title: 'Welcome back, Michael',
                 desc: 'Ready to compete in your next match?'
@@ -469,18 +470,28 @@ function UserHeader() {
                     '/admin-dashboard/settings'
                 ],
                 title: 'Profile & Settings',
-                desc: 'Manage your account information and preferences'
+                desc: 'Manage your account information and preferences.'
             }
         ];
-        // Use startsWith to match the root path of any sub-paths
+        // 1️⃣ First check exact matches
         for (const rule of rules){
-            if (rule.match.some((path)=>pathname.startsWith(path))) {
+            if (rule.exact && rule.exact.includes(pathname)) {
                 return [
                     rule.title,
                     rule.desc
                 ];
             }
         }
+        // 2️⃣ Then check startsWith matches
+        for (const rule of rules){
+            if (rule.match && rule.match.some((path)=>pathname.startsWith(path))) {
+                return [
+                    rule.title,
+                    rule.desc
+                ];
+            }
+        }
+        // fallback
         return [
             'Dashboard',
             'Manage your system efficiently.'
@@ -488,14 +499,14 @@ function UserHeader() {
     };
     const [title, description] = getPageContent();
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
-        className: "bg-white px-8 py-[13px] flex flex-col space-y-1 justify-center",
+        className: "bg-white px-8 py-[13px] flex flex-col space-y-1",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                 className: "text-[22px] font-semibold text-[#0C2661]",
                 children: title
             }, void 0, false, {
                 fileName: "[project]/src/components/reusable/UserHeader.tsx",
-                lineNumber: 69,
+                lineNumber: 79,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -503,13 +514,13 @@ function UserHeader() {
                 children: description
             }, void 0, false, {
                 fileName: "[project]/src/components/reusable/UserHeader.tsx",
-                lineNumber: 70,
+                lineNumber: 80,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/reusable/UserHeader.tsx",
-        lineNumber: 68,
+        lineNumber: 78,
         columnNumber: 5
     }, this);
 }
@@ -525,6 +536,67 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
 }),
+"[project]/src/app/admin-dashboard/clientDashboardLayout.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// /admin-dashboard/client-layout.tsx
+__turbopack_context__.s([
+    "default",
+    ()=>ClientDashboardLayout
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Sidebar.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$reusable$2f$UserHeader$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/reusable/UserHeader.tsx [app-client] (ecmascript)");
+'use client';
+;
+;
+;
+function ClientDashboardLayout(param) {
+    let { children } = param;
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "bg-[#F8F9FC] min-h-screen flex",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                fileName: "[project]/src/app/admin-dashboard/clientDashboardLayout.tsx",
+                lineNumber: 15,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
+                className: "flex-1 flex flex-col",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$reusable$2f$UserHeader$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                        fileName: "[project]/src/app/admin-dashboard/clientDashboardLayout.tsx",
+                        lineNumber: 19,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex-1 px-8 pt-4",
+                        children: children
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/admin-dashboard/clientDashboardLayout.tsx",
+                        lineNumber: 20,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/admin-dashboard/clientDashboardLayout.tsx",
+                lineNumber: 18,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/app/admin-dashboard/clientDashboardLayout.tsx",
+        lineNumber: 13,
+        columnNumber: 5
+    }, this);
+}
+_c = ClientDashboardLayout;
+var _c;
+__turbopack_context__.k.register(_c, "ClientDashboardLayout");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
 ]);
 
-//# sourceMappingURL=src_components_1026003d._.js.map
+//# sourceMappingURL=src_74356f6e._.js.map

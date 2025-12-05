@@ -29,7 +29,8 @@ export interface UpdateProfileData {
   fullName?: string
   username?: string
   role?: string
-  phoneNumber?: string
+  phone?: string
+  organizationName?: string
 }
 
 export interface ChangePasswordData {

@@ -27,7 +27,7 @@ export default function SettingsPage() {
   const [fullName, setFullName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const [phone, setPhone] = useState('')
   const [role, setRole] = useState('')
   const [organizationName, setOrganizationName] = useState('')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -91,7 +91,7 @@ export default function SettingsPage() {
       setFullName(profile.fullName || '')
       setUsername(profile.username || '')
       setEmail(profile.email || '')
-      setPhoneNumber(profile.phone || '')
+      setPhone(profile.phone || '')
       setRole(profile.role || '')
       setOrganizationName(profile.organizationName || '')
       setProfileImage(profile.profileImage || '')
@@ -121,8 +121,9 @@ export default function SettingsPage() {
     const profilePayload: UpdateProfileData = {
       fullName,
       username,
-      phoneNumber,
+      phone,
       role,
+      organizationName,
     }
     updateProfile(profilePayload)
   }
@@ -149,7 +150,7 @@ export default function SettingsPage() {
         const profile = profileData.data
         setFullName(profile.fullName || '')
         setUsername(profile.username || '')
-        setPhoneNumber(profile.phone || '')
+        setPhone(profile.phone || '')
         setRole(profile.role || '')
         setOrganizationName(profile.organizationName || '')
         setImagePreview(profile.profileImage || '')
@@ -222,8 +223,8 @@ export default function SettingsPage() {
                 username={username}
                 setUsername={setUsername}
                 email={email}
-                phoneNumber={phoneNumber}
-                setPhoneNumber={setPhoneNumber}
+                phone={phone}
+                setPhone={setPhone}
                 role={role}
                 setRole={setRole}
                 isUpdating={isUpdatingProfile}
