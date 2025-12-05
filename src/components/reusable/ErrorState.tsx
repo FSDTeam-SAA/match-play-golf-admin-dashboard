@@ -1,24 +1,26 @@
-// -------------------
-// Error UI
-// -------------------
+'use client'
+
 import { AlertTriangle } from 'lucide-react'
 
-function ErrorState({
+export default function ErrorState({
+  title = 'Oops! Something went wrong',
   message,
   onRetry,
 }: {
+  title?: string
   message: string
   onRetry?: () => void
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
+    <div className="flex h-[50vh] flex-col items-center justify-center text-center px-4">
       <div className="p-4 rounded-full bg-red-100 mb-4">
-        <AlertTriangle className="w-12 h-12 text-red-600" />
+        <AlertTriangle className="h-10 w-10 text-red-600" />
       </div>
-      <h2 className="text-lg font-semibold text-red-600 mb-2">
-        Oops! Something went wrong
-      </h2>
-      <p className="text-gray-600 mb-4">{message}</p>
+
+      <h2 className="text-xl font-semibold text-red-600">{title}</h2>
+
+      <p className="text-gray-600 max-w-md mt-2 mb-4">{message}</p>
+
       {onRetry && (
         <button
           onClick={onRetry}
@@ -30,5 +32,3 @@ function ErrorState({
     </div>
   )
 }
-
-export default ErrorState

@@ -1,4 +1,4 @@
-// 📄 src/components/contacts/contact-view-modal.tsx
+// src/components/contacts/contact-view-modal.tsx
 
 'use client'
 

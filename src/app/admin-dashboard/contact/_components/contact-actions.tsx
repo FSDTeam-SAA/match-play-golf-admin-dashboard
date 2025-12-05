@@ -1,4 +1,4 @@
-// 📄 src/components/contacts/contact-actions.tsx
+// src/components/contacts/contact-actions.tsx
 
 'use client'
 
@@ -24,17 +24,17 @@ export function ContactActions({ contact }: ContactActionsProps) {
           variant="ghost"
           size="icon"
           onClick={() => setViewOpen(true)}
-          className="h-8 w-8"
+          className="h-10 w-10"
         >
-          <Eye className="h-5 w-5" />
+          <Eye size={20} />
         </Button>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setDeleteOpen(true)}
-          className="h-8 w-8 text-red-600 hover:text-red-700"
+          className="h-10 w-10 text-red-600 hover:text-red-700"
         >
-          <Trash2 className="h-5 w-5" />
+          <Trash2 size={20} />
         </Button>
       </div>
 
