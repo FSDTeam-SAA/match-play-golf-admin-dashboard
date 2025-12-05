@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///home/mamun/Desktop/Projects/match-play-golf/match-play-golf-admin-dashboard/src/app/providers.tsx"],"sourcesContent":["'use client'\n\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query'\nimport { SessionProvider } from 'next-auth/react'\nimport { ReactNode, useState } from 'react'\n\nexport function Providers({ children }: { children: ReactNode }) {\n  const [queryClient] = useState(() => new QueryClient())\n\n  return (\n    <QueryClientProvider client={queryClient}>\n      <SessionProvider>{children}</SessionProvider>\n    </QueryClientProvider>\n  )\n}\n"],"names":[],"mappings":";;;;;AAEA;AAAA;AACA;AACA;AAJA;;;;;AAMO,SAAS,UAAU,EAAE,QAAQ,EAA2B;IAC7D,MAAM,CAAC,YAAY,GAAG,IAAA,iNAAQ,EAAC,IAAM,IAAI,4LAAW;IAEpD,qBACE,8OAAC,6MAAmB;QAAC,QAAQ;kBAC3B,cAAA,8OAAC,iKAAe;sBAAE;;;;;;;;;;;AAGxB","debugId":null}}]
+}

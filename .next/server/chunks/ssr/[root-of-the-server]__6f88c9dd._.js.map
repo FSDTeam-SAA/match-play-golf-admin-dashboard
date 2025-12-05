@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
+    {"offset": {"line": 23, "column": 0}, "map": {"version":3,"sources":["file:///home/mamun/Desktop/Projects/match-play-golf/match-play-golf-admin-dashboard/src/app/admin-dashboard/page.tsx"],"sourcesContent":["import { auth } from '@/auth'\nimport { redirect } from 'next/navigation'\n// import { redirect } from 'next/navigation'\n\nexport default async function Page() {\n  const session = await auth()\n  console.log('users role::', session)\n\n  if (!session?.user?.accessToken) {\n  return redirect('/signin')\n}\n \n\nreturn (\n  <div>\n    <h2>dashboard overview</h2>\n  </div>\n)\n\n}\n"],"names":[],"mappings":";;;;;AAAA;AACA;AAAA;;;;AAGe,eAAe;IAC5B,MAAM,UAAU,MAAM,IAAA,mHAAI;IAC1B,QAAQ,GAAG,CAAC,gBAAgB;IAE5B,IAAI,CAAC,SAAS,MAAM,aAAa;QACjC,OAAO,IAAA,iMAAQ,EAAC;IAClB;IAGA,qBACE,8OAAC;kBACC,cAAA,8OAAC;sBAAG;;;;;;;;;;;AAIR","debugId":null}}]
+}

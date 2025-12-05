@@ -1,0 +1,30 @@
+{
+  "pages": {
+    "/admin-dashboard/podcast-management/edit/[id]/page": [
+      "static/chunks/a1f0b_next_dist_64aed532._.js",
+      "static/chunks/BeUnburdened_admin_dashboard_src_app_favicon_ico_mjs_c7f69933._.js",
+      "static/chunks/[root-of-the-server]__08ce4369._.css",
+      "static/chunks/a1f0b_1dcf5169._.js",
+      "static/chunks/BeUnburdened_admin_dashboard_src_app_providers_tsx_6beeb53b._.js",
+      "static/chunks/BeUnburdened_admin_dashboard_src_app_layout_tsx_4571630b._.js",
+      "static/chunks/a1f0b_next_dist_client_components_builtin_global-error_485b5dcc.js",
+      "static/chunks/a1f0b_b956538f._.js",
+      "static/chunks/BeUnburdened_admin_dashboard_src_d598a5e9._.js",
+      "static/chunks/BeUnburdened_admin_dashboard_src_app_admin-dashboard_layout_tsx_485b5dcc._.js",
+      "static/chunks/BeUnburdened_admin_dashboard_src_6030c23d._.js",
+      "static/chunks/a1f0b_tailwind-merge_dist_bundle-mjs_mjs_78f2497d._.js",
+      "static/chunks/a1f0b_zod_v4_1279c907._.js",
+      "static/chunks/a1f0b_056b889e._.js",
+      "static/chunks/6c9d4_src_app_admin-dashboard_podcast-management_edit_[id]_page_tsx_e1d42337._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_5fb12e17._.js",
+      "static/chunks/a1f0b_next_dist_compiled_react-dom_96ff3ffe._.js",
+      "static/chunks/a1f0b_next_dist_compiled_next-devtools_index_31bbfd6f.js",
+      "static/chunks/a1f0b_next_dist_compiled_be6cc30d._.js",
+      "static/chunks/a1f0b_next_dist_client_34afa538._.js",
+      "static/chunks/a1f0b_next_dist_04ec1581._.js",
+      "static/chunks/a1f0b_@swc_helpers_cjs_2aa3c046._.js",
+      "static/chunks/BeUnburdened_admin_dashboard_a0ff3932._.js",
+      "static/chunks/turbopack-BeUnburdened_admin_dashboard_d078dae3._.js"
+    ]
+  }
+}

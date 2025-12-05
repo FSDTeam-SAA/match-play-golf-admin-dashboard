@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/mamun/Desktop/Projects/match-play-golf/match-play-golf-admin-dashboard/src/app/%28auth%29/layout.tsx"],"sourcesContent":["import React from \"react\";\n\nconst Layout = ({ children }: { children: React.ReactNode }) => {\n  return (\n    <div\n      style={{\n        backgroundImage: `url('/images/auth-banner.jpg')`,\n        backgroundSize: \"cover\",\n        backgroundPosition: \"center\",\n        backgroundRepeat: \"no-repeat\",\n        backgroundBlendMode: \"overlay\",\n        backgroundAttachment: \"fixed\",\n      }}\n      className=\"min-h-screen flex items-center justify-center bg-[#00000098]\"\n    >\n      {children}\n    </div>\n  );\n};\n\nexport default Layout;"],"names":[],"mappings":";;;;;;AAEA,MAAM,SAAS,CAAC,EAAE,QAAQ,EAAiC;IACzD,qBACE,8OAAC;QACC,OAAO;YACL,iBAAiB,CAAC,8BAA8B,CAAC;YACjD,gBAAgB;YAChB,oBAAoB;YACpB,kBAAkB;YAClB,qBAAqB;YACrB,sBAAsB;QACxB;QACA,WAAU;kBAET;;;;;;AAGP;uCAEe","debugId":null}}]
+}

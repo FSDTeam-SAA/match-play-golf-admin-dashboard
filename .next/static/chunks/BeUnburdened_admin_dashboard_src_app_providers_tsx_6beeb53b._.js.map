@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/kmsaifullah/Desktop/projects/BeUnburdened_admin_dashboard/src/app/providers.tsx"],"sourcesContent":["'use client'\n\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query'\nimport { SessionProvider } from 'next-auth/react'\nimport { ReactNode, useState } from 'react'\n\nexport function Providers({ children }: { children: ReactNode }) {\n  const [queryClient] = useState(() => new QueryClient())\n\n  return (\n    <QueryClientProvider client={queryClient}>\n      <SessionProvider>{children}</SessionProvider>\n    </QueryClientProvider>\n  )\n}\n"],"names":[],"mappings":";;;;;AAEA;AAAA;AACA;AACA;;;AAJA;;;;AAMO,SAAS,UAAU,KAAqC;QAArC,EAAE,QAAQ,EAA2B,GAArC;;IACxB,MAAM,CAAC,YAAY,GAAG,IAAA,yMAAQ;8BAAC,IAAM,IAAI,+NAAW;;IAEpD,qBACE,6NAAC,gPAAmB;QAAC,QAAQ;kBAC3B,cAAA,6NAAC,oMAAe;sBAAE;;;;;;;;;;;AAGxB;GARgB;KAAA","debugId":null}}]
+}

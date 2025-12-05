@@ -1,0 +1,21 @@
+{
+  "pages": {
+    "/(auth)/forgotPassword/page": [
+      "static/chunks/d839de8a30d3eb1b.js",
+      "static/chunks/4b6b921b6ea1af83.js",
+      "static/chunks/9f1d4d9360449d17.css",
+      "static/chunks/9c2ed29031fea2ae.js",
+      "static/chunks/3739626d28a28fc8.js",
+      "static/chunks/34ab5f59c703e325.js",
+      "static/chunks/ef77321997f5cdc5.js",
+      "static/chunks/3f2f692a9a0ee00e.js",
+      "static/chunks/8eca41903d184dd5.js",
+      "static/chunks/4a61701ee9ff5019.js",
+      "static/chunks/3c1021d730c527db.js",
+      "static/chunks/40e3238e501d15ea.js",
+      "static/chunks/928898383fffd54d.js",
+      "static/chunks/99410103d82f7ad4.js",
+      "static/chunks/turbopack-0a2430fd4d6a8252.js"
+    ]
+  }
+}
