@@ -15,6 +15,7 @@ import {
   Users,
   Swords,
   BookOpen,
+  UserSearch,
 } from 'lucide-react'
 
 const PRIMARY = '#DF1020'
@@ -46,9 +47,14 @@ const sidebarItems = [
     href: '/admin-dashboard/tournament-draw',
   },
   {
+    icon: <UserSearch size={20} color={PRIMARY} />,
+    text: 'Team Management',
+    href: '/admin-dashboard/team-management',
+  },
+  {
     icon: <BookOpen size={20} color={PRIMARY} />,
     text: 'Article Management',
-    href: '/admin-dashboard/artical-management',
+    href: '/admin-dashboard/article-management',
   },
   {
     icon: <MailIcon size={20} color={PRIMARY} />,

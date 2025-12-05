@@ -194,6 +194,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/users.js [app-ssr] (ecmascript) <export default as Users>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$swords$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Swords$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/swords.js [app-ssr] (ecmascript) <export default as Swords>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/book-open.js [app-ssr] (ecmascript) <export default as BookOpen>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$search$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserSearch$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/user-search.js [app-ssr] (ecmascript) <export default as UserSearch>");
 'use client';
 ;
 ;
@@ -209,7 +210,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 24,
+            lineNumber: 25,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Dashboard Overview',
@@ -221,7 +222,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 29,
+            lineNumber: 30,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Tournaments Management',
@@ -233,7 +234,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 34,
+            lineNumber: 35,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Players Management',
@@ -245,7 +246,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 39,
+            lineNumber: 40,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Matches Management',
@@ -257,11 +258,23 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 44,
+            lineNumber: 45,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Tournament Draw',
         href: '/admin-dashboard/tournament-draw'
+    },
+    {
+        icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$search$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserSearch$3e$__["UserSearch"], {
+            size: 20,
+            color: PRIMARY
+        }, void 0, false, {
+            fileName: "[project]/src/components/Sidebar.tsx",
+            lineNumber: 50,
+            columnNumber: 11
+        }, ("TURBOPACK compile-time value", void 0)),
+        text: 'Team Management',
+        href: '/admin-dashboard/team-management'
     },
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"], {
@@ -269,11 +282,11 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 49,
+            lineNumber: 55,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Article Management',
-        href: '/admin-dashboard/artical-management'
+        href: '/admin-dashboard/article-management'
     },
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$mail$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MailIcon$3e$__["MailIcon"], {
@@ -281,7 +294,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 54,
+            lineNumber: 60,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Contact Management',
@@ -293,7 +306,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 59,
+            lineNumber: 65,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Subscriber Management',
@@ -305,7 +318,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 64,
+            lineNumber: 70,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Settings',
@@ -326,18 +339,18 @@ function SidebarItem({ icon, text, href, active }) {
                     children: text
                 }, void 0, false, {
                     fileName: "[project]/src/components/Sidebar.tsx",
-                    lineNumber: 83,
+                    lineNumber: 89,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 74,
+            lineNumber: 80,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/Sidebar.tsx",
-        lineNumber: 73,
+        lineNumber: 79,
         columnNumber: 5
     }, this);
 }
@@ -364,17 +377,17 @@ function AdminSidebar() {
                         className: "object-contain"
                     }, void 0, false, {
                         fileName: "[project]/src/components/Sidebar.tsx",
-                        lineNumber: 106,
+                        lineNumber: 112,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/Sidebar.tsx",
-                    lineNumber: 105,
+                    lineNumber: 111,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/Sidebar.tsx",
-                lineNumber: 104,
+                lineNumber: 110,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -386,17 +399,17 @@ function AdminSidebar() {
                             active: isActiveLink(item.href)
                         }, item.text, false, {
                             fileName: "[project]/src/components/Sidebar.tsx",
-                            lineNumber: 120,
+                            lineNumber: 126,
                             columnNumber: 13
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/src/components/Sidebar.tsx",
-                    lineNumber: 118,
+                    lineNumber: 124,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/Sidebar.tsx",
-                lineNumber: 117,
+                lineNumber: 123,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -405,23 +418,23 @@ function AdminSidebar() {
                     className: "text-[#DF1020]",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$LogoutDialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/src/components/Sidebar.tsx",
-                        lineNumber: 132,
+                        lineNumber: 138,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/Sidebar.tsx",
-                    lineNumber: 131,
+                    lineNumber: 137,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/Sidebar.tsx",
-                lineNumber: 130,
+                lineNumber: 136,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/Sidebar.tsx",
-        lineNumber: 102,
+        lineNumber: 108,
         columnNumber: 5
     }, this);
 }
