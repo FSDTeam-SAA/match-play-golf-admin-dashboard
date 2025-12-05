@@ -12,6 +12,7 @@ import {
   MessageSquare,
   Radio,
   Settings,
+  MailIcon,
 } from 'lucide-react'
 
 const PRIMARY = '#DF1020'
@@ -41,6 +42,11 @@ const sidebarItems = [
     icon: <MessageSquare size={20} color={PRIMARY} />,
     text: 'Tournament Draw',
     href: '/admin-dashboard/tournament-draw',
+  },
+  {
+    icon: <MailIcon size={20} color={PRIMARY} />,
+    text: 'Contact Management',
+    href: '/admin-dashboard/contact',
   },
   {
     icon: <Settings size={20} color={PRIMARY} />,

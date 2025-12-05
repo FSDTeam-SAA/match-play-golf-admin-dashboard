@@ -43,7 +43,7 @@ export default function UserHeader() {
         desc: 'Manage subscription plans and view history.',
       },
       {
-        match: ['/admin-dashboard/contact-management'],
+        match: ['/admin-dashboard/contact'],
         title: 'Contact Management',
         desc: 'Manage user messages and inquiries.',
       },

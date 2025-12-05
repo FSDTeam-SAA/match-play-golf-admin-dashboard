@@ -1,28 +1,33 @@
-export interface Contract {
+// ============================================
+// 📄 src/lib/types/contact.types.ts
+// ============================================
+
+export interface Contact {
   _id: string
-  fullName: string
+  name: string
   email: string
-  phoneNumber: string
-  occupation: string
+  phone: string
   message: string
-  status: "New" | "Respond" | "Pending" | string // optional extension if other statuses exist
+  consent: boolean
   createdAt: string
   updatedAt: string
+  __v: number
 }
 
-export interface Pagination {
-  currentPage: number
-  totalPages: number
-  totalData: number
-  hasNextPage: boolean
-  hasPrevPage: boolean
-}
-
-export interface ContractsResponse {
-  status: boolean
+export interface ContactsResponse {
+  success: boolean
   message: string
-  data: {
-    contracts: Contract[]
-    pagination: Pagination
+  data: Contact[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
   }
+}
+
+export interface SingleContactResponse {
+  success: boolean
+  message: string
+  data: Contact
 }

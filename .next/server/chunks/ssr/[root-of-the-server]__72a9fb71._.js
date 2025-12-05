@@ -191,6 +191,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageSquare$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/message-square.js [app-ssr] (ecmascript) <export default as MessageSquare>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$radio$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Radio$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/radio.js [app-ssr] (ecmascript) <export default as Radio>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$settings$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Settings$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/settings.js [app-ssr] (ecmascript) <export default as Settings>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$mail$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MailIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/mail.js [app-ssr] (ecmascript) <export default as MailIcon>");
 'use client';
 ;
 ;
@@ -206,7 +207,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 21,
+            lineNumber: 22,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Dashboard Overview',
@@ -218,7 +219,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 26,
+            lineNumber: 27,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Tournaments Management',
@@ -230,7 +231,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 31,
+            lineNumber: 32,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Players Management',
@@ -242,7 +243,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 36,
+            lineNumber: 37,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Matches Management',
@@ -254,11 +255,23 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 41,
+            lineNumber: 42,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Tournament Draw',
         href: '/admin-dashboard/tournament-draw'
+    },
+    {
+        icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$mail$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MailIcon$3e$__["MailIcon"], {
+            size: 20,
+            color: PRIMARY
+        }, void 0, false, {
+            fileName: "[project]/src/components/Sidebar.tsx",
+            lineNumber: 47,
+            columnNumber: 11
+        }, ("TURBOPACK compile-time value", void 0)),
+        text: 'Contact Management',
+        href: '/admin-dashboard/contact'
     },
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$settings$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Settings$3e$__["Settings"], {
@@ -266,7 +279,7 @@ const sidebarItems = [
             color: PRIMARY
         }, void 0, false, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 46,
+            lineNumber: 52,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         text: 'Settings',
@@ -287,18 +300,18 @@ function SidebarItem({ icon, text, href, active }) {
                     children: text
                 }, void 0, false, {
                     fileName: "[project]/src/components/Sidebar.tsx",
-                    lineNumber: 65,
+                    lineNumber: 71,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/Sidebar.tsx",
-            lineNumber: 56,
+            lineNumber: 62,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/Sidebar.tsx",
-        lineNumber: 55,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
@@ -325,17 +338,17 @@ function AdminSidebar() {
                         className: "object-contain"
                     }, void 0, false, {
                         fileName: "[project]/src/components/Sidebar.tsx",
-                        lineNumber: 88,
+                        lineNumber: 94,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/Sidebar.tsx",
-                    lineNumber: 87,
+                    lineNumber: 93,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/Sidebar.tsx",
-                lineNumber: 86,
+                lineNumber: 92,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -347,17 +360,17 @@ function AdminSidebar() {
                             active: isActiveLink(item.href)
                         }, item.text, false, {
                             fileName: "[project]/src/components/Sidebar.tsx",
-                            lineNumber: 102,
+                            lineNumber: 108,
                             columnNumber: 13
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/src/components/Sidebar.tsx",
-                    lineNumber: 100,
+                    lineNumber: 106,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/Sidebar.tsx",
-                lineNumber: 99,
+                lineNumber: 105,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -366,23 +379,23 @@ function AdminSidebar() {
                     className: "text-[#DF1020]",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$LogoutDialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/src/components/Sidebar.tsx",
-                        lineNumber: 114,
+                        lineNumber: 120,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/Sidebar.tsx",
-                    lineNumber: 113,
+                    lineNumber: 119,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/Sidebar.tsx",
-                lineNumber: 112,
+                lineNumber: 118,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/Sidebar.tsx",
-        lineNumber: 84,
+        lineNumber: 90,
         columnNumber: 5
     }, this);
 }
@@ -450,7 +463,7 @@ function UserHeader() {
             },
             {
                 match: [
-                    '/admin-dashboard/contact-management'
+                    '/admin-dashboard/contact'
                 ],
                 title: 'Contact Management',
                 desc: 'Manage user messages and inquiries.'
@@ -463,7 +476,7 @@ function UserHeader() {
                 desc: 'Manage your account information and preferences.'
             }
         ];
-        // 1️⃣ First check exact matches
+        // First check exact matches
         for (const rule of rules){
             if (rule.exact && rule.exact.includes(pathname)) {
                 return [
@@ -472,7 +485,7 @@ function UserHeader() {
                 ];
             }
         }
-        // 2️⃣ Then check startsWith matches
+        // Then check startsWith matches
         for (const rule of rules){
             if (rule.match && rule.match.some((path)=>pathname.startsWith(path))) {
                 return [
