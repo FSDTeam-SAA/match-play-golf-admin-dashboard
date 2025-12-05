@@ -7,11 +7,15 @@ import LogoutDialog from './LogoutDialog'
 
 import {
   LayoutDashboard,
-  FileText,
-  Headphones,
   MessageSquare,
-  Radio,
   Settings,
+  MailIcon,
+  Bell,
+  Trophy,
+  Users,
+  Swords,
+  BookOpen,
+  UserSearch,
 } from 'lucide-react'
 
 const PRIMARY = '#DF1020'
@@ -23,17 +27,17 @@ const sidebarItems = [
     href: '/admin-dashboard/',
   },
   {
-    icon: <FileText size={20} color={PRIMARY} />,
+    icon: <Trophy size={20} color={PRIMARY} />,
     text: 'Tournaments Management',
     href: '/admin-dashboard/tournamments-management',
   },
   {
-    icon: <Headphones size={20} color={PRIMARY} />,
+    icon: <Users size={20} color={PRIMARY} />,
     text: 'Players Management',
     href: '/admin-dashboard/players-management',
   },
   {
-    icon: <Radio size={20} color={PRIMARY} />,
+    icon: <Swords size={20} color={PRIMARY} />,
     text: 'Matches Management',
     href: '/admin-dashboard/atches-management',
   },
@@ -41,6 +45,26 @@ const sidebarItems = [
     icon: <MessageSquare size={20} color={PRIMARY} />,
     text: 'Tournament Draw',
     href: '/admin-dashboard/tournament-draw',
+  },
+  {
+    icon: <UserSearch size={20} color={PRIMARY} />,
+    text: 'Team Management',
+    href: '/admin-dashboard/team-management',
+  },
+  {
+    icon: <BookOpen size={20} color={PRIMARY} />,
+    text: 'Article Management',
+    href: '/admin-dashboard/article-management',
+  },
+  {
+    icon: <MailIcon size={20} color={PRIMARY} />,
+    text: 'Contact Management',
+    href: '/admin-dashboard/contact',
+  },
+  {
+    icon: <Bell size={20} color={PRIMARY} />,
+    text: 'Subscriber Management',
+    href: '/admin-dashboard/subscriber',
   },
   {
     icon: <Settings size={20} color={PRIMARY} />,

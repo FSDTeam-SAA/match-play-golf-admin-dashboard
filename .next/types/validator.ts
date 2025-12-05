@@ -71,6 +71,18 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   handler satisfies AppPageConfig<"/verify-email">
 }
 
+// Validate ../../src/app/admin-dashboard/article-management/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/article-management/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/article-management">
+}
+
+// Validate ../../src/app/admin-dashboard/contact/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/contact/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/contact">
+}
+
 // Validate ../../src/app/admin-dashboard/page.tsx
 {
   const handler = {} as typeof import("../../src/app/admin-dashboard/page.js")
@@ -99,6 +111,12 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   const handler = {} as typeof import("../../src/app/admin-dashboard/settings/page.js")
   handler satisfies AppPageConfig<"/admin-dashboard/settings">
+}
+
+// Validate ../../src/app/admin-dashboard/team-management/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/team-management/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/team-management">
 }
 
 // Validate ../../src/app/page.tsx

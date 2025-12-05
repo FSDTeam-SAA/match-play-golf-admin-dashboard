@@ -258,7 +258,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$
 const buttonVariants = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$class$2d$variance$2d$authority$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cva"])("inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer", {
     variants: {
         variant: {
-            default: 'bg-[#5A8DEE] px-6 py-3 rounded-sm text-primary-foreground shadow-xs hover:bg-[#5A8DEE]/80',
+            default: 'bg-[#DF1020] px-6 py-3 rounded-sm text-primary-foreground shadow-xs hover:bg-[#DF1020]/80',
             destructive: 'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
             outline: 'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
             secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
@@ -516,7 +516,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 ;
 ;
 ;
-function ProfileForm({ fullName, setFullName, setUsername, email, phoneNumber, setPhoneNumber, role, setRole, isUpdating, onSubmit, onReset, organizationName, setOrganizationName }) {
+function ProfileForm({ fullName, setFullName, setUsername, email, phone, setPhone, role, setRole, isUpdating, onSubmit, onReset, organizationName, setOrganizationName }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "space-y-6",
         children: [
@@ -617,8 +617,8 @@ function ProfileForm({ fullName, setFullName, setUsername, email, phoneNumber, s
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                 id: "phoneNumber",
-                                value: phoneNumber,
-                                onChange: (e)=>setPhoneNumber(e.target.value),
+                                value: phone,
+                                onChange: (e)=>setPhone(e.target.value),
                                 placeholder: "+1 (555) 000-0000",
                                 className: "mt-1 border border-[#DF1020] bg-white text-gray-600"
                             }, void 0, false, {
@@ -1047,7 +1047,7 @@ function SettingsPage() {
     const [fullName, setFullName] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [username, setUsername] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [email, setEmail] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
-    const [phoneNumber, setPhoneNumber] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    const [phone, setPhone] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [role, setRole] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [organizationName, setOrganizationName] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1094,7 +1094,7 @@ function SettingsPage() {
             setFullName(profile.fullName || '');
             setUsername(profile.username || '');
             setEmail(profile.email || '');
-            setPhoneNumber(profile.phone || '');
+            setPhone(profile.phone || '');
             setRole(profile.role || '');
             setOrganizationName(profile.organizationName || '');
             setProfileImage(profile.profileImage || '');
@@ -1122,8 +1122,9 @@ function SettingsPage() {
         const profilePayload = {
             fullName,
             username,
-            phoneNumber,
-            role
+            phone,
+            role,
+            organizationName
         };
         updateProfile(profilePayload);
     };
@@ -1151,7 +1152,7 @@ function SettingsPage() {
                 const profile = profileData.data;
                 setFullName(profile.fullName || '');
                 setUsername(profile.username || '');
-                setPhoneNumber(profile.phone || '');
+                setPhone(profile.phone || '');
                 setRole(profile.role || '');
                 setOrganizationName(profile.organizationName || '');
                 setImagePreview(profile.profileImage || '');
@@ -1170,12 +1171,12 @@ function SettingsPage() {
                 className: "w-8 h-8 animate-spin text-blue-600"
             }, void 0, false, {
                 fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                lineNumber: 168,
+                lineNumber: 169,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-            lineNumber: 167,
+            lineNumber: 168,
             columnNumber: 7
         }, this);
     }
@@ -1195,7 +1196,7 @@ function SettingsPage() {
                                 children: "Personal Information"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                                lineNumber: 185,
+                                lineNumber: 186,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1204,13 +1205,13 @@ function SettingsPage() {
                                 children: "Change Password"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                                lineNumber: 195,
+                                lineNumber: 196,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                        lineNumber: 184,
+                        lineNumber: 185,
                         columnNumber: 11
                     }, this),
                     activeTab === 'profile' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1224,14 +1225,14 @@ function SettingsPage() {
                                 onUpload: handleUploadProfileImage
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                                lineNumber: 209,
+                                lineNumber: 210,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("hr", {
                                 className: "bg-[#DF1020] h-[1.5px]"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                                lineNumber: 217,
+                                lineNumber: 218,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$admin$2d$dashboard$2f$settings$2f$_components$2f$profileForm$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ProfileForm"], {
@@ -1240,8 +1241,8 @@ function SettingsPage() {
                                 username: username,
                                 setUsername: setUsername,
                                 email: email,
-                                phoneNumber: phoneNumber,
-                                setPhoneNumber: setPhoneNumber,
+                                phone: phone,
+                                setPhone: setPhone,
                                 role: role,
                                 setRole: setRole,
                                 isUpdating: isUpdatingProfile,
@@ -1251,13 +1252,13 @@ function SettingsPage() {
                                 setOrganizationName: setOrganizationName
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                                lineNumber: 219,
+                                lineNumber: 220,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                        lineNumber: 208,
+                        lineNumber: 209,
                         columnNumber: 13
                     }, this),
                     activeTab === 'password' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$admin$2d$dashboard$2f$settings$2f$_components$2f$passwordForm$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PasswordForm"], {
@@ -1272,23 +1273,23 @@ function SettingsPage() {
                         onReset: handleReset
                     }, void 0, false, {
                         fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                        lineNumber: 239,
+                        lineNumber: 240,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-                lineNumber: 183,
+                lineNumber: 184,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-            lineNumber: 182,
+            lineNumber: 183,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/admin-dashboard/settings/_components/settingsPage.tsx",
-        lineNumber: 174,
+        lineNumber: 175,
         columnNumber: 5
     }, this);
 }

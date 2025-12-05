@@ -163,3 +163,7 @@
 .primary-color-red {
   color: #df1020;
 }
+
+body {
+  font-family: var(--font-open-sans), sans-serif;
+}

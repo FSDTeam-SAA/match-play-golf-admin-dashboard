@@ -406,7 +406,7 @@ function UserHeader() {
             {
                 match: [
                     '/admin-dashboard',
-                    '/admin-dashboard'
+                    '/'
                 ],
                 title: 'Welcome back, Michael',
                 desc: 'Ready to compete in your next match?'
@@ -458,12 +458,13 @@ function UserHeader() {
                 match: [
                     '/admin-dashboard/settings'
                 ],
-                title: 'Settings',
-                desc: 'Customize your preferences and dashboard settings.'
+                title: 'Profile & Settings',
+                desc: 'Manage your account information and preferences'
             }
         ];
+        // Use startsWith to match the root path of any sub-paths
         for (const rule of rules){
-            if (rule.match.some((path)=>pathname.includes(path))) {
+            if (rule.match.some((path)=>pathname.startsWith(path))) {
                 return [
                     rule.title,
                     rule.desc
@@ -484,7 +485,7 @@ function UserHeader() {
                 children: title
             }, void 0, false, {
                 fileName: "[project]/src/components/reusable/UserHeader.tsx",
-                lineNumber: 68,
+                lineNumber: 69,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -492,13 +493,13 @@ function UserHeader() {
                 children: description
             }, void 0, false, {
                 fileName: "[project]/src/components/reusable/UserHeader.tsx",
-                lineNumber: 69,
+                lineNumber: 70,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/reusable/UserHeader.tsx",
-        lineNumber: 67,
+        lineNumber: 68,
         columnNumber: 5
     }, this);
 }
