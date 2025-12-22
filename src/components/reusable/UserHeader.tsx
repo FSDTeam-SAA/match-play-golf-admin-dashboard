@@ -15,34 +15,6 @@ export default function UserHeader() {
       },
 
       {
-        match: ['/admin-dashboard/grant-management'],
-        title: 'Grants Management',
-        desc: 'Manage all grants in the system.',
-      },
-      {
-        match: ['/admin-dashboard/user-management'],
-        title: 'User Management',
-        desc: 'Manage all users and their subscription details.',
-      },
-      {
-        match: ['/admin-dashboard/calendar'],
-        title: 'Grant Calendar',
-        desc: 'Track deadlines and saved grants easily.',
-      },
-      {
-        match: ['/admin-dashboard/subscription/recent-transactions'],
-        title: 'Transactions Management',
-        desc: 'Manage and view transaction history.',
-      },
-      {
-        match: [
-          '/admin-dashboard/subscription',
-          '/admin-dashboard/subscription-management',
-        ],
-        title: 'Subscription Management',
-        desc: 'Manage subscription plans and view history.',
-      },
-      {
         match: ['/admin-dashboard/contact'],
         title: 'Contact Management',
         desc: 'Manage user messages and inquiries.',
@@ -51,6 +23,11 @@ export default function UserHeader() {
         match: ['/admin-dashboard/settings'],
         title: 'Profile & Settings',
         desc: 'Manage your account information and preferences.',
+      },
+      {
+        match: ['/admin-dashboard/subscriber-management'],
+        title: 'Subscriber Management',
+        desc: 'Manage your subscribers.',
       },
     ]
 
