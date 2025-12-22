@@ -7,7 +7,6 @@ import LogoutDialog from './LogoutDialog'
 
 import {
   LayoutDashboard,
-  MessageSquare,
   Settings,
   MailIcon,
   Bell,
@@ -16,6 +15,7 @@ import {
   Swords,
   BookOpen,
   UserSearch,
+  Brackets,
 } from 'lucide-react'
 
 const PRIMARY = '#DF1020'
@@ -42,7 +42,7 @@ const sidebarItems = [
     href: '/admin-dashboard/atches-management',
   },
   {
-    icon: <MessageSquare size={20} color={PRIMARY} />,
+    icon: <Brackets size={20} color={PRIMARY} />,
     text: 'Tournament Draw',
     href: '/admin-dashboard/tournament-draw',
   },
@@ -64,7 +64,7 @@ const sidebarItems = [
   {
     icon: <Bell size={20} color={PRIMARY} />,
     text: 'Subscriber Management',
-    href: '/admin-dashboard/subscriber',
+    href: '/admin-dashboard/subscriber-management',
   },
   {
     icon: <Settings size={20} color={PRIMARY} />,

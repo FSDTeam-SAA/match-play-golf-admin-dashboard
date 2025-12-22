@@ -2,12 +2,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface DataTablePaginationProps {
   currentPage: number
@@ -22,6 +17,9 @@ export function DataTablePagination({
   onPageChange,
   totalItems,
 }: DataTablePaginationProps) {
+  // 🔴 Hide pagination if total pages are 2 or less
+  // if (totalPages <= 2) return null
+
   const canGoPrevious = currentPage > 1
   const canGoNext = currentPage < totalPages
 
@@ -61,15 +59,7 @@ export function DataTablePagination({
       </div>
 
       <div className="flex items-center space-x-3">
-        <Button
-          variant="outline"
-          className="h-8 w-8 p-0 border-gray-300"
-          onClick={() => onPageChange(1)}
-          disabled={!canGoPrevious}
-        >
-          <ChevronsLeft className="h-4 w-4 text-[#DF1020]" />
-        </Button>
-
+        {/* Previous */}
         <Button
           variant="outline"
           className="h-8 w-8 p-0 border-gray-300"
@@ -79,18 +69,17 @@ export function DataTablePagination({
           <ChevronLeft className="h-4 w-4 text-[#DF1020]" />
         </Button>
 
+        {/* Page Numbers */}
         <div className="flex items-center gap-1">
           {getPageNumbers().map((page, idx) => (
             <Button
               key={idx}
               variant={page === currentPage ? 'default' : 'outline'}
-              className={`h-8 w-8 p-0 
-                ${
-                  page === currentPage
-                    ? 'bg-[#DF1020] text-white'
-                    : 'border-gray-300'
-                }
-              `}
+              className={`h-8 w-8 p-0 ${
+                page === currentPage
+                  ? 'bg-[#DF1020] text-white'
+                  : 'border-gray-300'
+              }`}
               onClick={() => typeof page === 'number' && onPageChange(page)}
               disabled={page === '...'}
             >
@@ -99,6 +88,7 @@ export function DataTablePagination({
           ))}
         </div>
 
+        {/* Next */}
         <Button
           variant="outline"
           className="h-8 w-8 p-0 border-gray-300"
@@ -106,15 +96,6 @@ export function DataTablePagination({
           disabled={!canGoNext}
         >
           <ChevronRight className="h-4 w-4 text-[#DF1020]" />
-        </Button>
-
-        <Button
-          variant="outline"
-          className="h-8 w-8 p-0 border-gray-300"
-          onClick={() => onPageChange(totalPages)}
-          disabled={!canGoNext}
-        >
-          <ChevronsRight className="h-4 w-4 text-[#DF1020]" />
         </Button>
       </div>
     </div>

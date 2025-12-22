@@ -89,28 +89,16 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   handler satisfies AppPageConfig<"/admin-dashboard">
 }
 
-// Validate ../../src/app/admin-dashboard/podcast-management/add/page.tsx
-{
-  const handler = {} as typeof import("../../src/app/admin-dashboard/podcast-management/add/page.js")
-  handler satisfies AppPageConfig<"/admin-dashboard/podcast-management/add">
-}
-
-// Validate ../../src/app/admin-dashboard/podcast-management/edit/[id]/page.tsx
-{
-  const handler = {} as typeof import("../../src/app/admin-dashboard/podcast-management/edit/[id]/page.js")
-  handler satisfies AppPageConfig<"/admin-dashboard/podcast-management/edit/[id]">
-}
-
-// Validate ../../src/app/admin-dashboard/podcast-management/page.tsx
-{
-  const handler = {} as typeof import("../../src/app/admin-dashboard/podcast-management/page.js")
-  handler satisfies AppPageConfig<"/admin-dashboard/podcast-management">
-}
-
 // Validate ../../src/app/admin-dashboard/settings/page.tsx
 {
   const handler = {} as typeof import("../../src/app/admin-dashboard/settings/page.js")
   handler satisfies AppPageConfig<"/admin-dashboard/settings">
+}
+
+// Validate ../../src/app/admin-dashboard/subscriber-management/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/subscriber-management/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/subscriber-management">
 }
 
 // Validate ../../src/app/admin-dashboard/team-management/page.tsx
