@@ -29,7 +29,7 @@ const sidebarItems = [
   {
     icon: <Trophy size={20} color={PRIMARY} />,
     text: 'Tournaments Management',
-    href: '/admin-dashboard/tournamments-management',
+    href: '/admin-dashboard/tournaments-management',
   },
   {
     icon: <Users size={20} color={PRIMARY} />,
@@ -39,7 +39,7 @@ const sidebarItems = [
   {
     icon: <Swords size={20} color={PRIMARY} />,
     text: 'Matches Management',
-    href: '/admin-dashboard/atches-management',
+    href: '/admin-dashboard/matches-management',
   },
   {
     icon: <Brackets size={20} color={PRIMARY} />,

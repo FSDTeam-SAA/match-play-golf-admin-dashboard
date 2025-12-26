@@ -83,10 +83,28 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   handler satisfies AppPageConfig<"/admin-dashboard/contact">
 }
 
+// Validate ../../src/app/admin-dashboard/matches-management/create-match/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/matches-management/create-match/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/matches-management/create-match">
+}
+
+// Validate ../../src/app/admin-dashboard/matches-management/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/matches-management/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/matches-management">
+}
+
 // Validate ../../src/app/admin-dashboard/page.tsx
 {
   const handler = {} as typeof import("../../src/app/admin-dashboard/page.js")
   handler satisfies AppPageConfig<"/admin-dashboard">
+}
+
+// Validate ../../src/app/admin-dashboard/players-management/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/players-management/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/players-management">
 }
 
 // Validate ../../src/app/admin-dashboard/settings/page.tsx
@@ -105,6 +123,24 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   const handler = {} as typeof import("../../src/app/admin-dashboard/team-management/page.js")
   handler satisfies AppPageConfig<"/admin-dashboard/team-management">
+}
+
+// Validate ../../src/app/admin-dashboard/tournaments-management/[id]/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/tournaments-management/[id]/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/tournaments-management/[id]">
+}
+
+// Validate ../../src/app/admin-dashboard/tournaments-management/create-tournament/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/tournaments-management/create-tournament/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/tournaments-management/create-tournament">
+}
+
+// Validate ../../src/app/admin-dashboard/tournaments-management/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/tournaments-management/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/tournaments-management">
 }
 
 // Validate ../../src/app/page.tsx

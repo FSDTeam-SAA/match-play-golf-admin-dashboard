@@ -7,7 +7,7 @@ export default function UserHeader() {
 
   const getPageContent = () => {
     const rules = [
-      // 🎯 Exact match — dashboard home only
+      // Exact match — dashboard home only
       {
         exact: ['/admin-dashboard', '/admin-dashboard/'],
         title: 'Welcome back, Michael',
