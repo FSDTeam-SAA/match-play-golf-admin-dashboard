@@ -1,5 +1,6 @@
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
+import DashboardPage from './_components/dashboard-overview'
 // import { redirect } from 'next/navigation'
 
 export default async function Page() {
@@ -7,14 +8,12 @@ export default async function Page() {
   console.log('users role::', session)
 
   if (!session?.user?.accessToken) {
-  return redirect('/signin')
-}
- 
+    return redirect('/signin')
+  }
 
-return (
-  <div>
-    <h2>dashboard overview</h2>
-  </div>
-)
-
+  return (
+    <>
+      <DashboardPage />
+    </>
+  )
 }

@@ -17,7 +17,7 @@ export default function ClientDashboardLayout({
       {/* Main */}
       <main className="flex-1 flex flex-col">
         <UserHeader />
-        <div className="flex-1 px-8 pt-4">{children}</div>
+        <div className="flex-1 px-4 pt-4">{children}</div>
       </main>
     </div>
   )
