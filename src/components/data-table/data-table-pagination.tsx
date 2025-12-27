@@ -11,6 +11,8 @@ interface DataTablePaginationProps {
   totalItems?: number
 }
 
+// for demo purpuse
+
 export function DataTablePagination({
   currentPage,
   totalPages,
