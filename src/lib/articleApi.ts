@@ -18,7 +18,7 @@ async function handleResponse(response: Response) {
   }
   return response.json()
 }
-
+//for testing
 // ==================== GET ALL ARTICLES ====================
 export const useGetArticles = (accessToken: string, page = 1, limit = 10) => {
   return useQuery<ArticlesResponse>({
