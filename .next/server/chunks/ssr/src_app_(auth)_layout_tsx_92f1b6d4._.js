@@ -1,3 +1,0 @@
-module.exports=[90430,a=>{"use strict";a.s(["default",()=>c]);var b=a.i(7997);let c=({children:a})=>(0,b.jsx)("div",{style:{backgroundImage:"url('/images/auth-banner.jpg')",backgroundSize:"cover",backgroundPosition:"center",backgroundRepeat:"no-repeat",backgroundBlendMode:"overlay",backgroundAttachment:"fixed"},className:"min-h-screen flex items-center justify-center bg-[#00000098]",children:a})}];
-
-//# sourceMappingURL=src_app_%28auth%29_layout_tsx_92f1b6d4._.js.map
