@@ -11,30 +11,27 @@ import {
 } from '@/components/ui/table'
 import moment from 'moment'
 import { Eye, Plus, Trash, SquarePen } from 'lucide-react'
-import MatchPlayGolfPagination from '@/components/ui/match-play-golf-pagination'
+
 import { Input } from '@/components/ui/input'
 import DeleteModal from '@/components/modals/delete-modal'
-
+// import TournamentView from "./tournament-view";
 import Link from 'next/link'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
-import { Tournament, TournamentApiResponse } from './tournament-data-type'
-import TableSkeleton from '@/components/reusable/TableSkeleton'
-import ErrorState from '@/components/reusable/ErrorState'
 import { useDebounce } from '@/hooks/useDebounce'
+import { TournamentApiResponse } from './tournament-data-type'
+import TableSkeleton from '@/components/reusable/TableSkeleton'
+import ErrorContainer from '@/components/ErrorContainer/ErrorContainer'
 import NotFound from '@/components/reusable/not-found-data'
-import TournamentView from './tournament-view'
+import MatchPlayGolfPagination from '@/components/ui/match-play-golf-pagination'
 
 const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [search, setSearch] = useState('')
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
-  const [viewTournament, setViewTournament] = useState(false)
   const [tournementId, setTournamentId] = useState('')
-  const [selectedTournament, setSelectedTournament] =
-    useState<Tournament | null>(null)
   const debouncedSearch = useDebounce(search, 500)
 
   const queryClient = useQueryClient()
@@ -45,7 +42,7 @@ const TournamentsManagementContainer = () => {
   console.log(search)
 
   // get tournament api
-  const { data, isLoading, isError } = useQuery<TournamentApiResponse>({
+  const { data, isLoading, isError, error } = useQuery<TournamentApiResponse>({
     queryKey: ['tournaments', currentPage, debouncedSearch],
     queryFn: async () => {
       const res = await fetch(
@@ -66,8 +63,7 @@ const TournamentsManagementContainer = () => {
   } else if (isError) {
     content = (
       <div>
-        {/* <ErrorContainer message={error?.message || 'Something went wrong'} /> */}
-        <ErrorState message="failed to load the tournaments!" />
+        <ErrorContainer message={error?.message || 'Something went wrong'} />
       </div>
     )
   } else if (
@@ -155,15 +151,13 @@ const TournamentsManagementContainer = () => {
                         <SquarePen className="cursor-pointer h-5 w-5 text-[#181818]" />
                       </button>
                     </Link>
-                    <button
-                      onClick={() => {
-                        setViewTournament(true)
-                        setSelectedTournament(item)
-                      }}
-                      className="cursor-pointer"
+                    <Link
+                      href={`/admin-dashboard/tournaments-management/tournament-details/${item?._id}`}
                     >
-                      <Eye className="h-6 w-6 text-[#181818]" />
-                    </button>
+                      <button className="cursor-pointer">
+                        <Eye className="h-6 w-6 text-[#181818]" />
+                      </button>
+                    </Link>
                     <button
                       onClick={() => {
                         setDeleteModalOpen(true)
@@ -274,17 +268,6 @@ const TournamentsManagementContainer = () => {
             desc="Are you sure you want to delete this tournaments?"
           />
         )}
-
-        {/* tournament view modal  */}
-        <div>
-          {viewTournament && (
-            <TournamentView
-              open={viewTournament}
-              onOpenChange={(open: boolean) => setViewTournament(open)}
-              tournamentData={selectedTournament}
-            />
-          )}
-        </div>
       </div>
     </div>
   )

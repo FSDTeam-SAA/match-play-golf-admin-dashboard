@@ -143,6 +143,12 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   handler satisfies AppPageConfig<"/admin-dashboard/tournaments-management">
 }
 
+// Validate ../../src/app/admin-dashboard/tournaments-management/tournament-details/[id]/page.tsx
+{
+  const handler = {} as typeof import("../../src/app/admin-dashboard/tournaments-management/tournament-details/[id]/page.js")
+  handler satisfies AppPageConfig<"/admin-dashboard/tournaments-management/tournament-details/[id]">
+}
+
 // Validate ../../src/app/page.tsx
 {
   const handler = {} as typeof import("../../src/app/page.js")

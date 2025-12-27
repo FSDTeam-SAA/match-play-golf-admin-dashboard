@@ -1,12 +1,12 @@
 import React from 'react'
 import CreateMatchForm from './_components/create-match-form'
-import CreateMatchHeader from './_components/create-match-header'
+// import CreateMatchHeader from './_components/create-match-header'
 
 const CreateMatchPage = () => {
   return (
     <div>
-      <CreateMatchHeader/>
-      <CreateMatchForm/>
+      {/* <CreateMatchHeader/> */}
+      <CreateMatchForm />
     </div>
   )
 }

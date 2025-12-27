@@ -16,12 +16,19 @@ import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
 import TableSkeleton from '@/components/reusable/TableSkeleton'
 import ErrorState from '@/components/reusable/ErrorState'
+import { toast } from 'sonner' // or use your toast library
+import { DeleteModal } from './deleteModal'
 
 export default function SubscriberManagementPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [showBroadcastModal, setShowBroadcastModal] = useState(false)
   const [showSpecificModal, setShowSpecificModal] = useState(false)
   const [selectedSubscriber, setSelectedSubscriber] =
+    useState<Subscriber | null>(null)
+
+  // Delete modal state
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [subscriberToDelete, setSubscriberToDelete] =
     useState<Subscriber | null>(null)
 
   const cu = useSession()
@@ -37,17 +44,31 @@ export default function SubscriberManagementPage() {
   )
 
   // Delete mutation
-  const { mutate: deleteSubscriber } = useDeleteSubscriber(accessToken)
+  const { mutate: deleteSubscriber, isPending: isDeleting } =
+    useDeleteSubscriber(accessToken)
 
-  const handleDelete = (id: string) => {
-    if (!confirm('Are you sure you want to delete this subscriber?')) return
+  const handleOpenDeleteModal = (subscriber: Subscriber) => {
+    setSubscriberToDelete(subscriber)
+    setIsDeleteModalOpen(true)
+  }
 
-    deleteSubscriber(id, {
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+    setSubscriberToDelete(null)
+  }
+
+  const handleConfirmDelete = () => {
+    if (!subscriberToDelete) return
+
+    deleteSubscriber(subscriberToDelete._id, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['subscribers'] })
+        toast.success('Subscriber deleted successfully')
+        handleCloseDeleteModal()
       },
-      onError: error => {
-        alert(`Failed to delete subscriber: ${error.message}`)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onError: (error: any) => {
+        toast.error(`Failed to delete subscriber: ${error.message}`)
       },
     })
   }
@@ -58,9 +79,10 @@ export default function SubscriberManagementPage() {
   }
 
   const columns = createColumns({
-    onDelete: handleDelete,
     onSendEmail: handleSendEmail,
+    onOpenDeleteModal: handleOpenDeleteModal,
   })
+
   // Loading State
   if (isLoading) {
     return (
@@ -70,7 +92,6 @@ export default function SubscriberManagementPage() {
     )
   }
 
-  // Error State (ADDED)
   // Error State
   if (isError) {
     return (
@@ -84,21 +105,11 @@ export default function SubscriberManagementPage() {
 
   return (
     <div className="py-6">
-      {/* Header */}
-      {/* <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Subscriber Management
-        </h1>
-        <p className="text-gray-600 text-sm mt-1">
-          Manage email subscribers and send broadcasts
-        </p>
-      </div> */}
-
       {/* Broadcast Button */}
       <div className="mb-4 flex justify-end">
         <Button
           onClick={() => setShowBroadcastModal(true)}
-          className=" px-6 py-2.5 rounded-lg flex items-center gap-2 transition-colors"
+          className="px-6 py-2.5 rounded-lg flex items-center gap-2 transition-colors bg-red-600 hover:bg-red-600/60 cursor-pointer"
         >
           <Send className="w-4 h-4" />
           Broadcast to All Subscribers
@@ -119,6 +130,16 @@ export default function SubscriberManagementPage() {
               }
             : undefined
         }
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        title="Delete Subscriber"
+        description={`Are you sure you want to delete ${subscriberToDelete?.email}? This action cannot be undone.`}
+        isLoading={isDeleting}
       />
 
       {/* Broadcast Modal */}

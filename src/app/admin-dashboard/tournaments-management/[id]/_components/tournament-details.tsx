@@ -201,10 +201,10 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                           key={option.id}
                           type="button"
                           onClick={() => field.onChange(option.value)}
-                          className={`py-3 px-4 rounded-[8px] border-2 text-base font-medium leading-[120%] transition-all duration-200 ${
+                          className={`py-4 px-6 rounded-[8px] border-2 text-base font-semibold leading-[120%] transition-all duration-300 shadow-sm ${
                             field.value === option.value
-                              ? 'border-primary bg-[#F0FFFE] text-[#434C45]'
-                              : 'border-[#C0C3C1] bg-white text-[#434C45] hover:border-primary'
+                              ? 'border-[#E5102E] bg-gradient-to-br from-[#FFE5E8] to-[#FFF5F6] text-[#E5102E] shadow-md scale-105'
+                              : 'border-[#C0C3C1] bg-white text-[#434C45] hover:border-[#E5102E] hover:shadow-md'
                           }`}
                         >
                           {option.label}

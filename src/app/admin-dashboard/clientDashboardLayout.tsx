@@ -2,7 +2,7 @@
 'use client'
 
 import Sidebar from '@/components/Sidebar'
-import UserHeader from '@/components/reusable/UserHeader'
+import UserHeader from '@/components/UserHeader'
 
 export default function ClientDashboardLayout({
   children,
@@ -10,14 +10,22 @@ export default function ClientDashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="bg-[#F8F9FC] min-h-screen flex">
-      {/* Sidebar */}
+    <div
+      suppressHydrationWarning
+      className="bg-[#F8F9FC] min-h-screen flex overflow-hidden"
+    >
+      {/* Sidebar (fixed height, no scroll) */}
       <Sidebar />
 
       {/* Main */}
-      <main className="flex-1 flex flex-col">
-        <UserHeader />
-        <div className="flex-1 px-4 pt-4">{children}</div>
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Header (fixed) */}
+        <div className="shrink-0">
+          <UserHeader />
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-4 pt-4">{children}</div>
       </main>
     </div>
   )
