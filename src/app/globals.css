@@ -167,3 +167,15 @@
 body {
   font-family: var(--font-open-sans), sans-serif;
 }
+
+.text-primary {
+  color: #df1020;
+}
+
+.border-primary {
+  color: #df1020;
+}
+
+.bg-primary {
+  background-color: #df1020;
+}

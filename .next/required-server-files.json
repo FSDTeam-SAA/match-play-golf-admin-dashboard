@@ -103,7 +103,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/home/kmsaifullah/Desktop/projects",
+    "outputFileTracingRoot": "/home/mamun/Desktop/Projects/match-play-golf/match-play-golf-admin-dashboard",
     "experimental": {
       "useSkewCookie": false,
       "cacheLife": {
@@ -292,11 +292,11 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
     "turbopack": {
-      "root": "/home/kmsaifullah/Desktop/projects"
+      "root": "/home/mamun/Desktop/Projects/match-play-golf/match-play-golf-admin-dashboard"
     }
   },
-  "appDir": "/home/kmsaifullah/Desktop/projects/BeUnburdened_admin_dashboard",
-  "relativeAppDir": "BeUnburdened_admin_dashboard",
+  "appDir": "/home/mamun/Desktop/Projects/match-play-golf/match-play-golf-admin-dashboard",
+  "relativeAppDir": "",
   "files": [
     ".next/routes-manifest.json",
     ".next/server/pages-manifest.json",

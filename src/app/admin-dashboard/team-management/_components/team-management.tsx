@@ -38,7 +38,10 @@ export default function TeamManagementPage() {
   return (
     <div className="container mx-auto py-5">
       <div className="mb-6 flex items-center justify-end">
-        <Button onClick={() => setAddOpen(true)} className="gap-2">
+        <Button
+          onClick={() => setAddOpen(true)}
+          className="gap-2  bg-red-600 hover:bg-red-700"
+        >
           <Plus className="h-4 w-4" />
           Add Team Member
         </Button>

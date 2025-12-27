@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
-    {"offset": {"line": 19, "column": 0}, "map": {"version":3,"sources":["file:///home/kmsaifullah/Desktop/projects/BeUnburdened_admin_dashboard/src/app/admin-dashboard/page.tsx"],"sourcesContent":["import { auth } from '@/auth'\nimport { redirect } from 'next/navigation'\n// import { redirect } from 'next/navigation'\n\nexport default async function Page() {\n  const session = await auth()\n  console.log('users role::', session)\n  if (session?.user && session?.user?.role.toLowerCase() !== 'admin') {\n    return redirect('/signin')\n  }\n  redirect('/admin-dashboard/dashboard')\n}\n"],"names":[],"mappings":";;;;AAAA;AACA;AAAA;;;AAGe,eAAe;IAC5B,MAAM,UAAU,MAAM,IAAA,mJAAI;IAC1B,QAAQ,GAAG,CAAC,gBAAgB;IAC5B,IAAI,SAAS,QAAQ,SAAS,MAAM,KAAK,kBAAkB,SAAS;QAClE,OAAO,IAAA,iOAAQ,EAAC;IAClB;IACA,IAAA,iOAAQ,EAAC;AACX","debugId":null}}]
-}

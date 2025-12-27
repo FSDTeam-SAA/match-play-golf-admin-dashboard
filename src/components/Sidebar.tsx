@@ -15,7 +15,6 @@ import {
   Swords,
   BookOpen,
   UserSearch,
-  Brackets,
 } from 'lucide-react'
 
 const PRIMARY = '#DF1020'
@@ -29,7 +28,7 @@ const sidebarItems = [
   {
     icon: <Trophy size={20} color={PRIMARY} />,
     text: 'Tournaments Management',
-    href: '/admin-dashboard/tournamments-management',
+    href: '/admin-dashboard/tournaments-management',
   },
   {
     icon: <Users size={20} color={PRIMARY} />,
@@ -39,12 +38,7 @@ const sidebarItems = [
   {
     icon: <Swords size={20} color={PRIMARY} />,
     text: 'Matches Management',
-    href: '/admin-dashboard/atches-management',
-  },
-  {
-    icon: <Brackets size={20} color={PRIMARY} />,
-    text: 'Tournament Draw',
-    href: '/admin-dashboard/tournament-draw',
+    href: '/admin-dashboard/matches-management',
   },
   {
     icon: <UserSearch size={20} color={PRIMARY} />,
@@ -78,7 +72,7 @@ function SidebarItem({ icon, text, href, active }: any) {
   return (
     <Link href={href}>
       <div
-        className={`flex items-center gap-6 px-5 py-[14px] rounded-lg cursor-pointer transition-all mb-3
+        className={`flex items-center gap-6 px-2 py-[14px] rounded-lg cursor-pointer transition-all mb-3
           ${
             active
               ? 'bg-red-50 text-[#DF1020] font-semibold shadow-md'
@@ -108,7 +102,7 @@ export default function AdminSidebar() {
     <aside className="w-[320px] bg-white  min-h-screen flex flex-col ">
       {/* Logo */}
       <div className="h-[80px] flex items-center px-8">
-        <Link href="/admin-dashboard/dashboard">
+        <Link href="/admin-dashboard">
           <Image
             src="/images/auth-logo.png"
             alt="logo"

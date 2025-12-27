@@ -1,4 +1,4 @@
-// 📄 src/app/admin-dashboard/subscriber-management/_components/columns.tsx
+// 📄 src/app/admin-dashboard/subscriber-management/columns.tsx
 
 'use client'
 
@@ -7,13 +7,13 @@ import { Trash2, Mail } from 'lucide-react'
 import type { Subscriber } from '@/../types/subscriber'
 
 interface ColumnActions {
-  onDelete: (id: string) => void
   onSendEmail: (subscriber: Subscriber) => void
+  onOpenDeleteModal: (subscriber: Subscriber) => void
 }
 
 export const createColumns = ({
-  onDelete,
   onSendEmail,
+  onOpenDeleteModal,
 }: ColumnActions): ColumnDef<Subscriber>[] => [
   {
     accessorKey: 'email',
@@ -51,7 +51,7 @@ export const createColumns = ({
           <Mail className="w-4 h-4 text-gray-600 group-hover:text-blue-600" />
         </button>
         <button
-          onClick={() => onDelete(row.original._id)}
+          onClick={() => onOpenDeleteModal(row.original)}
           className="p-2 hover:bg-red-50 rounded-lg transition-colors group"
           title="Delete"
         >

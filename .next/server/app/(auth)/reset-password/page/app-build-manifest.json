@@ -1,30 +1,23 @@
 {
   "pages": {
     "/(auth)/reset-password/page": [
-      "static/chunks/node_modules_next_dist_8db7fb1f._.js",
-      "static/chunks/src_app_favicon_ico_mjs_243aa161._.js",
-      "static/chunks/[root-of-the-server]__54567d6f._.css",
-      "static/chunks/node_modules_6a415390._.js",
-      "static/chunks/src_app_providers_tsx_9c18dcf0._.js",
-      "static/chunks/src_app_layout_tsx_0a548d63._.js",
-      "static/chunks/node_modules_c6a8d370._.js",
-      "static/chunks/src_a3ee3eaf._.js",
-      "static/chunks/src_app_not-found_tsx_3b82a5b4._.js",
-      "static/chunks/node_modules_next_dist_client_components_builtin_global-error_3b82a5b4.js",
-      "static/chunks/node_modules_tailwind-merge_dist_bundle-mjs_mjs_56b6fd65._.js",
-      "static/chunks/node_modules_zod_465ed27e._.js",
-      "static/chunks/node_modules_cfca9e9a._.js",
-      "static/chunks/src_8f17fb27._.js",
-      "static/chunks/src_app_(auth)_reset-password_page_tsx_3b82a5b4._.js",
-      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_57d40746._.js",
-      "static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
-      "static/chunks/node_modules_next_dist_compiled_next-devtools_index_a9cb0712.js",
-      "static/chunks/node_modules_next_dist_compiled_5150ccfd._.js",
-      "static/chunks/node_modules_next_dist_client_cf1d9188._.js",
-      "static/chunks/node_modules_next_dist_b0daae9a._.js",
-      "static/chunks/node_modules_@swc_helpers_cjs_b3dc30d6._.js",
-      "static/chunks/_a0ff3932._.js",
-      "static/chunks/turbopack-_cdba956c._.js"
+      "static/chunks/ff1a16fafef87110.js",
+      "static/chunks/6a7993b07cb97bb3.js",
+      "static/chunks/db4bc660ce4d8400.css",
+      "static/chunks/7ecc37032b78435c.css",
+      "static/chunks/82b0d1dc316991dd.js",
+      "static/chunks/77ab7f9cdcd0799a.js",
+      "static/chunks/463e49e1eb7d93ed.js",
+      "static/chunks/f17f2275432e1522.js",
+      "static/chunks/8d71480593e4b2ac.js",
+      "static/chunks/4f5a9952a555a23e.js",
+      "static/chunks/31ea248234786917.js",
+      "static/chunks/4c791b400ebbf74c.js",
+      "static/chunks/522518d740397639.js",
+      "static/chunks/7810da4988c46acd.js",
+      "static/chunks/811c82e360775988.js",
+      "static/chunks/47a465164401cb79.js",
+      "static/chunks/turbopack-3df82247df5b18c2.js"
     ]
   }
 }

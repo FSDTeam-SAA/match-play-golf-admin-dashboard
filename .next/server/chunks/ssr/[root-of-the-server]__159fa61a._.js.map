@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
-    {"offset": {"line": 19, "column": 0}, "map": {"version":3,"sources":["file:///home/mamun/Desktop/Projects/match-play-golf/match-play-golf-admin-dashboard/src/app/admin-dashboard/dashboard/page.tsx"],"sourcesContent":["import { auth } from '@/auth'\nimport { redirect } from 'next/navigation'\nimport { ActiveUsers } from './_components/ActiveUsers'\nimport DashboardStats from './_components/StatsCard'\nimport { MessagesSection } from './_components/Contact'\n\nexport default async function DashboardPage() {\n  const session = await auth()\n\n  if (!session?.user || session?.user?.role.toLowerCase() !== 'admin') {\n    redirect('/signin')\n  }\n\n\n\n  return (\n    <div className=\"space-y-8 \">\n      {/* Scrollable Header */}\n      <header className=\"space-y-6 max-h-screen pr-2\">\n        {/* <DashboardStats />\n        <ActiveUsers />\n        <MessagesSection /> */}\n      </header>\n    </div>\n  )\n}\n"],"names":[],"mappings":";;;;;AAAA;AACA;AAAA;;;;AAKe,eAAe;IAC5B,MAAM,UAAU,MAAM,IAAA,mHAAI;IAE1B,IAAI,CAAC,SAAS,QAAQ,SAAS,MAAM,KAAK,kBAAkB,SAAS;QACnE,IAAA,iMAAQ,EAAC;IACX;IAIA,qBACE,8OAAC;QAAI,WAAU;kBAEb,cAAA,8OAAC;YAAO,WAAU;;;;;;;;;;;AAOxB","debugId":null}}]
-}
