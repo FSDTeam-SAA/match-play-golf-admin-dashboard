@@ -3,124 +3,132 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 
+/**
+ * Header rule type
+ */
+type HeaderRule = {
+  title: string
+  desc: string
+  showBack: boolean
+  backPath?: string
+  exact?: string[]
+  match?: string[]
+}
+
 export default function UserHeader() {
   const pathname = usePathname()
   const router = useRouter()
 
-  const getPageContent = () => {
-    const rules = [
-      // Exact match — dashboard home only
-      {
-        exact: ['/admin-dashboard', '/admin-dashboard/'],
-        title: 'Welcome back, Michael',
-        desc: 'Ready to compete in your next match?',
-        showBack: false,
-      },
+  /**
+   * Header rules
+   */
+  const rules: HeaderRule[] = [
+    // Dashboard Home
+    {
+      exact: ['/admin-dashboard', '/admin-dashboard/'],
+      title: 'Welcome back, Michael',
+      desc: 'Ready to compete in your next match?',
+      showBack: false,
+    },
 
-      // Contact Management
-      {
-        match: ['/admin-dashboard/contact'],
-        title: 'Contact Management',
-        desc: 'Manage user messages and inquiries.',
-        showBack: false,
-      },
+    // Contact Management
+    {
+      match: ['/admin-dashboard/contact'],
+      title: 'Contact Management',
+      desc: 'Manage user messages and inquiries.',
+      showBack: false,
+    },
 
-      // Settings
-      {
-        match: ['/admin-dashboard/settings'],
-        title: 'Profile & Settings',
-        desc: 'Manage your account information and preferences.',
-        showBack: false,
-      },
+    // Settings
+    {
+      match: ['/admin-dashboard/settings'],
+      title: 'Profile & Settings',
+      desc: 'Manage your account information and preferences.',
+      showBack: false,
+    },
 
-      // Subscriber Management
-      {
-        match: ['/admin-dashboard/subscriber-management'],
-        title: 'Subscriber Management',
-        desc: 'Manage your subscribers.',
-        showBack: false,
-      },
+    // Subscriber Management
+    {
+      match: ['/admin-dashboard/subscriber-management'],
+      title: 'Subscriber Management',
+      desc: 'Manage your subscribers.',
+      showBack: false,
+    },
 
-      // Tournaments Management - Main
-      {
-        exact: ['/admin-dashboard/tournaments-management'],
-        title: 'Tournaments Management',
-        desc: 'Manage all golf tournaments.',
-        showBack: false,
-      },
+    // Tournaments Management (Main)
+    {
+      exact: ['/admin-dashboard/tournaments-management'],
+      title: 'Tournaments Management',
+      desc: 'Manage all golf tournaments.',
+      showBack: false,
+    },
 
-      // Create Tournament
-      {
-        exact: ['/admin-dashboard/tournaments-management/create-tournament'],
-        title: 'Create Tournament',
-        desc: 'Manage all golf tournaments',
-        showBack: true,
-        backPath: '/admin-dashboard/tournaments-management',
-      },
+    // Create Tournament
+    {
+      exact: ['/admin-dashboard/tournaments-management/create-tournament'],
+      title: 'Create Tournament',
+      desc: 'Create and manage a new tournament.',
+      showBack: true,
+      backPath: '/admin-dashboard/tournaments-management',
+    },
 
-      // Tournament Details
-      {
-        match: ['/admin-dashboard/tournaments-management/tournament-details'],
-        title: 'Tournament Details',
-        desc: 'View and manage tournament information',
-        showBack: true,
-        backPath: '/admin-dashboard/tournaments-management',
-      },
+    // Tournament Details (Dynamic ID support)
+    {
+      match: ['/admin-dashboard/tournaments-management/'],
+      title: 'Tournament Details',
+      desc: 'View and manage tournament information.',
+      showBack: true,
+      backPath: '/admin-dashboard/tournaments-management',
+    },
 
-      // Players Management - Main
-      {
-        exact: ['/admin-dashboard/players-management'],
-        title: 'Players Management',
-        desc: 'Manage all registered players.',
-        showBack: false,
-      },
+    // Players Management
+    {
+      exact: ['/admin-dashboard/players-management'],
+      title: 'Players Management',
+      desc: 'Manage all registered players.',
+      showBack: false,
+    },
 
-      // Matches Management - Main
-      {
-        exact: ['/admin-dashboard/matches-management'],
-        title: 'Matches Management',
-        desc: 'Manage all tournament matches.',
-        showBack: false,
-      },
+    // Matches Management
+    {
+      exact: ['/admin-dashboard/matches-management'],
+      title: 'Matches Management',
+      desc: 'Manage all tournament matches.',
+      showBack: false,
+    },
 
-      // Team Management - Main
-      {
-        exact: ['/admin-dashboard/team-management'],
-        title: 'Team Management',
-        desc: 'Manage all teams.',
-        showBack: false,
-      },
+    // Team Management
+    {
+      exact: ['/admin-dashboard/team-management'],
+      title: 'Team Management',
+      desc: 'Manage all teams.',
+      showBack: false,
+    },
 
-      // Article Management - Main
-      {
-        exact: ['/admin-dashboard/article-management'],
-        title: 'Article Management',
-        desc: 'Manage articles and content.',
-        showBack: false,
-      },
-    ]
+    // Article Management
+    {
+      exact: ['/admin-dashboard/article-management'],
+      title: 'Article Management',
+      desc: 'Manage articles and content.',
+      showBack: false,
+    },
+  ]
 
-    // First check exact matches
+  /**
+   * Get page content based on pathname
+   */
+  const getPageContent = (): HeaderRule => {
+    // Exact match first
     for (const rule of rules) {
       if (rule.exact && rule.exact.includes(pathname)) {
-        return {
-          title: rule.title,
-          desc: rule.desc,
-          showBack: rule.showBack,
-          backPath: rule.backPath,
-        }
+        return rule
       }
     }
 
-    // Then check startsWith matches
+    // startsWith match for dynamic routes
     for (const rule of rules) {
-      if (rule.match && rule.match.some(path => pathname.startsWith(path))) {
-        return {
-          title: rule.title,
-          desc: rule.desc,
-          showBack: rule.showBack,
-          backPath: rule.backPath,
-        }
+      if (rule.match && rule.match.some((path) => pathname.startsWith(path))) {
+        return rule
       }
     }
 
@@ -153,6 +161,7 @@ export default function UserHeader() {
           <ArrowLeft size={24} className="text-[#0C2661]" />
         </button>
       )}
+
       <div className="flex flex-col space-y-1">
         <h1 className="text-[22px] font-semibold text-[#0C2661]">{title}</h1>
         <p className="text-sm text-gray-600">{desc}</p>

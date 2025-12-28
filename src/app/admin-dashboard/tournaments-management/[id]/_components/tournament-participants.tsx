@@ -149,9 +149,6 @@ const { mutate, isPending } = useMutation({
               key={field.id}
               className="border border-gray-200 rounded-lg p-6"
             >
-              <h5 className="font-semibold mb-4">
-                Player {index + 1}
-              </h5>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <FormField
@@ -159,9 +156,9 @@ const { mutate, isPending } = useMutation({
                   name={`players.${index}.fullName`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name*</FormLabel>
+                      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Player {index + 1} Name</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:teext-[#8E938F] font-semibold leading-[150%]" placeholder="Liam Davies(Collingtree Park GC)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -173,9 +170,9 @@ const { mutate, isPending } = useMutation({
                   name={`players.${index}.email`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email*</FormLabel>
+                      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Player {index + 1} Email</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:teext-[#8E938F] font-semibold leading-[150%]" placeholder="yx04lbn@yahoo.co.uk" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -187,9 +184,9 @@ const { mutate, isPending } = useMutation({
                   name={`players.${index}.phone`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone*</FormLabel>
+                      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Player {index + 1} Phone</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:teext-[#8E938F] font-semibold leading-[150%]" placeholder="Collingtree Park GC" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -197,15 +194,15 @@ const { mutate, isPending } = useMutation({
                 />
               </div>
 
-              <div className="mt-4 max-w-sm">
+              <div className="mt-4">
                 <FormField
                   control={form.control}
                   name={`players.${index}.seed`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Seed*</FormLabel>
+                      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Seed</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:teext-[#8E938F] font-semibold leading-[150%]" placeholder="Enter Seed" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -221,7 +218,7 @@ const { mutate, isPending } = useMutation({
   name="csvFile"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Import CSV File (Optional)</FormLabel>
+      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Import CSV File (Optional)</FormLabel>
       <FormControl>
         <CsvUploadInput
           value={field.value || null}
