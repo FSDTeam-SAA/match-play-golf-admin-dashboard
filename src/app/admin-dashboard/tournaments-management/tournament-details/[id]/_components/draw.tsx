@@ -51,6 +51,7 @@ export interface Match {
   pair2Id: PairId
   comments: string
   matchPhoto: string[]
+  venue?: string
 }
 
 interface Props {
@@ -65,6 +66,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
   const [isEnterResultModalOpen, setIsEnterResultModalOpen] = useState(false)
   const [matchInfo, setMatchInfo] = useState<Match | null>(null)
   const [winner1, setWinner1] = useState<boolean>(false)
+  const [isEditMode, setIsEditMode] = useState(false)
 
   const handleOpenModal = (match: Match, winner1: boolean) => {
     setIsModalOpen(true)
@@ -77,9 +79,10 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
     setMatchInfo(match)
   }
 
-  const handleEnterResultOpen = (match: Match) => {
+  const handleEnterResultOpen = (match: Match, editMode: boolean = false) => {
     setIsEnterResultModalOpen(true)
     setMatchInfo(match)
+    setIsEditMode(editMode)
   }
 
   const handleCloseModal = () => {
@@ -92,6 +95,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
 
   const handleEnterResultClose = () => {
     setIsEnterResultModalOpen(false)
+    setIsEditMode(false)
   }
 
   const handleResultSuccess = () => {
@@ -102,7 +106,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        {[1, 2, 3].map(item => (
+        {[1, 2, 3].map((item) => (
           <div key={item} className="flex items-start gap-5 space-y-8">
             <Skeleton className="h-6 w-8 rounded-md" />
             <div className="flex-1 shadow-lg rounded-lg overflow-hidden ">
@@ -279,7 +283,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                                     month: 'short',
                                     day: 'numeric',
                                     year: 'numeric',
-                                  },
+                                  }
                                 )
                               : 'Date not set'}
                           </span>
@@ -291,7 +295,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                                   {
                                     hour: '2-digit',
                                     minute: '2-digit',
-                                  },
+                                  }
                                 )
                               : ''}
                           </span>
@@ -299,7 +303,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                         <div className="flex items-center gap-3 justify-end">
                           <div
                             className={`text-sm font-medium px-3 py-1 rounded-full ${getStatusColor(
-                              item.status,
+                              item.status
                             )}`}
                           >
                             {item.status || 'upcoming'}
@@ -318,7 +322,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                               Moments
                             </button>
                             <button
-                              onClick={() => handleEnterResultOpen(item)}
+                              onClick={() => handleEnterResultOpen(item, true)}
                               className="text-blue-600 font-semibold text-sm hover:text-blue-700 transition-colors"
                             >
                               Edit Result
@@ -326,7 +330,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                           </>
                         ) : (
                           <button
-                            onClick={() => handleEnterResultOpen(item)}
+                            onClick={() => handleEnterResultOpen(item, false)}
                             className="text-primary font-semibold text-sm hover:text-red-700 transition-colors"
                           >
                             Enter Result
@@ -372,6 +376,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
           onClose={handleEnterResultClose}
           match={matchInfo}
           onSuccess={handleResultSuccess}
+          isEditMode={isEditMode}
         />
       )}
     </div>
