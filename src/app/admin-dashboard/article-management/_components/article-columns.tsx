@@ -34,7 +34,7 @@ export const articleColumns: ColumnDef<Article>[] = [
 
           {/* Title */}
           <div
-            className="max-w-[200px] truncate font-medium text-sm"
+            className="max-w-[200px] truncate font-medium text-base"
             title={title}
           >
             {title}

@@ -1,5 +1,5 @@
-"use client";
-import { Button } from "@/components/ui/button";
+'use client'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -7,68 +7,68 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
-import { signIn } from "next-auth/react";
-import { Spinner } from "@/components/ui/spinner";
-import { toast } from "sonner";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import z from 'zod'
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
+import { signIn } from 'next-auth/react'
+import { Spinner } from '@/components/ui/spinner'
+import { toast } from 'sonner'
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6, { message: "Password should be 6 character." }),
-});
+  password: z.string().min(6, { message: 'Password should be 6 character.' }),
+})
 
-type FormType = z.infer<typeof formSchema>;
+type FormType = z.infer<typeof formSchema>
 
 const LoginForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-  });
+  })
 
   const handleSignIn = async (payload: FormType) => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
 
-      const res = await signIn("credentials", {
+      const res = await signIn('credentials', {
         email: payload.email,
         password: payload.password,
         redirect: false,
-      });
+      })
 
       if (res?.error) {
-        toast.error(res.error);
+        toast.error(res.error)
       } else {
-        toast.success("Login successful!");
-        window.location.href = "/";
+        toast.success('Login successful!')
+        window.location.href = '/'
       }
     } catch (error) {
-      console.log(`login error : ${error}`);
-      toast.error("Something went wrong!");
+      console.log(`login error : ${error}`)
+      toast.error('Something went wrong!')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   async function onSubmit(payload: FormType) {
-    await handleSignIn(payload);
+    await handleSignIn(payload)
   }
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
 
   return (
     <div>
@@ -102,7 +102,7 @@ const LoginForm = () => {
                 <FormControl>
                   <div className="relative">
                     <Input
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       placeholder="Enter your password"
                       className="h-[45px] border border-black pr-10"
                       {...field}
@@ -127,7 +127,7 @@ const LoginForm = () => {
 
           <div className="flex items-center justify-end">
             <div>
-              <Link href={"/forgot-password"}>
+              <Link href={'/forgot-password'}>
                 <h4 className="underline">Forgot Password?</h4>
               </Link>
             </div>
@@ -152,17 +152,8 @@ const LoginForm = () => {
           </Button>
         </form>
       </Form>
-
-      <div>
-        <h3 className="text-center mt-5">
-          Don’t have an account?{" "}
-          <Link href={"/sign-up"}>
-            <span className="font-semibold hover:underline">Sign Up</span>
-          </Link>
-        </h3>
-      </div>
     </div>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

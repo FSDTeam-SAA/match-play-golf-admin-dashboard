@@ -19,7 +19,7 @@ export const createColumns = ({
     accessorKey: 'email',
     header: 'Email Address',
     cell: ({ row }) => (
-      <div className="text-sm text-gray-900">{row.original.email}</div>
+      <div className="text-base text-gray-900">{row.original.email}</div>
     ),
   },
   {
@@ -28,7 +28,7 @@ export const createColumns = ({
     cell: ({ row }) => {
       const date = new Date(row.original.createdAt)
       return (
-        <div className="text-sm text-gray-600">
+        <div className="text-base text-gray-600">
           {date.toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',

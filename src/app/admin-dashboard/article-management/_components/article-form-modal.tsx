@@ -13,6 +13,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -38,6 +45,8 @@ const ARTICLE_TYPES = [
   'Draft',
 ]
 
+const ARTICLE_STATUS = ['draft', 'published']
+
 export function ArticleFormModal({
   mode,
   article,
@@ -51,6 +60,7 @@ export function ArticleFormModal({
     title: '',
     description: '',
     type: 'Golf Ball',
+    status: 'draft',
   })
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>('')
@@ -68,6 +78,7 @@ export function ArticleFormModal({
         title: article.title,
         description: article.description,
         type: article.type,
+        status: article.status || 'draft',
       })
       setImagePreview(article.coverImage)
     } else {
@@ -75,6 +86,7 @@ export function ArticleFormModal({
         title: '',
         description: '',
         type: 'Golf Ball',
+        status: 'draft',
       })
       setImagePreview('')
     }
@@ -161,19 +173,43 @@ export function ArticleFormModal({
           {/* Type */}
           <div className="space-y-1.5">
             <Label htmlFor="type">Type</Label>
-            <select
-              id="type"
+            <Select
               value={formData.type}
-              onChange={e => setFormData({ ...formData, type: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-              required
+              onValueChange={value => setFormData({ ...formData, type: value })}
             >
-              {ARTICLE_TYPES.map(type => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                {ARTICLE_TYPES.map(type => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Status */}
+          <div className="space-y-1.5">
+            <Label htmlFor="status">Status</Label>
+            <Select
+              value={formData.status}
+              onValueChange={value =>
+                setFormData({ ...formData, status: value })
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                {ARTICLE_STATUS.map(status => (
+                  <SelectItem key={status} value={status}>
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Description */}

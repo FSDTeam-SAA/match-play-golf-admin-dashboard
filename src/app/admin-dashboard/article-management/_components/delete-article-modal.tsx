@@ -61,7 +61,7 @@ export function DeleteArticleModal({
           Are you sure you want to delete the article{' '}
           <span className="font-semibold">&quot;{articleTitle}&quot;</span>?
         </DialogDescription>
-        <DialogFooter className="flex gap-2 sm:gap-0">
+        <DialogFooter className="flex gap-5">
           <Button
             type="button"
             variant="outline"
@@ -72,7 +72,7 @@ export function DeleteArticleModal({
           </Button>
           <Button
             type="button"
-            variant="destructive"
+            variant="default"
             onClick={handleDelete}
             disabled={isPending}
           >

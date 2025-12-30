@@ -24,7 +24,7 @@
     "@tiptap/extension-placeholder": "^3.12.1",
     "@tiptap/extension-text-align": "^3.12.1",
     "@tiptap/extension-text-style": "^3.12.1",
-    "@tiptap/extension-underline": "^3.4.1",
+    "@tiptap/extension-underline": "^3.14.0",
     "@tiptap/react": "^3.12.1",
     "@tiptap/starter-kit": "^3.12.1",
     "axios": "^1.12.2",

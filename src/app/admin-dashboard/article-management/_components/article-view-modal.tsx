@@ -27,7 +27,7 @@ export function ArticleViewModal({
   onOpenChange,
 }: ArticleViewModalProps) {
   const { data: session } = useSession()
-  const accessToken = session?.user?.accessToken || ''
+  const accessToken = session?.user?.accessToken ?? ''
 
   const { data, isLoading } = useGetSingleArticle(
     open ? articleId : undefined,
@@ -50,51 +50,71 @@ export function ArticleViewModal({
         ) : article ? (
           <div className="space-y-6">
             {/* Cover Image */}
-            <div className="relative w-full h-64 rounded-lg overflow-hidden">
-              <Image
-                src={article.coverImage}
-                alt={article.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            {/* Title and Type */}
-            <div className="space-y-2">
-              <div className="flex items-start justify-between gap-4">
-                <h2 className="text-2xl font-bold">{article.title}</h2>
-                <Badge className="bg-blue-100 text-blue-800">
-                  {article.type}
-                </Badge>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-2">
-                Description
-              </h3>
-              <div
-                className="prose max-w-none"
-                dangerouslySetInnerHTML={{ __html: article.description }}
-              />
-            </div>
-
-            {/* Created By */}
-            <div className="flex items-center gap-3 pt-4 border-t">
-              <div className="relative h-10 w-10 rounded-full overflow-hidden">
+            {article?.coverImage && (
+              <div className="relative w-full h-64 rounded-lg overflow-hidden">
                 <Image
-                  src={article.createdBy.profileImage}
-                  alt={article.createdBy.fullName}
+                  src={article?.coverImage}
+                  alt={article?.title ?? 'Article cover'}
                   fill
                   className="object-cover"
                 />
               </div>
+            )}
+
+            {/* Title and Type */}
+            <div className="space-y-2">
+              <div className="flex items-start justify-between gap-4">
+                <h2 className="text-2xl font-bold">
+                  {article?.title ?? 'Untitled Article'}
+                </h2>
+                {article?.type && (
+                  <Badge className="bg-blue-100 text-blue-800">
+                    {article?.type}
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            {/* Description */}
+            {article?.description && (
               <div>
-                <p className="font-medium">{article.createdBy.fullName}</p>
+                <h3 className="text-sm font-medium text-gray-500 mb-2">
+                  Description
+                </h3>
+                <div
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: article?.description ?? '',
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Created By */}
+            <div className="flex items-center gap-3 pt-4 border-t">
+              {article?.createdBy?.profileImage && (
+                <div className="relative h-10 w-10 rounded-full overflow-hidden">
+                  <Image
+                    src={article?.createdBy?.profileImage}
+                    alt={article?.createdBy?.fullName ?? 'Author'}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
+
+              <div>
+                <p className="font-medium">
+                  {article?.createdBy?.fullName ?? 'Unknown Author'}
+                </p>
                 <p className="text-sm text-gray-500">
-                  {article.createdBy.role} •{' '}
-                  {format(new Date(article.createdAt), 'MMM dd, yyyy')}
+                  {article?.createdBy?.role ?? 'Role unknown'}
+                  {article?.createdAt && (
+                    <>
+                      {' '}
+                      • {format(new Date(article?.createdAt), 'MMM dd, yyyy')}
+                    </>
+                  )}
                 </p>
               </div>
             </div>

@@ -61,7 +61,7 @@ export function DeleteContactModal({
           Are you sure you want to delete contact from{' '}
           <span className="font-semibold">{contactName}</span>?
         </DialogDescription>
-        <DialogFooter className="flex gap-2 sm:gap-0">
+        <DialogFooter className="flex gap-8 sm:gap-0">
           <Button
             type="button"
             variant="outline"
@@ -75,6 +75,7 @@ export function DeleteContactModal({
             variant="destructive"
             onClick={handleDelete}
             disabled={isPending}
+            className="border border-white text-white bg-red-700"
           >
             {isPending ? (
               <>
