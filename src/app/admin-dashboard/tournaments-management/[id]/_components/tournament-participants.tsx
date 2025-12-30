@@ -149,9 +149,12 @@ const { mutate, isPending } = useMutation({
               key={field.id}
               className="border border-gray-200 rounded-lg p-6"
             >
+<<<<<<< HEAD
               <h5 className="font-semibold mb-4">
                 Player {index + 1}
               </h5>
+=======
+>>>>>>> origin/main
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <FormField
@@ -159,9 +162,15 @@ const { mutate, isPending } = useMutation({
                   name={`players.${index}.fullName`}
                   render={({ field }) => (
                     <FormItem>
+<<<<<<< HEAD
                       <FormLabel>Full Name*</FormLabel>
                       <FormControl>
                         <Input {...field} />
+=======
+                      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Player {index + 1} Name</FormLabel>
+                      <FormControl>
+                        <Input className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:teext-[#8E938F] font-semibold leading-[150%]" placeholder="Liam Davies(Collingtree Park GC)" {...field} />
+>>>>>>> origin/main
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -173,9 +182,15 @@ const { mutate, isPending } = useMutation({
                   name={`players.${index}.email`}
                   render={({ field }) => (
                     <FormItem>
+<<<<<<< HEAD
                       <FormLabel>Email*</FormLabel>
                       <FormControl>
                         <Input {...field} />
+=======
+                      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Player {index + 1} Email</FormLabel>
+                      <FormControl>
+                        <Input className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:teext-[#8E938F] font-semibold leading-[150%]" placeholder="yx04lbn@yahoo.co.uk" {...field} />
+>>>>>>> origin/main
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -187,9 +202,15 @@ const { mutate, isPending } = useMutation({
                   name={`players.${index}.phone`}
                   render={({ field }) => (
                     <FormItem>
+<<<<<<< HEAD
                       <FormLabel>Phone*</FormLabel>
                       <FormControl>
                         <Input {...field} />
+=======
+                      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Player {index + 1} Phone</FormLabel>
+                      <FormControl>
+                        <Input className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:teext-[#8E938F] font-semibold leading-[150%]" placeholder="Collingtree Park GC" {...field} />
+>>>>>>> origin/main
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -197,15 +218,25 @@ const { mutate, isPending } = useMutation({
                 />
               </div>
 
+<<<<<<< HEAD
               <div className="mt-4 max-w-sm">
+=======
+              <div className="mt-4">
+>>>>>>> origin/main
                 <FormField
                   control={form.control}
                   name={`players.${index}.seed`}
                   render={({ field }) => (
                     <FormItem>
+<<<<<<< HEAD
                       <FormLabel>Seed*</FormLabel>
                       <FormControl>
                         <Input {...field} />
+=======
+                      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Seed</FormLabel>
+                      <FormControl>
+                        <Input className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:teext-[#8E938F] font-semibold leading-[150%]" placeholder="Enter Seed" {...field} />
+>>>>>>> origin/main
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -221,7 +252,11 @@ const { mutate, isPending } = useMutation({
   name="csvFile"
   render={({ field }) => (
     <FormItem>
+<<<<<<< HEAD
       <FormLabel>Import CSV File (Optional)</FormLabel>
+=======
+      <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">Import CSV File (Optional)</FormLabel>
+>>>>>>> origin/main
       <FormControl>
         <CsvUploadInput
           value={field.value || null}

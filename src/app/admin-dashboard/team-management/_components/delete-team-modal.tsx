@@ -72,10 +72,16 @@ export function DeleteTeamModal({
           </Button>
           <Button
             type="button"
+<<<<<<< HEAD
             variant="default"
             onClick={handleDelete}
             disabled={isPending}
             className="bg-red-600"
+=======
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isPending}
+>>>>>>> origin/main
           >
             {isPending ? (
               <>
