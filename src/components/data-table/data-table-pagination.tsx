@@ -19,7 +19,7 @@ export function DataTablePagination({
   onPageChange,
   totalItems,
 }: DataTablePaginationProps) {
-  // 🔴 Hide pagination if total pages are 2 or less
+  //  Hide pagination if total pages are 2 or less
   // if (totalPages <= 2) return null
 
   const canGoPrevious = currentPage > 1
