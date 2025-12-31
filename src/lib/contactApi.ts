@@ -36,11 +36,6 @@ export const useGetContacts = (accessToken: string, page = 1, limit = 10) => {
     enabled: !!accessToken,
   })
 }
-<<<<<<< HEAD
-
-=======
-//dasjkfas
->>>>>>> origin/main
 // ==================== GET SINGLE CONTACT ====================
 export const useGetSingleContact = (
   contactId?: string,

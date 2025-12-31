@@ -1,25 +1,25 @@
 import type { Config } from 'tailwindcss'
-import defaultTheme from 'tailwindcss/defaultTheme'
-import tailwindcssAnimate from 'tailwindcss-animate'
 
 const config: Config = {
   darkMode: 'class',
-<<<<<<< HEAD
-  content: ['./src/**/*.{ts,tsx}'],
-=======
-  content: [
-    './src/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-  ],
->>>>>>> origin/main
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['var(--font-inter)', ...defaultTheme.fontFamily.sans],
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      colors: {
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        border: 'var(--border)',
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [],
 }
+
 export default config
