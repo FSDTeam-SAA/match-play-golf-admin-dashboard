@@ -32,7 +32,9 @@ export interface Tournament {
   startDate: string
   endDate: string
   createdAt: string
+  location: string
   updatedAt: string
+  totalParticipants: string
   __v: number
   playerCount: number
 }

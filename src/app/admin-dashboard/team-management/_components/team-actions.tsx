@@ -1,5 +1,3 @@
-// 📄 src/components/team/team-actions.tsx
-
 'use client'
 
 import { useState } from 'react'
@@ -21,39 +19,47 @@ export function TeamActions({ member }: TeamActionsProps) {
 
   return (
     <>
+      {/* ACTION BUTTONS */}
       <div className="flex items-center justify-center gap-2">
+        {/* VIEW */}
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setViewOpen(true)}
-          className="h-8 w-8"
+          className="h-10 w-10 [&_svg]:h-6 [&_svg]:w-6"
         >
-          <Eye className="h-4 w-4" />
+          <Eye />
         </Button>
+
+        {/* EDIT */}
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setEditOpen(true)}
-          className="h-8 w-8"
+          className="h-10 w-10 [&_svg]:h-6 [&_svg]:w-6"
         >
-          <Pencil className="h-4 w-4" />
+          <Pencil />
         </Button>
+
+        {/* DELETE */}
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setDeleteOpen(true)}
-          className="h-8 w-8 text-red-600 hover:text-red-700"
+          className="h-10 w-10 text-red-600 hover:text-red-700 [&_svg]:h-6 [&_svg]:w-6"
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 />
         </Button>
       </div>
 
+      {/* VIEW MODAL */}
       <TeamViewModal
         memberId={member._id}
         open={viewOpen}
         onOpenChange={setViewOpen}
       />
 
+      {/* EDIT MODAL */}
       <TeamFormModal
         mode="edit"
         member={member}
@@ -61,6 +67,7 @@ export function TeamActions({ member }: TeamActionsProps) {
         onOpenChange={setEditOpen}
       />
 
+      {/* DELETE MODAL */}
       <DeleteTeamModal
         memberId={member._id}
         memberName={member.memberName}

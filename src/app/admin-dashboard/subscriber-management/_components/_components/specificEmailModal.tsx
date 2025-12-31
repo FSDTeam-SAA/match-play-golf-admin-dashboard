@@ -7,6 +7,7 @@ import { X, Mail, Loader2 } from 'lucide-react'
 import { useSendSpecificEmail } from '@/lib/subscriberApi'
 import type { Subscriber } from '@/../types/subscriber'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 interface SpecificEmailModalProps {
   accessToken: string
@@ -27,7 +28,7 @@ export default function SpecificEmailModal({
 
   const handleSend = () => {
     if (!subject.trim() || !html.trim()) {
-      alert('Please fill in all fields')
+      toast.error('Please fill in all fields')
       return
     }
 
@@ -45,7 +46,7 @@ export default function SpecificEmailModal({
           }, 2000)
         },
         onError: error => {
-          alert(`Failed to send email: ${error.message}`)
+          toast.error(`Failed to send email: ${error.message}`)
         },
       },
     )

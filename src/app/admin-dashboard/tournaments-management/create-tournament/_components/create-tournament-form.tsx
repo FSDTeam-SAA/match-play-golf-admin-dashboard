@@ -205,11 +205,11 @@ const CreateTournament = () => {
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Pairs" />
+                        <SelectValue placeholder="Pair" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Single">Single</SelectItem>
-                        <SelectItem value="Pairs">Pairs</SelectItem>
+                        <SelectItem value="Pairs">Pair</SelectItem>
                         <SelectItem value="Team">Team</SelectItem>
                       </SelectContent>
                     </Select>
@@ -241,6 +241,8 @@ const CreateTournament = () => {
                         <SelectItem value="32">32</SelectItem>
                         <SelectItem value="64">64</SelectItem>
                         <SelectItem value="128">128</SelectItem>
+                        <SelectItem value="128">256</SelectItem>
+                        <SelectItem value="512">512</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
