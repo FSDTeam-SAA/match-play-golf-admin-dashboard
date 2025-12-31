@@ -1,5 +1,10 @@
+<<<<<<< HEAD
+'use client'
+import { Button } from '@/components/ui/button'
+=======
 "use client";
 import { Button } from "@/components/ui/button";
+>>>>>>> origin/main
 import {
   Form,
   FormControl,
@@ -7,6 +12,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+<<<<<<< HEAD
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import z from 'zod'
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
+import { signIn } from 'next-auth/react'
+import { Spinner } from '@/components/ui/spinner'
+import { toast } from 'sonner'
+
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6, { message: 'Password should be 6 character.' }),
+})
+
+type FormType = z.infer<typeof formSchema>
+
+const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+=======
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,10 +58,49 @@ type FormType = z.infer<typeof formSchema>;
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+>>>>>>> origin/main
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+<<<<<<< HEAD
+      email: '',
+      password: '',
+    },
+  })
+
+  const handleSignIn = async (payload: FormType) => {
+    try {
+      setIsLoading(true)
+
+      const res = await signIn('credentials', {
+        email: payload.email,
+        password: payload.password,
+        redirect: false,
+      })
+
+      if (res?.error) {
+        toast.error(res.error)
+      } else {
+        toast.success('Login successful!')
+        window.location.href = '/'
+      }
+    } catch (error) {
+      console.log(`login error : ${error}`)
+      toast.error('Something went wrong!')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function onSubmit(payload: FormType) {
+    await handleSignIn(payload)
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
+=======
       email: "",
       password: "",
     },
@@ -69,6 +137,7 @@ const LoginForm = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+>>>>>>> origin/main
 
   return (
     <div>
@@ -102,7 +171,11 @@ const LoginForm = () => {
                 <FormControl>
                   <div className="relative">
                     <Input
+<<<<<<< HEAD
+                      type={showPassword ? 'text' : 'password'}
+=======
                       type={showPassword ? "text" : "password"}
+>>>>>>> origin/main
                       placeholder="Enter your password"
                       className="h-[45px] border border-black pr-10"
                       {...field}
@@ -127,7 +200,11 @@ const LoginForm = () => {
 
           <div className="flex items-center justify-end">
             <div>
+<<<<<<< HEAD
+              <Link href={'/forgot-password'}>
+=======
               <Link href={"/forgot-password"}>
+>>>>>>> origin/main
                 <h4 className="underline">Forgot Password?</h4>
               </Link>
             </div>
@@ -152,6 +229,13 @@ const LoginForm = () => {
           </Button>
         </form>
       </Form>
+<<<<<<< HEAD
+    </div>
+  )
+}
+
+export default LoginForm
+=======
 
       <div>
         <h3 className="text-center mt-5">
@@ -166,3 +250,4 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+>>>>>>> origin/main

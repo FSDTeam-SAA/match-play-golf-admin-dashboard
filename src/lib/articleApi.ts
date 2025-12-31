@@ -68,6 +68,10 @@ export const useCreateArticle = (accessToken: string) => {
       formData.append('title', data.title)
       formData.append('description', data.description)
       formData.append('type', data.type)
+<<<<<<< HEAD
+      formData.append('status', data.status)
+=======
+>>>>>>> origin/main
       if (data.coverImage instanceof File) {
         formData.append('coverImage', data.coverImage)
       }
@@ -103,6 +107,10 @@ export const useUpdateArticle = (accessToken: string) => {
       formData.append('title', data.title)
       formData.append('description', data.description)
       formData.append('type', data.type)
+<<<<<<< HEAD
+      formData.append('status', data.status)
+=======
+>>>>>>> origin/main
       if (data.coverImage instanceof File) {
         formData.append('coverImage', data.coverImage)
       }

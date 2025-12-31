@@ -1,3 +1,14 @@
+<<<<<<< HEAD
+'use client'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+import { Button } from '@/components/ui/button'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
+=======
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -7,6 +18,7 @@ import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { useEffect } from "react"
 import { toast } from "sonner";
+>>>>>>> origin/main
 import {
   Form,
   FormControl,
@@ -14,6 +26,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+<<<<<<< HEAD
+} from '@/components/ui/form'
+import { TournamentResponseData } from './single-tournament-data-type'
+import { CalendarIcon } from 'lucide-react'
+import { Calendar } from '@/components/ui/calendar'
+import { format } from 'date-fns'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useSession } from 'next-auth/react'
+=======
 } from "@/components/ui/form"
 import { TournamentResponseData } from "./single-tournament-data-type"
 import { CalendarIcon } from "lucide-react"
@@ -21,24 +42,130 @@ import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+>>>>>>> origin/main
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+<<<<<<< HEAD
+} from '@/components/ui/popover'
+=======
 } from "@/components/ui/popover";
+>>>>>>> origin/main
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+<<<<<<< HEAD
+} from '@/components/ui/select'
+=======
 } from "@/components/ui/select";
+>>>>>>> origin/main
 
 const formSchema = z.object({
   rememberEmail: z.string().optional(),
   rounds: z.array(
     z.object({
       date: z.date().nullable(),
+<<<<<<< HEAD
+    }),
+  ),
+})
+
+const TournamentRounds = (data: {
+  data: TournamentResponseData & {
+    rememberEmail?: number
+    totalRounds?: number
+  }
+}) => {
+  const tournamentId = (data?.data as unknown as { _id: string })?._id
+
+  console.log(data?.data)
+  const session = useSession()
+  const token = (session?.data?.user as { accessToken: string })?.accessToken
+  console.log(token)
+  const queryClient = useQueryClient()
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      rememberEmail: '',
+      rounds: [],
+    },
+  })
+
+  console.log(data?.data)
+
+  useEffect(() => {
+    if (!data?.data) return
+
+    const totalRounds = data.data.totalRounds ?? 0
+
+    const existingRounds = data.data.rounds ?? []
+
+    form.reset({
+      rememberEmail: Number(data?.data?.rememberEmail ?? 5).toString(),
+      rounds: Array.from({ length: totalRounds }, (_, index) => ({
+        date: existingRounds[index]?.date
+          ? new Date(existingRounds[index].date)
+          : null,
+      })),
+    })
+  }, [data, form])
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['tournament-details', tournamentId],
+    mutationFn: async (payload: {
+      rememberEmail: string
+      rounds: { roundName: string; date: string | null }[]
+    }) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        },
+      )
+      return res.json()
+    },
+    onSuccess: data => {
+      if (!data?.success) {
+        toast.error(data?.message || 'Something went wrong')
+        return
+      }
+      toast.success(data?.message || 'Tournament updated successfully')
+      queryClient.invalidateQueries({ queryKey: ['single-tournament'] })
+    },
+  })
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const payload = {
+      rememberEmail: values.rememberEmail || '',
+      rounds: values.rounds.map((round, index) => ({
+        roundName: `Round ${index + 1}`,
+        date: round.date ? format(round.date, 'yyyy-MM-dd') : null,
+      })),
+    }
+
+    mutate(payload)
+  }
+
+  return (
+    <div>
+      <h4 className="text-lg md:text-xl font-semibold text-[#181818] leading-[120%]">
+        Reminder Emails Days Before
+      </h4>
+      <p className="text-base text-[#181818] leading-[150%] font-normal pt-2">
+        Please enter the number of days before the round deadline for sending a
+        reminder email to those who have not played their match.
+      </p>
+=======
     })
   ),
 });
@@ -131,11 +258,15 @@ function onSubmit(values: z.infer<typeof formSchema>) {
     <div>
       <h4 className="text-lg md:text-xl font-semibold text-[#181818] leading-[120%]">Reminder Emails Days Before</h4>
       <p className="text-base text-[#181818] leading-[150%] font-normal pt-2">Please enter the number of days before the round deadline for sending a reminder email to those who have not played their match.</p>
+>>>>>>> origin/main
 
       <div className="pt-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/main
             <FormField
               control={form.control}
               name="rememberEmail"
@@ -145,10 +276,14 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                     Reminder
                   </FormLabel>
                   <FormControl>
+<<<<<<< HEAD
+                    <Select value={field.value} onValueChange={field.onChange}>
+=======
                     <Select
                       value={field.value}
                       onValueChange={field.onChange}
                     >
+>>>>>>> origin/main
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="5 Days Later" />
                       </SelectTrigger>
@@ -173,9 +308,14 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                 Round Deadlines
               </h4>
 
+<<<<<<< HEAD
+              {form.watch('rounds')?.map((_, index) => (
+                <div key={index} className="space-y-2 py-2">
+=======
               {form.watch("rounds")?.map((_, index) => (
                 <div key={index} className="space-y-2 py-2">
 
+>>>>>>> origin/main
                   {/* Deadline Date */}
                   <FormField
                     control={form.control}
@@ -188,12 +328,23 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                             <FormControl>
                               <Button
                                 variant="outline"
+<<<<<<< HEAD
+                                className={`w-full justify-start text-left h-12 ${
+                                  !field.value && 'text-muted-foreground'
+                                }`}
+                              >
+                                {field.value instanceof Date &&
+                                !isNaN(field.value.getTime())
+                                  ? format(field.value, 'yyyy-MM-dd')
+                                  : 'mm/dd/yyyy'}
+=======
                                 className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
                                   }`}
                               >
                                 {field.value instanceof Date && !isNaN(field.value.getTime())
                                   ? format(field.value, "yyyy-MM-dd")
                                   : "mm/dd/yyyy"}
+>>>>>>> origin/main
                                 <CalendarIcon className="ml-auto h-4 w-4" />
                               </Button>
                             </FormControl>
@@ -203,7 +354,11 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                             <Calendar
                               mode="single"
                               selected={field.value ?? undefined}
+<<<<<<< HEAD
+                              onSelect={date => field.onChange(date ?? null)}
+=======
                               onSelect={(date) => field.onChange(date ?? null)}
+>>>>>>> origin/main
                               initialFocus
                             />
                           </PopoverContent>
@@ -214,6 +369,29 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                   />
                 </div>
               ))}
+<<<<<<< HEAD
+            </div>
+            {/* Buttons */}
+            <div className="flex justify-end gap-6 pt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => form.reset()}
+                className="h-[49px] text-[#F2415A] text-lg font-medium leading-[150%] border-[1px] border-[#F2415A] rounded-[8px] py-3 px-16"
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="h-[49px] bg-gradient-to-b from-[#DF1020] to-[#310000]
+            hover:from-[#310000] hover:to-[#DF1020]
+            transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-20"
+              >
+                {isPending ? 'Adding...' : 'Add'}
+              </Button>
+            </div>
+=======
 
             </div>
              {/* Buttons */}
@@ -236,6 +414,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
               {isPending ? "Adding..." : "Add"}
             </Button>
           </div>
+>>>>>>> origin/main
           </form>
         </Form>
       </div>
@@ -243,4 +422,8 @@ function onSubmit(values: z.infer<typeof formSchema>) {
   )
 }
 
+<<<<<<< HEAD
 export default TournamentRounds
+=======
+export default TournamentRounds
+>>>>>>> origin/main

@@ -1,0 +1,26 @@
+0000000000000000000000000000000000000000 b196e15c0ed5054d7bd533860972c16d0376d305 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764902692 +0600	commit (initial): first commit
+b196e15c0ed5054d7bd533860972c16d0376d305 0000000000000000000000000000000000000000 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764902692 +0600	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 b196e15c0ed5054d7bd533860972c16d0376d305 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764902692 +0600	Branch: renamed refs/heads/master to refs/heads/main
+b196e15c0ed5054d7bd533860972c16d0376d305 a14b92e7b80310b515b2b59ec1d3b96ec5e61940 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764904962 +0600	commit: first commit
+a14b92e7b80310b515b2b59ec1d3b96ec5e61940 0000000000000000000000000000000000000000 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764904962 +0600	Branch: renamed refs/heads/main to refs/heads/main
+a14b92e7b80310b515b2b59ec1d3b96ec5e61940 a14b92e7b80310b515b2b59ec1d3b96ec5e61940 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764904962 +0600	Branch: renamed refs/heads/main to refs/heads/main
+a14b92e7b80310b515b2b59ec1d3b96ec5e61940 dd4d991179267e8ac3cb18327188f7fa4ff7bef7 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764904985 +0600	commit: second commit
+dd4d991179267e8ac3cb18327188f7fa4ff7bef7 dd4d991179267e8ac3cb18327188f7fa4ff7bef7 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764910866 +0600	checkout: moving from main to mamun
+dd4d991179267e8ac3cb18327188f7fa4ff7bef7 8550e392f73a48a43ba246460e7511b7bd0b8d23 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764910885 +0600	commit: commit from mamun
+8550e392f73a48a43ba246460e7511b7bd0b8d23 4f4aa253b45ca219a2ef06a2669cc350cca8e285 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764915710 +0600	commit: complete the contact management page
+4f4aa253b45ca219a2ef06a2669cc350cca8e285 6dc5aa84c67dc174b07fd998027a3352911cfa16 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764917961 +0600	commit: fix the table contact
+6dc5aa84c67dc174b07fd998027a3352911cfa16 532fe20a688f18cc514644ae212b3d8351e1a1e0 Mamun-Hossain-Dev <mh4559641@gmail.com> 1764928988 +0600	commit: article management completed
+532fe20a688f18cc514644ae212b3d8351e1a1e0 fba4b3ba57a440cb7df70ca94169548a610d10db Mamun-Hossain-Dev <mh4559641@gmail.com> 1764931175 +0600	commit: team management complete
+fba4b3ba57a440cb7df70ca94169548a610d10db 846bfe1cf586e66cf5b5cff5be536730367f3b6c Mamun-Hossain-Dev <mh4559641@gmail.com> 1764989758 +0600	pull origin main: Fast-forward
+846bfe1cf586e66cf5b5cff5be536730367f3b6c 846bfe1cf586e66cf5b5cff5be536730367f3b6c Mamun-Hossain-Dev <mh4559641@gmail.com> 1764989806 +0600	checkout: moving from mamun to mamun
+846bfe1cf586e66cf5b5cff5be536730367f3b6c 846bfe1cf586e66cf5b5cff5be536730367f3b6c Mamun-Hossain-Dev <mh4559641@gmail.com> 1764989853 +0600	checkout: moving from mamun to mamun
+846bfe1cf586e66cf5b5cff5be536730367f3b6c 1414d491acb88af48dca1e96c5f5be83541e9dc5 Mamun-Hossain-Dev <mh4559641@gmail.com> 1766384184 +0600	commit: complete the subscriber management
+1414d491acb88af48dca1e96c5f5be83541e9dc5 45057068607b0184490a9a98e78c9c3fcebd5b73 Mamun-Hossain-Dev <mh4559641@gmail.com> 1766716372 +0600	pull origin main: Fast-forward
+45057068607b0184490a9a98e78c9c3fcebd5b73 a22fd0c2609bdc24ec6261eb31f1c6e905574efa Mamun-Hossain-Dev <mh4559641@gmail.com> 1766723971 +0600	commit: complete the tournaments, players and matches pages
+a22fd0c2609bdc24ec6261eb31f1c6e905574efa 359bd1dd3af4883898244ae52bc2f4127c24b445 Mamun-Hossain-Dev <mh4559641@gmail.com> 1766726076 +0600	commit: complete the dashboard overview page
+359bd1dd3af4883898244ae52bc2f4127c24b445 a7697a86bdd8a59d0ed580f7b72def413e2dc977 Mamun-Hossain-Dev <mh4559641@gmail.com> 1766827689 +0600	commit: deploy to vercel
+a7697a86bdd8a59d0ed580f7b72def413e2dc977 b3ede6cf89ebf0cc4635c5ae05d34cdd0b98eea8 Mamun-Hossain-Dev <mh4559641@gmail.com> 1766828211 +0600	commit: deploy to vercel sdfsd
+b3ede6cf89ebf0cc4635c5ae05d34cdd0b98eea8 9604510976792c0acd2b2b9b4e3850fd3b21901c Mamun-Hossain-Dev <mh4559641@gmail.com> 1766831526 +0600	commit: nextjs 14 down-graded
+9604510976792c0acd2b2b9b4e3850fd3b21901c 951454be9587da886ca0e775c82abf5f987d98a0 Mamun-Hossain-Dev <mh4559641@gmail.com> 1766831611 +0600	commit: dfsdf
+951454be9587da886ca0e775c82abf5f987d98a0 20d09c9f705e1bcdde290d80a95929e1eb1debf8 Mamun-Hossain-Dev <mh4559641@gmail.com> 1766831730 +0600	commit: Remove .next from git and add to gitignore
+20d09c9f705e1bcdde290d80a95929e1eb1debf8 211eb9e3f1fe7f1b791665611bc2fe6bc183731a Mamun-Hossain-Dev <mh4559641@gmail.com> 1766832035 +0600	commit: Remove .next folder and update .gitignore

@@ -1,4 +1,14 @@
+<<<<<<< HEAD
+# .gitignore file
+.next/
+node_modules/
+.env
+.env.local
+.DS_Store
+*.log
+=======
 node_modules
 .env
 .env.local
 .next
+>>>>>>> origin/main

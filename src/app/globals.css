@@ -1,6 +1,17 @@
+<<<<<<< HEAD
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Animate CSS */
+/* @import 'tw-animate-css'; */
+
+/* Custom dark variant (Tailwind 3.4+ supported) */
+=======
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+>>>>>>> origin/main
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -113,11 +124,18 @@
 }
 
 @layer base {
+<<<<<<< HEAD
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-open-sans), sans-serif;
+=======
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+>>>>>>> origin/main
   }
 }
 
@@ -164,16 +182,23 @@
   color: #df1020;
 }
 
+<<<<<<< HEAD
+=======
 body {
   font-family: var(--font-open-sans), sans-serif;
 }
 
+>>>>>>> origin/main
 .text-primary {
   color: #df1020;
 }
 
 .border-primary {
+<<<<<<< HEAD
+  border-color: #df1020;
+=======
   color: #df1020;
+>>>>>>> origin/main
 }
 
 .bg-primary {

@@ -4,11 +4,15 @@ import tailwindcssAnimate from 'tailwindcss-animate'
 
 const config: Config = {
   darkMode: 'class',
+<<<<<<< HEAD
+  content: ['./src/**/*.{ts,tsx}'],
+=======
   content: [
     './src/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
   ],
+>>>>>>> origin/main
   theme: {
     extend: {
       fontFamily: {

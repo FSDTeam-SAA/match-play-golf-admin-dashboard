@@ -1,0 +1,15 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/FSDTeam-SAA/match-play-golf-admin-dashboard.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+[branch "mamun"]
+	vscode-merge-base = origin/main
+	gk-last-accessed = 2025-12-27T10:39:49.229Z
+	gk-last-modified = 2025-12-27T10:39:49.229Z

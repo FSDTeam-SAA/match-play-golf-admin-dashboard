@@ -1,6 +1,8 @@
 'use client'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
+<<<<<<< HEAD
+=======
 import { create } from 'zustand'
 
 type User = {
@@ -27,6 +29,7 @@ export const useAuthStore = create<AuthStore>(set => ({
   setAuthData: data => set({ authData: data }),
   clearAuthData: () => set({ authData: null }),
 }))
+>>>>>>> origin/main
 
 export default function Home() {
   const session = useSession()

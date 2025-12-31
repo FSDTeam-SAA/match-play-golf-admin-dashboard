@@ -11,13 +11,22 @@ interface DataTablePaginationProps {
   totalItems?: number
 }
 
+<<<<<<< HEAD
+// for demo purpuse
+
+=======
+>>>>>>> origin/main
 export function DataTablePagination({
   currentPage,
   totalPages,
   onPageChange,
   totalItems,
 }: DataTablePaginationProps) {
+<<<<<<< HEAD
+  //  Hide pagination if total pages are 2 or less
+=======
   // 🔴 Hide pagination if total pages are 2 or less
+>>>>>>> origin/main
   // if (totalPages <= 2) return null
 
   const canGoPrevious = currentPage > 1
