@@ -7,10 +7,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign from '@tiptap/extension-text-align'
 import FontFamily from '@tiptap/extension-font-family'
-<<<<<<< HEAD
 import Underline from '@tiptap/extension-underline'
-=======
->>>>>>> origin/main
 import { TextStyle } from '@tiptap/extension-text-style'
 import { useEffect } from 'react'
 
@@ -52,10 +49,7 @@ const Toolbar = ({ editor }: { editor: any }) => {
       </select>
 
       <button
-<<<<<<< HEAD
         type="button"
-=======
->>>>>>> origin/main
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={`px-2 py-1 rounded ${
           editor.isActive('bold') ? 'bg-gray-200' : ''
@@ -65,10 +59,7 @@ const Toolbar = ({ editor }: { editor: any }) => {
       </button>
 
       <button
-<<<<<<< HEAD
         type="button"
-=======
->>>>>>> origin/main
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`px-2 py-1 rounded ${
           editor.isActive('italic') ? 'bg-gray-200' : ''
@@ -78,10 +69,7 @@ const Toolbar = ({ editor }: { editor: any }) => {
       </button>
 
       <button
-<<<<<<< HEAD
         type="button"
-=======
->>>>>>> origin/main
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={`px-2 py-1 rounded ${
           editor.isActive('underline') ? 'bg-gray-200' : ''
@@ -103,10 +91,7 @@ const Toolbar = ({ editor }: { editor: any }) => {
       </select>
 
       <button
-<<<<<<< HEAD
         type="button"
-=======
->>>>>>> origin/main
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={`px-2 py-1 rounded ${
           editor.isActive('bulletList') ? 'bg-gray-200' : ''
@@ -116,10 +101,7 @@ const Toolbar = ({ editor }: { editor: any }) => {
       </button>
 
       <button
-<<<<<<< HEAD
         type="button"
-=======
->>>>>>> origin/main
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={`px-2 py-1 rounded ${
           editor.isActive('orderedList') ? 'bg-gray-200' : ''
@@ -150,10 +132,7 @@ export default function TiptapEditor({ content, onChange }: TiptapEditorProps) {
       FontFamily.configure({
         types: ['textStyle'],
       }),
-<<<<<<< HEAD
       Underline,
-=======
->>>>>>> origin/main
     ],
     content,
     onUpdate: ({ editor }) => {

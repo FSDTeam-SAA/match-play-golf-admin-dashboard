@@ -13,7 +13,6 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
-<<<<<<< HEAD
 import {
   Select,
   SelectContent,
@@ -21,8 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-=======
->>>>>>> origin/main
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -48,11 +45,8 @@ const ARTICLE_TYPES = [
   'Draft',
 ]
 
-<<<<<<< HEAD
 const ARTICLE_STATUS = ['draft', 'published']
 
-=======
->>>>>>> origin/main
 export function ArticleFormModal({
   mode,
   article,
@@ -66,10 +60,7 @@ export function ArticleFormModal({
     title: '',
     description: '',
     type: 'Golf Ball',
-<<<<<<< HEAD
     status: 'draft',
-=======
->>>>>>> origin/main
   })
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>('')
@@ -87,10 +78,7 @@ export function ArticleFormModal({
         title: article.title,
         description: article.description,
         type: article.type,
-<<<<<<< HEAD
         status: article.status || 'draft',
-=======
->>>>>>> origin/main
       })
       setImagePreview(article.coverImage)
     } else {
@@ -98,10 +86,7 @@ export function ArticleFormModal({
         title: '',
         description: '',
         type: 'Golf Ball',
-<<<<<<< HEAD
         status: 'draft',
-=======
->>>>>>> origin/main
       })
       setImagePreview('')
     }
@@ -188,7 +173,6 @@ export function ArticleFormModal({
           {/* Type */}
           <div className="space-y-1.5">
             <Label htmlFor="type">Type</Label>
-<<<<<<< HEAD
             <Select
               value={formData.type}
               onValueChange={value => setFormData({ ...formData, type: value })}
@@ -226,21 +210,6 @@ export function ArticleFormModal({
                 ))}
               </SelectContent>
             </Select>
-=======
-            <select
-              id="type"
-              value={formData.type}
-              onChange={e => setFormData({ ...formData, type: e.target.value })}
-              className="w-full px-3 py-2 border rounded-md"
-              required
-            >
-              {ARTICLE_TYPES.map(type => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
->>>>>>> origin/main
           </div>
 
           {/* Description */}

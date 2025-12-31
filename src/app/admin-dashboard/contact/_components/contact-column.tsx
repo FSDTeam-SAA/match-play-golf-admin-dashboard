@@ -26,11 +26,7 @@ export const contactColumns: ColumnDef<Contact>[] = [
     cell: ({ row }) => {
       const message = row.getValue('message') as string
       return (
-<<<<<<< HEAD
         <div className="flex justify-center text-lg">
-=======
-        <div className="flex justify-center">
->>>>>>> origin/main
           <div className="max-w-[300px] truncate " title={message}>
             {message}
           </div>
