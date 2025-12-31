@@ -128,10 +128,7 @@ const PlayersManagementContainer = () => {
                   <TableCell className="flex items-center justify-start gap-2 text-base font-normal text-[#68706A] leading-[150%] py-4">
                     <div>
                       <Image
-                        src={
-                          item?.playerId?.profileImage ||
-                          '/images/common/no-user.jpeg'
-                        }
+                        src={item?.playerId?.profileImage || '/user.png'}
                         alt="Profile"
                         width={40}
                         height={40}
