@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: 'Golfko Dashboard',
   description:
     'Manage your matches, tournaments, and players all in one place.',
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({
