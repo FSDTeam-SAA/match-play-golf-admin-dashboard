@@ -1,138 +1,142 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button"
-import { useSession } from "next-auth/react"
-import { TournamentResponseData } from "./single-tournament-data-type"
-import { toast } from "sonner";
-import Link from "next/link";
+import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { useSession } from 'next-auth/react'
+import { TournamentResponseData } from './single-tournament-data-type'
+import { toast } from 'sonner'
+import Link from 'next/link'
 
 const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
-  const tournamentId = (data as unknown as { _id: string })?._id;
-  const { data: session } = useSession();
-  const token = (session?.user as { accessToken: string })?.accessToken;
+  const tournamentId = (data as unknown as { _id: string })?._id
+  const { data: session } = useSession()
+  const token = (session?.user as { accessToken: string })?.accessToken
 
-  const [emailLoading, setEmailLoading] = useState(false);
-  const [emailSuccess, setEmailSuccess] = useState(false);
-  const [eventLoading, setEventLoading] = useState(false);
-  const [eventDrawnLoading, setEventDrawnLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false)
+  const [emailSuccess, setEmailSuccess] = useState(false)
+  const [eventLoading, setEventLoading] = useState(false)
+  const [eventDrawnLoading, setEventDrawnLoading] = useState(false)
 
-
-  // handle participant invite send email 
+  // handle participant invite send email
 
   const handleSendEmails = async () => {
-    if (!tournamentId || !token) return;
+    if (!tournamentId || !token) return
 
-    setEmailLoading(true);
-    setEmailSuccess(false);
+    setEmailLoading(true)
+    setEmailSuccess(false)
 
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+        },
+      )
 
-      const result = await res.json();
+      const result = await res.json()
 
       if (!res.ok) {
-        toast.error(result?.message || "Something went wrong");
-        return;
+        toast.error(result?.message || 'Something went wrong')
+        return
       }
 
-      setEmailSuccess(true);
-      toast.success("Participant invite emails sent successfully!");
+      setEmailSuccess(true)
+      toast.success('Participant invite emails sent successfully!')
     } catch (error) {
-      toast.error("Failed to send emails");
+      toast.error('Failed to send emails')
     } finally {
-      setEmailLoading(false);
+      setEmailLoading(false)
     }
-  };
+  }
 
-
-
-  // handle event start 
+  // handle event start
 
   const handleEventStart = async () => {
-    if (!tournamentId || !token) return;
+    if (!tournamentId || !token) return
 
-    setEventLoading(true);
+    setEventLoading(true)
 
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}/event-started`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+        },
+      )
 
-      const result = await res.json();
+      const result = await res.json()
 
       if (!res.ok) {
-        toast.error(result?.message || "Something went wrong");
-        return;
+        toast.error(result?.message || 'Something went wrong')
+        return
       }
 
-      toast.success("Event started successfully!");
+      toast.success('Event started successfully!')
     } catch (error) {
-      toast.error("Failed to start event");
+      toast.error('Failed to start event')
     } finally {
-      setEventLoading(false);
+      setEventLoading(false)
     }
-  };
+  }
 
-  // handle event drawn 
+  // handle event drawn
   const handleEventDrawn = async () => {
-    if (!tournamentId || !token) return;
+    if (!tournamentId || !token) return
 
-    setEventDrawnLoading(true);
+    setEventDrawnLoading(true)
 
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}/tournament-progress`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+        },
+      )
 
-      const result = await res.json();
+      const result = await res.json()
 
       if (!res.ok) {
-        toast.error(result?.message || "Something went wrong");
-        return;
+        toast.error(result?.message || 'Something went wrong')
+        return
       }
 
-      toast.success("Event Drawn successfully!");
+      toast.success('Event Drawn successfully!')
     } catch (error) {
-      toast.error("Failed to start event");
+      toast.error('Failed to start event')
     } finally {
-      setEventDrawnLoading(false);
+      setEventDrawnLoading(false)
     }
-  };
-
+  }
 
   return (
     <div>
-      <h3 className="text-lg md:text-xl lg:text-2xl text-[#181818] font-bold leading-[150%]">Create Draw</h3>
+      <h3 className="text-lg md:text-xl lg:text-2xl text-[#181818] font-bold leading-[150%]">
+        Create Draw
+      </h3>
       <ul className="py-4 md:py-5 lg:py-6">
-        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">You have 16 participants added out of 16 needed.</li>
-        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal py-3">You have 3 participants registered.</li>
-        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">You have 0 of participants seeded.</li>
+        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">
+          You have 16 participants added out of 16 needed.
+        </li>
+        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal py-3">
+          You have 3 participants registered.
+        </li>
+        <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">
+          You have 0 of participants seeded.
+        </li>
       </ul>
 
       <div className="pt-2">
@@ -144,26 +148,27 @@ const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
           className="h-[49px] bg-[#343A40] hover:bg-black/60 text-[#F8F9FA] border-none rounded-[8px]"
         >
           {emailLoading
-            ? "Sending..."
+            ? 'Sending...'
             : emailSuccess
-              ? "Emails Sent"
-              : "Send Participant Invite Emails"}
+            ? 'Emails Sent'
+            : 'Send Participant Invite Emails'}
         </Button>
-
       </div>
 
       {/* Buttons */}
       <div className="flex justify-start items-center gap-4 pt-6 pb-10 md:pb-14 lg:pb-20">
         <Button
-        onClick={handleEventDrawn}
-            disabled={eventDrawnLoading}
+          onClick={handleEventDrawn}
+          disabled={eventDrawnLoading}
           type="button"
           variant="outline"
           className="h-[49px] bg-[#FEECEE] hover:bg-[#FEECEE] text-[#8E938F] text-base font-medium leading-[150%] border-none rounded-[8px] py-3 px-5 md:px-[63px]"
         >
           Event Drawn
         </Button>
-        <Link href={`/organizer/tournaments-management/tournament-details/${tournamentId}`}>
+        <Link
+          href={`/admin-dashboard/tournaments-management/tournament-details/${tournamentId}`}
+        >
           <Button
             type="button"
             variant="outline"
@@ -178,9 +183,8 @@ const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
           type="button"
           className="h-[49px] bg-[#E5102E] hover:bg-red-700 transition-all duration-300 text-[#F7F8FA] font-bold rounded-[8px] py-3 px-5 md:px-16"
         >
-          {eventLoading ? "Starting..." : "Event Started"}
+          {eventLoading ? 'Starting...' : 'Event Started'}
         </Button>
-
       </div>
 
       {/* <div className="flex justify-start items-center gap-6 pt-6">
@@ -207,7 +211,6 @@ const TournamentDrawPage = ({ data }: { data: TournamentResponseData }) => {
           Update Even (Active)
         </Button>
       </div> */}
-
     </div>
   )
 }
