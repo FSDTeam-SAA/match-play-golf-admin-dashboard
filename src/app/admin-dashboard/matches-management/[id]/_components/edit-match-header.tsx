@@ -1,13 +1,13 @@
-import React from 'react'
-import Link from 'next/link'
+import Link from "next/link";
+import React from "react";
 
-const TournamentViewHeader = () => {
+const EditMatchHeader = () => {
   return (
     <div className="sticky top-0  z-50">
       {/* Header */}
       <div className="bg-white p-6 ">
         <h1 className="flex items-center gap-2 text-2xl lg:text-3xl font-bold text-[#181818] leading-[150%]">
-          <Link href="/organizer/tournaments-management">
+          <Link href="/organizer/matches-management">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -23,15 +23,15 @@ const TournamentViewHeader = () => {
                 stroke-linejoin="round"
               />
             </svg>
-          </Link>{' '}
-          Spring Championship 2025
+          </Link>{" "}
+          Edit Match
         </h1>
         <p className="text-sm font-normal text-[#424242] leading-[150%]">
-          View tournament bracket progression
+          Manage all golf tournaments
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TournamentViewHeader
+export default EditMatchHeader;

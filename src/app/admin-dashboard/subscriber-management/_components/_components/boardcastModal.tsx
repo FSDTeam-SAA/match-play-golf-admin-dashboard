@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 import { X, Send, Loader2 } from 'lucide-react'
 import { useBroadcastEmail } from '@/lib/subscriberApi'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 interface BroadcastModalProps {
   accessToken: string
@@ -24,7 +25,7 @@ export default function BroadcastModal({
 
   const handleSend = () => {
     if (!subject.trim() || !html.trim()) {
-      alert('Please fill in all fields')
+      toast.error('Please fill in all fields')
       return
     }
 
@@ -38,7 +39,7 @@ export default function BroadcastModal({
           }, 2000)
         },
         onError: error => {
-          alert(`Failed to send broadcast: ${error.message}`)
+          toast.error(`Failed to send broadcast: ${error.message}`)
         },
       },
     )

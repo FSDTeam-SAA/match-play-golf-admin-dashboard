@@ -5,10 +5,7 @@ export interface Article {
   title: string
   description: string
   type: string
-<<<<<<< HEAD
   status: string
-=======
->>>>>>> origin/main
   coverImage: string
   createdBy: {
     _id: string
@@ -43,9 +40,6 @@ export interface ArticleFormData {
   title: string
   description: string
   type: string
-<<<<<<< HEAD
   status: string
-=======
->>>>>>> origin/main
   coverImage: File | string
 }

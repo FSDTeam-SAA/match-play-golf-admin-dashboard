@@ -119,7 +119,7 @@ const TournamentsManagementContainer = () => {
                     {item?.tournamentName}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.billingAddress?.country}
+                    {item?.location}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
                     {moment(item?.startDate).format('MMM DD, YYYY')}
@@ -128,7 +128,7 @@ const TournamentsManagementContainer = () => {
                     {moment(item?.endDate).format('MMM DD, YYYY')}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
-                    {0}
+                    {item?.totalParticipants}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
                     <button
