@@ -45,11 +45,10 @@ const formSchema = z.object({
     message: "Sport must be at least 2 characters.",
   }),
   numberOfSeeds: z
-  .coerce
-  .number()
-  .int()
-  .min(1)
-  .optional(),
+    .coerce
+    .number()
+    .int()
+    .optional(),
 
   drawSize: z.coerce.number().pipe(z.number().min(1).int()),
 
@@ -70,7 +69,7 @@ const formSchema = z.object({
 
 const TournamentDetailsPage = (data: { data: Tournament }) => {
   console.log(data)
-  const tournamentId = (data?.data as unknown as {_id:string})?._id;
+  const tournamentId = (data?.data as unknown as { _id: string })?._id;
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   console.log(token)
@@ -109,7 +108,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
       format: data?.data?.format?.toLowerCase(),
       drawSize: Number(data?.data?.drawSize),
       location: data?.data?.location,
-      numberOfSeeds: Number(data?.data?.totalRounds),
+      numberOfSeeds: Number(data?.data?.numberOfSeeds),
       startDate: data?.data?.startDate
         ? new Date(data?.data?.startDate)
         : null,
@@ -231,7 +230,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                       onValueChange={field.onChange}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Pairs" />
+                        <SelectValue placeholder="Pair" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="single">Single</SelectItem>
@@ -267,6 +266,8 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                         <SelectItem value="32">32</SelectItem>
                         <SelectItem value="64">64</SelectItem>
                         <SelectItem value="128">128</SelectItem>
+                        <SelectItem value="256">256</SelectItem>
+                        <SelectItem value="512">512</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -279,7 +280,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
               name="numberOfSeeds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Number of Seeds *</FormLabel>
+                  <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Number of Seeds</FormLabel>
                   <FormControl>
                     <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Completed" value={String(field.value)} onChange={(e) => field.onChange(Number(e.target.value))} />
                   </FormControl>

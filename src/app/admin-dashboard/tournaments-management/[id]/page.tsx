@@ -5,8 +5,8 @@ import TournamentsDetails from './_components/tournament-tabs'
 const TournamentDetailsPage = ({ params }: { params: { id: string } }) => {
   console.log(params)
   return (
-    <div>
-      {/* <TournamentsHeader /> */}
+    <div className="pb-20">
+      {/* <TournamentsHeader/> */}
       <TournamentsDetails id={params?.id} />
     </div>
   )

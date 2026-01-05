@@ -29,6 +29,7 @@ export interface Tournament {
   // rules: any[];                // array is empty, so type as any[] (or string[] if you know)
   createdBy: CreatedBy
   billingAddress: BillingAddress
+  tournamentStatus: 'pending' | 'approved' | 'rejected'
   startDate: string
   endDate: string
   createdAt: string
