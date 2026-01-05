@@ -209,7 +209,7 @@ const CreateTournament = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Single">Single</SelectItem>
-                        <SelectItem value="Pairs">Pair</SelectItem>
+                        <SelectItem value="Pair">Pair</SelectItem>
                         <SelectItem value="Team">Team</SelectItem>
                       </SelectContent>
                     </Select>

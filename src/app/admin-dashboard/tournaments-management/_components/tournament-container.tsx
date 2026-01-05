@@ -9,12 +9,27 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import moment from 'moment'
 import { Eye, Plus, Trash, SquarePen } from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
 import DeleteModal from '@/components/modals/delete-modal'
-// import TournamentView from "./tournament-view";
 import Link from 'next/link'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useSession } from 'next-auth/react'
@@ -31,15 +46,17 @@ const TournamentsManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [search, setSearch] = useState('')
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [statusModalOpen, setStatusModalOpen] = useState(false)
   const [tournementId, setTournamentId] = useState('')
+  const [selectedStatus, setSelectedStatus] = useState<
+    'pending' | 'approved' | 'rejected'
+  >('pending')
+  const [currentTournamentId, setCurrentTournamentId] = useState('')
   const debouncedSearch = useDebounce(search, 500)
 
   const queryClient = useQueryClient()
   const session = useSession()
   const token = (session?.data?.user as { accessToken: string })?.accessToken
-  console.log(token)
-
-  console.log(search)
 
   // get tournament api
   const { data, isLoading, isError, error } = useQuery<TournamentApiResponse>({
@@ -51,6 +68,98 @@ const TournamentsManagementContainer = () => {
       return res.json()
     },
   })
+
+  // update tournament status api
+  const { mutate: updateStatus, isPending: isStatusUpdating } = useMutation({
+    mutationKey: ['update-tournament-status'],
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/approved/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ tournamentStatus: status }),
+        },
+      )
+      return res.json()
+    },
+    onSuccess: data => {
+      if (!data?.success) {
+        toast.error(data?.message || 'Failed to update status')
+        return
+      }
+      toast.success(data?.message || 'Tournament status updated successfully')
+      queryClient.invalidateQueries({ queryKey: ['tournaments'] })
+      setStatusModalOpen(false)
+    },
+    onError: () => {
+      toast.error('Failed to update tournament status')
+    },
+  })
+
+  // delete tournament api
+  const { mutate: deleteTournament } = useMutation({
+    mutationKey: ['delete-tournament'],
+    mutationFn: async (id: string) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      return res.json()
+    },
+    onSuccess: data => {
+      if (!data?.success) {
+        toast.error(data?.message || 'Something went wrong')
+        return
+      }
+      toast.success(data?.message || 'Tournament deleted successfully')
+      queryClient.invalidateQueries({ queryKey: ['tournaments'] })
+    },
+  })
+
+  const handleStatusChange = (
+    status: 'pending' | 'approved' | 'rejected',
+    tournamentId: string,
+  ) => {
+    setSelectedStatus(status)
+    setCurrentTournamentId(tournamentId)
+    setStatusModalOpen(true)
+  }
+
+  const handleConfirmStatusChange = () => {
+    if (currentTournamentId && selectedStatus) {
+      updateStatus({ id: currentTournamentId, status: selectedStatus })
+    }
+  }
+
+  const handleDelete = () => {
+    if (tournementId) {
+      deleteTournament(tournementId)
+    }
+    setDeleteModalOpen(false)
+  }
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return 'Approve'
+      case 'rejected':
+        return 'Reject'
+      case 'pending':
+        return 'Set as Pending'
+      default:
+        return status
+    }
+  }
 
   let content
 
@@ -106,6 +215,9 @@ const TournamentsManagementContainer = () => {
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Status
               </TableHead>
+              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
+                Tournament Status
+              </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4">
                 Action
               </TableHead>
@@ -132,7 +244,7 @@ const TournamentsManagementContainer = () => {
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
                     <button
-                      className={`w-[140px] h-[40px] ${
+                      className={`w-[140px] h-[40px] rounded-md ${
                         item?.status === 'Active'
                           ? 'bg-[#E6FAEE] text-[#27BE69] py-2 px-4'
                           : item?.status === 'Upcoming'
@@ -143,30 +255,57 @@ const TournamentsManagementContainer = () => {
                       {item?.status}
                     </button>
                   </TableCell>
-                  <TableCell className="flex items-center justify-center gap-6 py-4">
-                    <Link
-                      href={`/admin-dashboard/tournaments-management/${item?._id}`}
+                  <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
+                    <Select
+                      value={item?.tournamentStatus || 'pending'}
+                      onValueChange={(
+                        value: 'pending' | 'approved' | 'rejected',
+                      ) => handleStatusChange(value, item?._id)}
                     >
-                      <button className="mt-1">
-                        <SquarePen className="cursor-pointer h-5 w-5 text-[#181818]" />
+                      <SelectTrigger
+                        className={`w-[140px] h-[40px] capitalize border-none ${
+                          item?.tournamentStatus === 'approved'
+                            ? 'bg-[#E6FAEE] text-[#27BE69]'
+                            : item?.tournamentStatus === 'pending'
+                            ? 'bg-[#FEF3C7] text-[#D97706]'
+                            : 'bg-[#FEE2E2] text-[#DC2626]'
+                        }`}
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="approved">Approved</SelectItem>
+                        <SelectItem value="rejected">Rejected</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell className="py-4">
+                    <div className="flex items-center justify-center gap-6">
+                      <Link
+                        href={`/admin-dashboard/tournaments-management/${item?._id}`}
+                      >
+                        <button className="mt-1">
+                          <SquarePen className="cursor-pointer h-5 w-5 text-[#181818]" />
+                        </button>
+                      </Link>
+                      <Link
+                        href={`/admin-dashboard/tournaments-management/tournament-details/${item?._id}`}
+                      >
+                        <button className="cursor-pointer">
+                          <Eye className="h-6 w-6 text-[#181818]" />
+                        </button>
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setDeleteModalOpen(true)
+                          setTournamentId(item?._id)
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <Trash className="h-6 w-6 text-primary" />
                       </button>
-                    </Link>
-                    <Link
-                      href={`/admin-dashboard/tournaments-management/tournament-details/${item?._id}`}
-                    >
-                      <button className="cursor-pointer">
-                        <Eye className="h-6 w-6 text-[#181818]" />
-                      </button>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        setDeleteModalOpen(true)
-                        setTournamentId(item?._id)
-                      }}
-                      className="cursor-pointer"
-                    >
-                      <Trash className="h-6 w-6 text-primary" />
-                    </button>
+                    </div>
                   </TableCell>
                 </TableRow>
               )
@@ -177,40 +316,6 @@ const TournamentsManagementContainer = () => {
     )
   }
 
-  console.log(data)
-
-  // delete tournament api
-  const { mutate } = useMutation({
-    mutationKey: ['delete-tournament'],
-    mutationFn: async (id: string) => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      return res.json()
-    },
-    onSuccess: data => {
-      if (!data?.success) {
-        toast.error(data?.message || 'Something went wrong')
-        return
-      }
-      toast.success(data?.message || 'Tournament deleted successfully')
-      queryClient.invalidateQueries({ queryKey: ['tournaments'] })
-    },
-  })
-
-  const handleDelete = () => {
-    if (tournementId) {
-      mutate(tournementId)
-    }
-    setDeleteModalOpen(false)
-  }
   return (
     <div>
       {/* table container */}
@@ -258,6 +363,40 @@ const TournamentsManagementContainer = () => {
             </div>
           )}
 
+        {/* Status Change Confirmation Modal */}
+        <Dialog open={statusModalOpen} onOpenChange={setStatusModalOpen}>
+          <DialogContent className="sm:max-w-[445px]">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-semibold">
+                Confirm Status Change
+              </DialogTitle>
+              <DialogDescription className="text-base pt-2">
+                Are you sure you want to{' '}
+                {getStatusLabel(selectedStatus).toLowerCase()} this tournament?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-8 sm:gap-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setStatusModalOpen(false)}
+                disabled={isStatusUpdating}
+                className="border-[#C0C3C1]"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={handleConfirmStatusChange}
+                disabled={isStatusUpdating}
+                className="bg-[#DF1020] hover:bg-[#C00F1C]"
+              >
+                {isStatusUpdating ? 'Updating...' : 'Confirm'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         {/* delete modal  */}
         {deleteModalOpen && (
           <DeleteModal
@@ -265,7 +404,7 @@ const TournamentsManagementContainer = () => {
             onClose={() => setDeleteModalOpen(false)}
             onConfirm={handleDelete}
             title="Are You Sure?"
-            desc="Are you sure you want to delete this tournaments?"
+            desc="Are you sure you want to delete this tournament?"
           />
         )}
       </div>
