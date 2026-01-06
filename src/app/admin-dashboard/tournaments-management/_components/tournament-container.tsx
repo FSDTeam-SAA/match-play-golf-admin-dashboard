@@ -375,7 +375,7 @@ const TournamentsManagementContainer = () => {
                 {getStatusLabel(selectedStatus).toLowerCase()} this tournament?
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter className="gap-8 sm:gap-0">
+            <DialogFooter className="flex gap-4">
               <Button
                 type="button"
                 variant="outline"
@@ -385,6 +385,7 @@ const TournamentsManagementContainer = () => {
               >
                 Cancel
               </Button>
+
               <Button
                 type="button"
                 onClick={handleConfirmStatusChange}
