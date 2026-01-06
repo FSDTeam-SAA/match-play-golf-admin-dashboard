@@ -37,6 +37,8 @@ import { TournamentPlayersRoundApiResponse } from "./round-tournament-data-type"
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
+
+
 const formSchema = z.object({
   matchType: z.string().min(1, {
     message: "Match Type must be select",
@@ -47,9 +49,11 @@ const formSchema = z.object({
   player1Id: z.string().min(1, {
     message: "Player 1 must be select",
   }),
+  player1Type: z.enum(["player", "pair"]),
   player2Id: z.string().min(1, {
     message: "Player 2 must be select",
   }),
+  player2Type: z.enum(["player", "pair"]),
 
   // score: z.string().min(2, {
   //   message: "Score must be at least 2 characters.",
@@ -72,7 +76,9 @@ const CreateMatchForm = () => {
       roundId: "",
       roundName: "",
       player1Id: "",
+      player1Type: "player",
       player2Id: "",
+      player2Type: "player",
       // score: "",
       date: new Date(),
       status: "",
@@ -91,7 +97,7 @@ const CreateMatchForm = () => {
     queryKey: ["tournaments"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament`, {
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament?limit=1000`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -139,72 +145,111 @@ const CreateMatchForm = () => {
       label: r.roundName,
     })) ?? [];
 
-  const playerOptions =
-    tournamentDetails?.data?.map((item) => ({
-      value: item?.pairId?._id,
-      label: item?.pairId?.teamName,
-    })) ?? [];
+  const participantOptions =
+    tournamentDetails?.data?.map((item) => {
+      if (item.playerId) {
+        return {
+          value: item.playerId._id,
+          label: item.playerId.fullName,
+          type: "player",
+        };
+      }
+
+      if (item.pairId) {
+        return {
+          value: item.pairId._id,
+          label: item.pairId.teamName,
+          type: "pair",
+        };
+      }
+
+      return null;
+    }).filter(Boolean) ?? [];
+
 
 
   const { mutate, isPending } = useMutation({
-  mutationKey: ["add-match"],
-  mutationFn: async (values: z.infer<typeof formSchema>) => {
-    const payload: Record<string, string | Date | undefined> = {
-      ...values,
-      date:
-        values.date instanceof Date
-          ? values.date.toISOString()
-          : values.date,
-    };
+    mutationKey: ["add-match"],
 
-    // Use pair1Id/pair2Id if matchType is Pair
-    if (values.matchType === "Pair") {
-      payload.pair1Id = values.player1Id;
-      payload.pair2Id = values.player2Id;
-      delete payload.player1Id;
-      delete payload.player2Id;
-    }
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/match`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
+      const payload: Record<string, string | Date | undefined> = {
+        matchType: values.matchType,
+        tournamentId: values.tournamentId,
+        roundId: values.roundId,
+        roundName: values.roundName,
+        status: values.status,
+        date:
+          values.date instanceof Date
+            ? values.date.toISOString()
+            : values.date,
+      };
 
-    return res.json();
-  },
-  onSuccess: (data) => {
-    if (!data?.success) {
-      toast.error(data?.message || "Something went wrong");
+      // Player / Pair mapping
+      if (values.player1Type === "player") {
+        payload.player1Id = values.player1Id;
+      } else {
+        payload.pair1Id = values.player1Id;
+      }
+
+      if (values.player2Type === "player") {
+        payload.player2Id = values.player2Id;
+      } else {
+        payload.pair2Id = values.player2Id;
+      }
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/match`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      return res.json();
+    },
+
+    onSuccess: (data) => {
+      if (!data?.success) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      }
+      toast.success(data?.message || "Match created successfully");
+      form.reset();
+      router.push("/organizer/matches-management")
+    },
+  });
+
+  // Submit handler
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Check if players are same
+    // if (values.player1Id === values.player2Id) {
+    //   alert("Player 1 and Player 2 cannot be same");
+    //   return;
+    // }
+
+    if (
+      values.player1Id === values.player2Id &&
+      values.player1Type === values.player2Type
+    ) {
+      toast.error("Participants cannot be same");
       return;
     }
-    toast.success(data?.message || "Match created successfully");
-    form.reset();
-    router.push("/organizer/matches-management")
-  },
-});
 
-// Submit handler
-function onSubmit(values: z.infer<typeof formSchema>) {
-  // Check if players are same
-  // if (values.player1Id === values.player2Id) {
-  //   alert("Player 1 and Player 2 cannot be same");
-  //   return;
-  // }
+    // If matchType is Pair, check pair IDs
+    // if (values.matchType === "Pair" && values.player1Id === values.player2Id) {
+    //   toast.error("Pair 1 and Pair 2 cannot be same");
+    //   return;
+    // }
 
-  // If matchType is Pair, check pair IDs
-  if (values.matchType === "Pair" && values.player1Id === values.player2Id) {
-    alert("Pair 1 and Pair 2 cannot be same");
-    return;
+    mutate(values);
   }
 
-  mutate(values);
-}
 
-  
   return (
     <div className="p-6">
       <div>
@@ -228,7 +273,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                           <SelectValue placeholder="Single" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Pingle">Single</SelectItem>
+                          <SelectItem value="Single">Single</SelectItem>
                           <SelectItem value="Pair">Pair</SelectItem>
                           <SelectItem value="Team">Team</SelectItem>
                         </SelectContent>
@@ -260,7 +305,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="Select tournament" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="h-[250px] overflow-y-auto">
                         {tournamentOptions.map((t) => (
                           <SelectItem key={t.value} value={t.value}>
                             {t.label}
@@ -348,15 +393,22 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                 name="player1Id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Player 1</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange} disabled={!selectedTournamentId || detailsLoading}>
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Select player" />
+                    <FormLabel>Player / Pair 1</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={(val) => {
+                        const selected = participantOptions.find(p => p?.value === val);
+                        field.onChange(val);
+                        form.setValue("player1Type", selected?.type as "player" | "pair");
+                      }}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]">
+                        <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        {playerOptions.map((p) => (
-                          <SelectItem key={p.value} value={p.value}>
-                            {p.label}
+                        {participantOptions.map((p) => (
+                          <SelectItem key={p!.value} value={p!.value}>
+                            {p!.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -366,20 +418,28 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                 )}
               />
 
+
               <FormField
                 control={form.control}
                 name="player2Id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Player 2</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange} disabled={!selectedTournamentId || detailsLoading}>
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Select player" />
+                    <FormLabel>Player / Pair 2</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={(val) => {
+                        const selected = participantOptions.find(p => p?.value === val);
+                        field.onChange(val);
+                        form.setValue("player2Type", selected?.type as "player" | "pair");
+                      }}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]">
+                        <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        {playerOptions.map((p) => (
-                          <SelectItem key={p.value} value={p.value}>
-                            {p.label}
+                        {participantOptions.map((p) => (
+                          <SelectItem key={p!.value} value={p!.value}>
+                            {p!.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -388,6 +448,9 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                   </FormItem>
                 )}
               />
+
+
+
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -449,9 +512,11 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                           <SelectValue placeholder="Completed" />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="upcoming">Upcoming</SelectItem>
+                          <SelectItem value="in progress">In Progress</SelectItem>
                           <SelectItem value="completed">Completed</SelectItem>
-                          <SelectItem value="scheduled">scheduled</SelectItem>
-                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="cancelled">Cancelled</SelectItem>
+                          <SelectItem value="scheduled">Scheduled</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>

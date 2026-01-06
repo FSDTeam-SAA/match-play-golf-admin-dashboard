@@ -150,12 +150,10 @@ const MatchesManagementContainer = () => {
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
-                    {/* <Link
-                      href={`/admin-dashboard/matches-management/${item?._id}`}
-                    >
-                      <button className="cursor-pointer">
-                        <SquarePen />
-                      </button>
+                    {/* <Link href={`/organizer/matches-management/${item?._id}`}>
+                    <button className="cursor-pointer">
+                      <SquarePen />
+                    </button>
                     </Link> */}
                     <button
                       onClick={() => {

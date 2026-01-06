@@ -9,8 +9,10 @@ export interface TournamentPlayersRoundApiResponse {
 export interface TournamentPlayer {
   _id: string
   tournamentId: string
-  playerId: string | null
-  pairId: Pair
+  // playerId: string | null
+  // pairId: Pair
+  playerId?: Player | null
+  pairId?: Pair | null
   assignMatch: boolean
   isActive: boolean
   createdAt: string
@@ -41,17 +43,17 @@ export interface Player {
   handicap: string
 }
 
-
 export interface TournamentRound {
   _id: string
   tournamentId: string
   roundName: string
   roundNumber: number
   date: string
-  status: "Scheduled" | "Ongoing" | "Completed" | string
+  status: "scheduled" | "in progress" | "completed" | "cancelled" | string
   createdBy: string
   createdAt: string
   updatedAt: string
   __v: number
 }
+
 

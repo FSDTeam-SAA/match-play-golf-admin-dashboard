@@ -92,8 +92,8 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
 
   const DRAW_FORMAT_OPTIONS = [
     // { id: "matrix", label: "Matrix 2", value: "matrix" },
-    { id: "knockout", label: "Knockout ?", value: "knockout" },
-    { id: "teams", label: "Teams ?", value: "teams" },
+    { id: "knockout", label: "Knockout ?", value: "Knockout" },
+    { id: "teams", label: "Teams ?", value: "Teams" },
   ]
 
 
@@ -104,7 +104,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
     form.reset({
       tournamentName: data?.data?.tournamentName ?? "",
       sportName: data?.data?.sportName ?? "",
-      drawFormat: data?.data?.drawFormat?.toLowerCase(),
+      drawFormat: data?.data?.drawFormat,
       format: data?.data?.format?.toLowerCase(),
       drawSize: Number(data?.data?.drawSize),
       location: data?.data?.location,
