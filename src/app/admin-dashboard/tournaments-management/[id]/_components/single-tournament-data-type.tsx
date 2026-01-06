@@ -81,11 +81,11 @@ export interface Tournament {
   tournamentName: string
   sportName: string
   drawFormat: string
-  format: "Single" | "Pair"
+  format: "Single" | "Pair" | "Team"
   drawSize: number
   price: string
   paymentStatus: "pending" | "paid"
-  status: "scheduled" | "ongoing" | "completed"
+  status: "scheduled" | "upcoming" | "completed" | "in progress" | "cancelled"
   totalParticipants: number
   registeredPlayers: string[]
   totalRounds: number
@@ -117,7 +117,7 @@ export interface BillingAddress {
 }
 
 export interface Registration {
-  type: "Single" | "Pair"
+  type: "Single" | "Pair" | "Team"
   users: string[]
   pairs: Pair[]
 }
@@ -138,7 +138,7 @@ export interface Round {
   roundName: string
   roundNumber: number
   date: string
-  status: "Scheduled" | "Ongoing" | "Completed"
+  status: "scheduled" | "completed" | "in progress" | "cancelled"
   createdBy: string
   _id: string
   createdAt: string
