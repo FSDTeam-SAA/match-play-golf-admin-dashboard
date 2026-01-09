@@ -14,12 +14,24 @@ interface Player {
   profileImage?: string
 }
 
+interface PairInfo {
+  _id: string
+  teamName: string
+  player1: Player
+  player2: Player
+}
+
 interface Match {
   _id: string
-  player1Id: Player
-  player2Id: Player
+  matchType: 'Single' | 'Pair' | 'Team'
+  player1Id?: Player
+  player2Id?: Player
+  pair1Id?: PairInfo
+  pair2Id?: PairInfo
   player1Score?: string
   player2Score?: string
+  pair1Score?: string
+  pair2Score?: string
   date?: string
   winner?: string
   venue?: string
@@ -55,12 +67,23 @@ export default function EnterResultModal({
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([])
   const [existingPhotos, setExistingPhotos] = useState<string[]>([])
 
+  // Check if this is a Pair match
+  const isPairMatch = match?.matchType === 'Pair'
+
   // Load existing data when in edit mode
   useEffect(() => {
     if (isOpen && match && isEditMode) {
       setSelectedWinner(match.winner || '')
-      setPlayer1Score(match.player1Score || '')
-      setPlayer2Score(match.player2Score || '')
+
+      // Load scores based on match type
+      if (isPairMatch) {
+        setPlayer1Score(match.pair1Score || '')
+        setPlayer2Score(match.pair2Score || '')
+      } else {
+        setPlayer1Score(match.player1Score || '')
+        setPlayer2Score(match.player2Score || '')
+      }
+
       setLocation(match.venue || '')
       setComments(match.comments || '')
       setExistingPhotos(match.matchPhoto || [])
@@ -82,7 +105,7 @@ export default function EnterResultModal({
       setPhotoPreviews([])
       setExistingPhotos([])
     }
-  }, [isOpen, match, isEditMode])
+  }, [isOpen, match, isEditMode, isPairMatch])
 
   const updateMatchMutation = useMutation({
     mutationFn: async (formData: FormData) => {
@@ -203,20 +226,36 @@ export default function EnterResultModal({
     const score1 = parseInt(player1Score)
     const score2 = parseInt(player2Score)
 
-    if (selectedWinner === match?.player1Id?._id && score1 <= score2) {
+    // Get the correct winner ID based on match type
+    const contestant1Id = isPairMatch
+      ? match?.pair1Id?._id
+      : match?.player1Id?._id
+    const contestant2Id = isPairMatch
+      ? match?.pair2Id?._id
+      : match?.player2Id?._id
+
+    if (selectedWinner === contestant1Id && score1 <= score2) {
       toast.error('Winner score must be higher than opponent')
       return
     }
 
-    if (selectedWinner === match?.player2Id?._id && score2 <= score1) {
+    if (selectedWinner === contestant2Id && score2 <= score1) {
       toast.error('Winner score must be higher than opponent')
       return
     }
 
     // Create FormData for file upload
     const formData = new FormData()
-    formData.append('player1Score', player1Score)
-    formData.append('player2Score', player2Score)
+
+    // Add scores based on match type
+    if (isPairMatch) {
+      formData.append('pair1Score', player1Score)
+      formData.append('pair2Score', player2Score)
+    } else {
+      formData.append('player1Score', player1Score)
+      formData.append('player2Score', player2Score)
+    }
+
     formData.append('winner', selectedWinner)
     formData.append('status', 'completed')
 
@@ -229,8 +268,7 @@ export default function EnterResultModal({
       formData.append('matchPhotos', photo)
     })
 
-    // If in edit mode and there are existing photos, we might need to handle them
-    // depending on your backend implementation
+    // If in edit mode and there are existing photos
     if (isEditMode && existingPhotos.length > 0) {
       formData.append('existingPhotos', JSON.stringify(existingPhotos))
     }
@@ -239,6 +277,36 @@ export default function EnterResultModal({
   }
 
   if (!isOpen || !match) return null
+
+  // Get contestant names based on match type
+  const getContestantName = (position: 1 | 2) => {
+    if (isPairMatch) {
+      if (position === 1) {
+        return (
+          match?.pair1Id?.teamName ||
+          `${match?.pair1Id?.player1?.fullName} & ${match?.pair1Id?.player2?.fullName}` ||
+          'Team 1'
+        )
+      } else {
+        return (
+          match?.pair2Id?.teamName ||
+          `${match?.pair2Id?.player1?.fullName} & ${match?.pair2Id?.player2?.fullName}` ||
+          'Team 2'
+        )
+      }
+    } else {
+      return position === 1
+        ? match?.player1Id?.fullName || 'Player 1'
+        : match?.player2Id?.fullName || 'Player 2'
+    }
+  }
+
+  const contestant1Id = isPairMatch
+    ? match?.pair1Id?._id
+    : match?.player1Id?._id
+  const contestant2Id = isPairMatch
+    ? match?.pair2Id?._id
+    : match?.player2Id?._id
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -275,57 +343,53 @@ export default function EnterResultModal({
                   </label>
 
                   <div className="space-y-3">
-                    {/* Player 1 */}
+                    {/* Contestant 1 */}
                     <div
-                      onClick={() =>
-                        setSelectedWinner(match?.player1Id?._id || '')
-                      }
+                      onClick={() => setSelectedWinner(contestant1Id || '')}
                       className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                        selectedWinner === match?.player1Id?._id
+                        selectedWinner === contestant1Id
                           ? 'border-green-600 bg-green-50'
                           : 'border-gray-300 hover:border-gray-400'
                       }`}
                     >
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                          selectedWinner === match?.player1Id?._id
+                          selectedWinner === contestant1Id
                             ? 'border-green-600 bg-green-600'
                             : 'border-gray-300'
                         }`}
                       >
-                        {selectedWinner === match?.player1Id?._id && (
+                        {selectedWinner === contestant1Id && (
                           <div className="w-2 h-2 bg-white rounded-full" />
                         )}
                       </div>
                       <span className="font-medium text-gray-900">
-                        {match?.player1Id?.fullName || 'Player 1'}
+                        {getContestantName(1)}
                       </span>
                     </div>
 
-                    {/* Player 2 */}
+                    {/* Contestant 2 */}
                     <div
-                      onClick={() =>
-                        setSelectedWinner(match?.player2Id?._id || '')
-                      }
+                      onClick={() => setSelectedWinner(contestant2Id || '')}
                       className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                        selectedWinner === match?.player2Id?._id
+                        selectedWinner === contestant2Id
                           ? 'border-green-600 bg-green-50'
                           : 'border-gray-300 hover:border-gray-400'
                       }`}
                     >
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                          selectedWinner === match?.player2Id?._id
+                          selectedWinner === contestant2Id
                             ? 'border-green-600 bg-green-600'
                             : 'border-gray-300'
                         }`}
                       >
-                        {selectedWinner === match?.player2Id?._id && (
+                        {selectedWinner === contestant2Id && (
                           <div className="w-2 h-2 bg-white rounded-full" />
                         )}
                       </div>
                       <span className="font-medium text-gray-900">
-                        {match?.player2Id?.fullName || 'Player 2'}
+                        {getContestantName(2)}
                       </span>
                     </div>
                   </div>
@@ -337,10 +401,10 @@ export default function EnterResultModal({
                 <label className="block text-sm font-semibold text-gray-900 ">
                   Score
                 </label>
-                {/* Player 1 Score */}
+                {/* Contestant 1 Score */}
                 <div className="flex items-center justify-between gap-2 p-2 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">
-                    {match?.player1Id?.fullName || 'Player 1'}
+                  <span className="font-medium text-gray-900 text-sm">
+                    {getContestantName(1)}
                   </span>
                   <input
                     type="number"
@@ -353,10 +417,10 @@ export default function EnterResultModal({
                   />
                 </div>
 
-                {/* Player 2 Score */}
+                {/* Contestant 2 Score */}
                 <div className="flex items-center justify-between gap-4 p-2 bg-gray-50 rounded-lg">
-                  <span className="font-medium text-gray-900">
-                    {match?.player2Id?.fullName || 'Player 2'}
+                  <span className="font-medium text-gray-900 text-sm">
+                    {getContestantName(2)}
                   </span>
                   <input
                     type="number"
