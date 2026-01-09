@@ -94,12 +94,6 @@ const MatchesManagementContainer = () => {
                 Round
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
-                Player 1
-              </TableHead>
-              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
-                Player 2
-              </TableHead>
-              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Score
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
@@ -121,16 +115,18 @@ const MatchesManagementContainer = () => {
                     {item?.tournamentId?.tournamentName}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.roundId?.roundName}
+                    {item?.round}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.player1Id?.fullName}
-                  </TableCell>
-                  <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
-                    {item?.player2Id?.fullName}
-                  </TableCell>
-                  <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.score}
+                    {item?.matchType === 'Pair' ? (
+                      <div>
+                        <span>{item?.pair1Score}</span> / {item?.pair2Score}
+                      </div>
+                    ) : (
+                      <div>
+                        <span>{item?.player1Score}</span> / {item?.player2Score}
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
                     {moment(item?.createdAt).format('MMM DD YYYY')}

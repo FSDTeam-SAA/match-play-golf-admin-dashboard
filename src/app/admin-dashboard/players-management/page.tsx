@@ -5,8 +5,8 @@ import PlayersManagementContainer from './_components/players-management-contain
 const PalyersManagementPage = () => {
   return (
     <div>
-        {/* <PlayersManagementHeader /> */}
-        <PlayersManagementContainer/>
+      {/* <PlayersManagementHeader /> */}
+      <PlayersManagementContainer />
     </div>
   )
 }
