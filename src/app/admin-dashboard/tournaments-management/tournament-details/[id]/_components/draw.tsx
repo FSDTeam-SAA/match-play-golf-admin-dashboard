@@ -106,7 +106,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        {[1, 2, 3].map((item) => (
+        {[1, 2, 3].map(item => (
           <div key={item} className="flex items-start gap-5 space-y-8">
             <Skeleton className="h-6 w-8 rounded-md" />
             <div className="flex-1 shadow-lg rounded-lg overflow-hidden ">
@@ -283,7 +283,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                                     month: 'short',
                                     day: 'numeric',
                                     year: 'numeric',
-                                  }
+                                  },
                                 )
                               : 'Date not set'}
                           </span>
@@ -295,7 +295,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                                   {
                                     hour: '2-digit',
                                     minute: '2-digit',
-                                  }
+                                  },
                                 )
                               : ''}
                           </span>
@@ -303,7 +303,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                         <div className="flex items-center gap-3 justify-end">
                           <div
                             className={`text-sm font-medium px-3 py-1 rounded-full ${getStatusColor(
-                              item.status
+                              item.status,
                             )}`}
                           >
                             {item.status || 'upcoming'}
@@ -347,6 +347,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                 item={item as Match}
                 getStatusColor={getStatusColor}
                 index={index}
+                refetchMatches={refetchMatches} // Add this line
               />
             )}
           </div>
