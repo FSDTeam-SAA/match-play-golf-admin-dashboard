@@ -40,7 +40,7 @@ export default function TeamManagementPage() {
       <div className="mb-6 flex items-center justify-end">
         <Button
           onClick={() => setAddOpen(true)}
-          className="gap-2  bg-red-600 hover:bg-red-700"
+          className="gap-2  bg-red-600 hover:bg-red-700 text-white"
         >
           <Plus className="h-4 w-4" />
           Add Team Member
