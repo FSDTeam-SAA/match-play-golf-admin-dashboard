@@ -56,7 +56,7 @@ export const useGetUserProfile = (accessToken: string) => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        credentials: 'include',
+        // credentials: 'include',
       })
       return handleResponse(res)
     },
@@ -72,7 +72,7 @@ export const useUpdateProfile = (accessToken: string, options?: any) => {
     mutationFn: async (data: UpdateProfileData) => {
       const res = await fetch(`${API_BASE_URL}/user/profile`, {
         method: 'PUT',
-        credentials: 'include',
+        // credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
@@ -100,7 +100,7 @@ export const useUpdateProfileImage = (accessToken: string, options?: any) => {
       const res = await fetch(`${API_BASE_URL}/user/profile/image`, {
         method: 'PUT',
         body: formData,
-        credentials: 'include',
+        // credentials: 'include',
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
