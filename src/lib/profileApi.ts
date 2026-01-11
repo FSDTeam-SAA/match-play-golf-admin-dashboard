@@ -2,7 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api'
+  process.env.NEXT_PUBLIC_BACKEND_URL
 
 // Types
 export type UserProfile = {

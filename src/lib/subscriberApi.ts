@@ -10,7 +10,7 @@ import type {
 } from '@/../types/subscriber'
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api'
+  process.env.NEXT_PUBLIC_BACKEND_URL
 
 // ==================== HELPER FUNCTION ====================
 async function handleResponse(response: Response) {

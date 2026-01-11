@@ -9,7 +9,7 @@ import type {
 } from '@/../types/article'
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api'
+  process.env.NEXT_PUBLIC_BACKEND_URL
 
 async function handleResponse(response: Response) {
   if (!response.ok) {
