@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   tournamentName: z.string().min(2, {
@@ -53,7 +54,7 @@ const DRAW_FORMAT_OPTIONS = [
 
 const CreateTournament = () => {
   const { data: session } = useSession()
-  // const router = useRouter()
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -108,7 +109,7 @@ const CreateTournament = () => {
 
       toast.success('Tournament created successfully!')
       form.reset()
-      // router.push("/tournaments"); // Optional: redirect to tournaments page
+      router.push("/admin-dashboard/tournaments-management");
     } catch (error) {
       console.error('Error creating tournament:', error)
       toast.error('Something went wrong. Please try again.')
