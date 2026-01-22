@@ -36,7 +36,7 @@ export default function TeamManagementPage() {
     )
   }
   return (
-    <div className="container mx-auto py-5">
+    <div className="w-full px-6 py-2">
       <div className="mb-6 flex items-center justify-end">
         <Button
           onClick={() => setAddOpen(true)}

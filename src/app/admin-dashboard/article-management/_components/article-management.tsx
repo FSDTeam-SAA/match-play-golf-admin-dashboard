@@ -37,7 +37,7 @@ export default function ArticleManagementPage() {
   }
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="w-full px-6 py-2">
       <div className="mb-6 flex items-center justify-end">
         <Button
           onClick={() => setAddOpen(true)}
