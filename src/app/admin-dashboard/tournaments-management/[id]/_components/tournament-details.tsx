@@ -19,7 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
+// import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input"
 import { useSession } from "next-auth/react";
 import {
@@ -30,19 +30,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox";
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import { useEffect } from "react"
-import { Tournament } from "./single-tournament-data-type";
+import { TournamentResponseData } from "./single-tournament-data-type";
+import HoldEachRoundToggle from "./hold-each-round";
 
 const formSchema = z.object({
   tournamentName: z.string().min(2, {
     message: "Event Name must be at least 2 characters.",
   }),
-  sportName: z.string().min(2, {
-    message: "Sport must be at least 2 characters.",
+  sportName: z.string().min(1, {
+    message: "Sport Name is required.",
   }),
   numberOfSeeds: z
     .coerce
@@ -62,14 +63,14 @@ const formSchema = z.object({
   endDate: z.date().nullable(),
 
   location: z.string().optional(),
-  terms: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions.",
-  }),
+  // terms: z.boolean().refine((val) => val === true, {
+  //   message: "You must accept the terms and conditions.",
+  // }),
 })
 
-const TournamentDetailsPage = (data: { data: Tournament }) => {
+const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
   console.log(data)
-  const tournamentId = (data?.data as unknown as { _id: string })?._id;
+  const tournamentId = (data?.data?.tournament as unknown as { _id: string })?._id;
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   console.log(token)
@@ -86,7 +87,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
       endDate: null,
       numberOfSeeds: 1,
       location: "",
-      terms: false,
+      // terms: false,
     },
   })
 
@@ -99,23 +100,23 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
 
 
   useEffect(() => {
-    if (!data?.data) return;
+    if (!data?.data?.tournament) return;
 
     form.reset({
-      tournamentName: data?.data?.tournamentName ?? "",
-      sportName: data?.data?.sportName ?? "",
-      drawFormat: data?.data?.drawFormat,
-      format: data?.data?.format?.toLowerCase(),
-      drawSize: Number(data?.data?.drawSize),
-      location: data?.data?.location,
-      numberOfSeeds: Number(data?.data?.numberOfSeeds),
-      startDate: data?.data?.startDate
-        ? new Date(data?.data?.startDate)
+      tournamentName: data?.data?.tournament?.tournamentName ?? "",
+      sportName: data?.data?.tournament?.sportName ?? "",
+      drawFormat: data?.data?.tournament?.drawFormat,
+      format: data?.data?.tournament?.format,
+      drawSize: data?.data?.tournament?.drawSize,
+      location: data?.data?.tournament?.location,
+      numberOfSeeds: Number(data?.data?.tournament?.numberOfSeeds),
+      startDate: data?.data?.tournament?.startDate
+        ? new Date(data?.data?.tournament?.startDate)
         : null,
-      endDate: data?.data?.endDate
-        ? new Date(data?.data?.endDate)
+      endDate: data?.data?.tournament?.endDate
+        ? new Date(data?.data?.tournament?.endDate)
         : null,
-      terms: false,
+      // terms: false,
     });
   }, [data, form]);
 
@@ -159,15 +160,15 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
               name="tournamentName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Event Name *</FormLabel>
+                  <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Event Name <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
-                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Spring Championship 2025" {...field} />
+                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Enter your tournament name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="sportName"
               render={({ field }) => (
@@ -177,6 +178,34 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                     <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Golf" {...field} />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+
+            <FormField
+              control={form.control}
+              name="sportName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Sport <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="Select Sport name" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Golf">Golf</SelectItem>
+                        <SelectItem value="Football">Football</SelectItem>
+                        <SelectItem value="Tennis">Tennis</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -229,13 +258,13 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Pair" />
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="Pairs" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="single">Single</SelectItem>
-                        <SelectItem value="pair">Pair</SelectItem>
-                        <SelectItem value="team">Team</SelectItem>
+                        <SelectItem value="Single">Single</SelectItem>
+                        <SelectItem value="Pairs">Pairs</SelectItem>
+                        <SelectItem value="Team">Team</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -257,7 +286,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                       value={String(field.value)}
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
                         <SelectValue placeholder="Parallel Unique  Club" />
                       </SelectTrigger>
                       <SelectContent>
@@ -280,7 +309,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
               name="numberOfSeeds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Number of Seeds</FormLabel>
+                  <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Number of Seeds (optional) </FormLabel>
                   <FormControl>
                     <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Completed" value={String(field.value)} onChange={(e) => field.onChange(Number(e.target.value))} />
                   </FormControl>
@@ -301,7 +330,6 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                   </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <FormControl>
                         <Button
                           variant="outline"
                           className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
@@ -316,7 +344,6 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
 
                           <CalendarIcon className="ml-auto h-4 w-4" />
                         </Button>
-                      </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       {/* <Calendar
@@ -347,8 +374,9 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                   </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <FormControl>
+                      {/* <FormControl> */}
                         <Button
+                          type="button"
                           variant="outline"
                           className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
                             }`}
@@ -362,7 +390,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
 
                           <CalendarIcon className="ml-auto h-4 w-4" />
                         </Button>
-                      </FormControl>
+                      {/* </FormControl> */}
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       {/* <Calendar
@@ -400,7 +428,7 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
           </div>
 
 
-          <div>
+          {/* <div>
             <FormField
               control={form.control}
               name="terms"
@@ -428,9 +456,11 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
                 </FormItem>
               )}
             />
-          </div>
+          </div> */}
+
+
           {/* Buttons */}
-          <div className="flex justify-end gap-6 pt-6">
+          <div className="flex justify-end gap-6 pt-3">
             <Button
               type="button"
               variant="outline"
@@ -451,6 +481,16 @@ const TournamentDetailsPage = (data: { data: Tournament }) => {
           </div>
         </form>
       </Form>
+
+      {/* hold each round */}
+      <div>
+        <HoldEachRoundToggle
+          tournamentId={tournamentId}
+          defaultValue={data?.data?.tournament?.onHold}
+        />
+        {/* <h4 className="text-base md:text-lg font-semibold text-[#131313] pb-1">Hold Each Round</h4>
+        <p className="text-sm md:text-base text-[#424242] text-font-normal">If checked, the next round of matches will not be displayed until the current round has been completed.</p> */}
+      </div>
     </div>
   )
 }

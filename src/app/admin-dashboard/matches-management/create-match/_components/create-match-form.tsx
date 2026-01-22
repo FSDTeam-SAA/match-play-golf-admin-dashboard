@@ -262,7 +262,7 @@ const CreateMatchForm = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Single">Single</SelectItem>
-                          <SelectItem value="Pair">Pair</SelectItem>
+                          <SelectItem value="Pairs">Pairs</SelectItem>
                           <SelectItem value="Team">Team</SelectItem>
                         </SelectContent>
                       </Select>

@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 
 import CsvUploadInput from "./CsvUploadInput"
-import { Tournament } from "./single-tournament-data-type"
+import { TournamentResponseData } from "./single-tournament-data-type"
 
 /* ---------------- ZOD SCHEMA ---------------- */
 
@@ -101,14 +101,17 @@ type FormValues = z.infer<typeof formSchema>
 
 /* ---------------- COMPONENT ---------------- */
 
-interface Props {
-  data: Tournament
-}
+// interface Props {
+//   data: Tournament
+// }
 
-const TournamentParticipantsPage = ({ data }: Props) => {
+const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
   const queryClient = useQueryClient()
-  const { _id: tournamentId, format } = data
-  const isPair = format === "Pair"
+
+  const tournamentId = (data?.data?.tournament as unknown as { _id: string })?._id;
+  const format = data?.data?.tournament?.format;
+  // const { _id: tournamentId, format } = data
+  const isPair = format === "Pairs"
 
   const { data: session } = useSession()
   const token = (session?.user as { accessToken: string })?.accessToken
@@ -370,7 +373,7 @@ const { mutate, isPending } = useMutation({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
-                        Seed
+                        Seed (optional)
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -394,7 +397,7 @@ const { mutate, isPending } = useMutation({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
-                  Import CSV File (Optional)
+                  Import CSV file (optional). CSV format: fullName, email, phone
                 </FormLabel>
                 <FormControl>
                   <CsvUploadInput

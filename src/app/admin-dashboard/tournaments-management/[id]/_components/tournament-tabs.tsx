@@ -7,7 +7,8 @@ import TournamentParticipantsPage from "./tournament-participants";
 import TournamentRounds from "./tournament-rounds";
 import TournamentDrawPage from "./tournament-draw";
 import { useSession } from "next-auth/react";
-import { Tournament, TournamentApiResponse, TournamentResponseData} from "./single-tournament-data-type";
+import { TournamentApiResponse, TournamentResponseData} from "./single-tournament-data-type";
+import TournamentsHeader from "./tournament-header";
 
 const TournamentsDetails = ({id}:{id:string}) => {
   const session = useSession();
@@ -32,10 +33,18 @@ const TournamentsDetails = ({id}:{id:string}) => {
     enabled: !!token
   })
 
-  console.log(data)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const tournamentName = data && data?.data && data?.data?.tournament?.tournamentName || "N/A"
+
+
+
+  console.log("tournament name", data)
 
   return (
-    <div className="p-6">
+
+    <div>
+      <TournamentsHeader tournamentName={tournamentName}/>
+      <div className="p-6">
 
       {/* sub-pages */}
       <div>
@@ -92,7 +101,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
           {isActive === "details" && (
 
               <div>
-              <TournamentDetailsPage  data={data?.data as unknown as Tournament}/>
+              <TournamentDetailsPage  data={data?.data as unknown as TournamentResponseData}/>
             </div>
           )}
 
@@ -103,7 +112,7 @@ const TournamentsDetails = ({id}:{id:string}) => {
           )}
           {isActive === "participants" && (
             <div>
-              <TournamentParticipantsPage  data={data?.data as unknown as Tournament}  />
+              <TournamentParticipantsPage  data={data?.data as unknown as TournamentResponseData}  />
             </div>
           )}
             {isActive === "rounds" && (
@@ -119,6 +128,8 @@ const TournamentsDetails = ({id}:{id:string}) => {
         </div>
       </div>
     </div>
+    </div>
+    
   );
 };
 

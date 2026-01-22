@@ -170,15 +170,15 @@ const CreateTournament = () => {
                     Draw Format <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-2 gap-6 ">
                       {DRAW_FORMAT_OPTIONS.map(option => (
                         <button
                           key={option.id}
                           type="button"
                           onClick={() => field.onChange(option.value)}
-                          className={`py-4 px-6 rounded-[8px] border-2 text-base font-semibold leading-[120%] transition-all duration-300 shadow-sm ${
+                          className={`py-3 px-4 rounded-[8px] border-2 text-base font-semibold leading-[120%] transition-all duration-300 shadow-sm ${
                             field.value === option.value
-                              ? 'border-[#E5102E] bg-gradient-to-br from-[#FFE5E8] to-[#FFF5F6] text-[#E5102E] shadow-md scale-105'
+                              ? 'border-[#E5102E] bg-gradient-to-br from-[#FFE5E8] to-[#FFF5F6] text-[#E5102E] shadow-md '
                               : 'border-[#C0C3C1] bg-white text-[#434C45] hover:border-[#E5102E] hover:shadow-md'
                           }`}
                         >
@@ -206,11 +206,11 @@ const CreateTournament = () => {
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Pair" />
+                        <SelectValue placeholder="Pairs" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Single">Single</SelectItem>
-                        <SelectItem value="Pair">Pair</SelectItem>
+                        <SelectItem value="Pairs">Pairs</SelectItem>
                         <SelectItem value="Team">Team</SelectItem>
                       </SelectContent>
                     </Select>

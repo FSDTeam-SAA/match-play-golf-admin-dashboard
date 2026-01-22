@@ -118,7 +118,7 @@ const MatchesManagementContainer = () => {
                     {item?.round}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.matchType === 'Pair' ? (
+                    {item?.matchType === 'Pairs' ? (
                       <div>
                         <span>{item?.pair1Score}</span> / {item?.pair2Score}
                       </div>

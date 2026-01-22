@@ -23,7 +23,7 @@ interface PairInfo {
 
 interface Match {
   _id: string
-  matchType: 'Single' | 'Pair' | 'Team'
+  matchType: 'Single' | 'Pairs' | 'Team'
   player1Id?: Player
   player2Id?: Player
   pair1Id?: PairInfo
@@ -67,8 +67,8 @@ export default function EnterResultModal({
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([])
   const [existingPhotos, setExistingPhotos] = useState<string[]>([])
 
-  // Check if this is a Pair match
-  const isPairMatch = match?.matchType === 'Pair'
+  // Check if this is a Pairs match
+  const isPairMatch = match?.matchType === 'Pairs'
 
   // Load existing data when in edit mode
   useEffect(() => {

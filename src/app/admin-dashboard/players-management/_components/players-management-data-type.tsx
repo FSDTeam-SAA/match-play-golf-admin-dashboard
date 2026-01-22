@@ -43,7 +43,7 @@ export interface TournamentDetails {
   _id: string
   tournamentName: string
   sportName: string
-  format: "Pair" | "Single" | string
+  format: "Pairs" | "Single" | string
 }
 
 
