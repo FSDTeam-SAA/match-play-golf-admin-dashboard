@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   tournamentName: z.string().min(2, {
@@ -53,7 +54,7 @@ const DRAW_FORMAT_OPTIONS = [
 
 const CreateTournament = () => {
   const { data: session } = useSession()
-  // const router = useRouter()
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -108,7 +109,7 @@ const CreateTournament = () => {
 
       toast.success('Tournament created successfully!')
       form.reset()
-      // router.push("/tournaments"); // Optional: redirect to tournaments page
+      router.push("/admin-dashboard/tournaments-management");
     } catch (error) {
       console.error('Error creating tournament:', error)
       toast.error('Something went wrong. Please try again.')
@@ -169,15 +170,15 @@ const CreateTournament = () => {
                     Draw Format <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-2 gap-6 ">
                       {DRAW_FORMAT_OPTIONS.map(option => (
                         <button
                           key={option.id}
                           type="button"
                           onClick={() => field.onChange(option.value)}
-                          className={`py-4 px-6 rounded-[8px] border-2 text-base font-semibold leading-[120%] transition-all duration-300 shadow-sm ${
+                          className={`py-3 px-4 rounded-[8px] border-2 text-base font-semibold leading-[120%] transition-all duration-300 shadow-sm ${
                             field.value === option.value
-                              ? 'border-[#E5102E] bg-gradient-to-br from-[#FFE5E8] to-[#FFF5F6] text-[#E5102E] shadow-md scale-105'
+                              ? 'border-[#E5102E] bg-gradient-to-br from-[#FFE5E8] to-[#FFF5F6] text-[#E5102E] shadow-md '
                               : 'border-[#C0C3C1] bg-white text-[#434C45] hover:border-[#E5102E] hover:shadow-md'
                           }`}
                         >
@@ -205,11 +206,11 @@ const CreateTournament = () => {
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Pair" />
+                        <SelectValue placeholder="Pairs" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Single">Single</SelectItem>
-                        <SelectItem value="Pair">Pair</SelectItem>
+                        <SelectItem value="Pairs">Pairs</SelectItem>
                         <SelectItem value="Team">Team</SelectItem>
                       </SelectContent>
                     </Select>

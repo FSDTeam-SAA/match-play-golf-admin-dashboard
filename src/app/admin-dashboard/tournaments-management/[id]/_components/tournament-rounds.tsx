@@ -1,61 +1,58 @@
-'use client'
+"use client"
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { Button } from '@/components/ui/button'
-import { useEffect } from 'react'
-import { toast } from 'sonner'
+import { Button } from "@/components/ui/button"
+import { useEffect } from "react"
+import { toast } from "sonner";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { TournamentResponseData } from './single-tournament-data-type'
-import { CalendarIcon } from 'lucide-react'
-import { Calendar } from '@/components/ui/calendar'
-import { format } from 'date-fns'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useSession } from 'next-auth/react'
+} from "@/components/ui/form"
+import { TournamentResponseData } from "./single-tournament-data-type"
+import { CalendarIcon } from "lucide-react"
+import { format } from "date-fns"
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar"
 
 const formSchema = z.object({
   rememberEmail: z.number().optional(),
   rounds: z.array(
     z.object({
       date: z.date().nullable(),
-    }),
+    })
   ),
-})
+});
 
-const TournamentRounds = (data: {
-  data: TournamentResponseData & {
-    rememberEmail?: number
-    totalRounds?: number
-  }
-}) => {
-  const tournamentId = (data?.data as unknown as { _id: string })?._id
 
-  console.log(data?.data)
-  const session = useSession()
-  const token = (session?.data?.user as { accessToken: string })?.accessToken
+const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail?: number; totalRounds?: number } }) => {
+  const tournamentId = (data?.data?.tournament as unknown as { _id: string })?._id;
+
+  console.log(data)
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
   console.log(token)
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,80 +60,82 @@ const TournamentRounds = (data: {
       rememberEmail: undefined,
       rounds: [],
     },
-  })
+  });
+
+
 
   console.log(data?.data)
 
-  useEffect(() => {
-    if (!data?.data) return
 
-    const totalRounds = data.data.totalRounds ?? 0
-    const existingRounds = data.data.rounds ?? []
+  useEffect(() => {
+    if (!data?.data) return;
+
+    const totalRounds = data?.data?.tournament?.totalRounds ?? 0;
+    const existingRounds = data.data.rounds ?? [];
 
     form.reset({
-      rememberEmail: data?.data?.rememberEmail ?? undefined,
+      rememberEmail: data?.data?.tournament?.rememberEmail ?? undefined,
       rounds: Array.from({ length: totalRounds }, (_, index) => ({
         date: existingRounds[index]?.date
           ? new Date(existingRounds[index].date)
           : null,
       })),
-    })
-  }, [data, form])
+    });
+  }, [data, form]);
+
+
+
 
   const { mutate, isPending } = useMutation({
-    mutationKey: ['tournament-details', tournamentId],
-    mutationFn: async (payload: {
-      rememberEmail: number
-      rounds: { roundName: string; date: string | null }[]
-    }) => {
+    mutationKey: ["tournament-details", tournamentId],
+    mutationFn: async (payload: { rememberEmail: number, rounds: { roundName: string; date: string | null }[] }) => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${tournamentId}`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
-        },
-      )
-      return res.json()
+        }
+      );
+      return res.json();
     },
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data?.success) {
-        toast.error(data?.message || 'Something went wrong')
-        return
+        toast.error(data?.message || "Something went wrong");
+        return;
       }
-      toast.success(data?.message || 'Tournament updated successfully')
-      queryClient.invalidateQueries({ queryKey: ['single-tournament'] })
+      toast.success(data?.message || "Tournament updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["single-tournament"] });
     },
-  })
+  });
+
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const payload = {
-      rememberEmail: values.rememberEmail ?? 0,
+      rememberEmail: (values.rememberEmail ?? 0),
       rounds: values.rounds.map((round, index) => ({
         roundName: `Round ${index + 1}`,
-        date: round.date ? format(round.date, 'yyyy-MM-dd') : null,
+        date: round.date ? format(round.date, "yyyy-MM-dd") : null,
       })),
-    }
+    };
 
-    mutate(payload)
+    mutate(payload);
   }
+
+
 
   return (
     <div>
-      <h4 className="text-lg md:text-xl font-semibold text-[#181818] leading-[120%]">
-        Reminder Emails Days Before
-      </h4>
-      <p className="text-base text-[#181818] leading-[150%] font-normal pt-2">
-        Please enter the number of days before the round deadline for sending a
-        reminder email to those who have not played their match.
-      </p>
+      <h4 className="text-lg md:text-xl font-semibold text-[#181818] leading-[120%]">Reminder Emails Days Before</h4>
+      <p className="text-base text-[#181818] leading-[150%] font-normal pt-2">Please enter the number of days before the round deadline for sending a reminder email to those who have not played their match.</p>
 
       <div className="pt-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
             <FormField
               control={form.control}
               name="rememberEmail"
@@ -145,28 +144,26 @@ const TournamentRounds = (data: {
                   <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">
                     Reminder
                   </FormLabel>
-                  <Select
-                    key={field.value}
-                    value={
-                      field.value !== undefined
-                        ? String(field.value)
-                        : undefined
-                    }
-                    onValueChange={value => field.onChange(Number(value))}
-                  >
-                    <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                      <SelectValue placeholder="5 Days Later" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="5">5 Days Later</SelectItem>
-                      <SelectItem value="10">10 Days Later</SelectItem>
-                      <SelectItem value="15">15 Days Later</SelectItem>
-                      <SelectItem value="20">20 Days Later</SelectItem>
-                      <SelectItem value="25">25 Days Later</SelectItem>
-                      <SelectItem value="30">30 Days Later</SelectItem>
-                      <SelectItem value="35">35 Days Later</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Select
+                      key={field.value}
+                      value={field.value !== undefined ? String(field.value) : undefined}
+                      onValueChange={(value) => field.onChange(Number(value))}
+                    >
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                        <SelectValue placeholder="5 Days Later" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="5">5 Days Later</SelectItem>
+                        <SelectItem value="10">10 Days Later</SelectItem>
+                        <SelectItem value="15">15 Days Later</SelectItem>
+                        <SelectItem value="20">20 Days Later</SelectItem>
+                        <SelectItem value="25">25 Days Later</SelectItem>
+                        <SelectItem value="30">30 Days Later</SelectItem>
+                        <SelectItem value="35">35 Days Later</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
                   <FormMessage className="text-red-500" />
                 </FormItem>
               )}
@@ -177,51 +174,81 @@ const TournamentRounds = (data: {
                 Round Deadlines
               </h4>
 
-              {form.watch('rounds')?.map((_, index) => (
+              {form.watch("rounds")?.map((_, index) => (
                 <div key={index} className="space-y-2 py-2">
+
                   {/* Deadline Date */}
                   <FormField
                     control={form.control}
                     name={`rounds.${index}.date`}
                     render={({ field }) => (
-                      <FormItem className="flex flex-col">
+                      <FormItem>
                         <FormLabel>Deadline Date *</FormLabel>
-                        <Popover>
+
+                        {/* <Popover>
                           <PopoverTrigger asChild>
-                            <Button
+                            <FormControl>
+                              <Button
                               type="button"
-                              variant="outline"
-                              className={cn(
-                                'w-full justify-start text-left h-12 font-normal',
-                                !field.value && 'text-muted-foreground',
-                              )}
-                            >
-                              {field.value instanceof Date &&
-                              !isNaN(field.value.getTime())
-                                ? format(field.value, 'yyyy-MM-dd')
-                                : 'mm/dd/yyyy'}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
+                                variant="outline"
+                                className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
+                                  }`}
+                              >
+                                {field.value instanceof Date && !isNaN(field.value.getTime())
+                                  ? format(field.value, "yyyy-MM-dd")
+                                  : "mm/dd/yyyy"}
+                                <CalendarIcon className="ml-auto h-4 w-4" />
+                              </Button>
+                            </FormControl>
                           </PopoverTrigger>
 
                           <PopoverContent className="w-auto p-0" align="start">
                             <Calendar
                               mode="single"
                               selected={field.value ?? undefined}
-                              onSelect={date => field.onChange(date ?? null)}
-                              disabled={date =>
-                                date < new Date(new Date().setHours(0, 0, 0, 0))
-                              }
+                              onSelect={(date) => field.onChange(date ?? null)}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover> */}
+
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
+                                }`}
+                            >
+                              {field.value instanceof Date && !isNaN(field.value.getTime())
+                                ? format(field.value, "yyyy-MM-dd")
+                                : "mm/dd/yyyy"}
+                              <CalendarIcon className="ml-auto h-4 w-4" />
+                            </Button>
+                          </PopoverTrigger>
+
+                          <PopoverContent
+                            className="w-auto p-0 z-[9999]"
+                            align="start"
+                          >
+                            <Calendar
+                              mode="single"
+                              selected={field.value ?? undefined}
+                              onSelect={(date) => field.onChange(date ?? null)}
                               initialFocus
                             />
                           </PopoverContent>
                         </Popover>
+
+
+
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
               ))}
+
             </div>
             {/* Buttons */}
             <div className="flex justify-end gap-6 pt-6">
@@ -240,7 +267,7 @@ const TournamentRounds = (data: {
             hover:from-[#310000] hover:to-[#DF1020]
             transition-all duration-300 text-[#F7F8FA] font-bold text-lg leading-[120%] rounded-[8px] px-20"
               >
-                {isPending ? 'Adding...' : 'Add'}
+                {isPending ? "Adding..." : "Add"}
               </Button>
             </div>
           </form>

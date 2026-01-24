@@ -28,7 +28,7 @@ export interface Match {
   _id: string
   winnerColor: string
   winner: string
-  matchType: 'Single' | 'Pair' | 'Team'
+  matchType: 'Single' | 'Pairs' | 'Team'
   player1Id: {
     _id: string
     fullName: string

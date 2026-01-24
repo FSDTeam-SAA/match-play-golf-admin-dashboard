@@ -333,8 +333,8 @@ const TournamentsManagementContainer = () => {
           </div>
           <div>
             <Link href="/admin-dashboard/tournaments-management/create-tournament">
-              <button className="flex items-center gap-2 bg-[#DF1020] p-3 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
-                <Plus /> Create New Event
+              <button className="flex items-center gap-2 bg-[#DF1020] py-3 px-6 rounded-[8px] text-[#F8F9FA] text-base font-medium leading-[150%] ">
+                <Plus /> Create
               </button>
             </Link>
           </div>

@@ -28,7 +28,7 @@ const MomentsModal = ({
           </h1>
 
           <div className="mb-2 font-semibold">
-            {match?.matchType === "Pair" ? (
+            {match?.matchType === "Pairs" ? (
               <div className="flex items-center gap-4">
                 <h1>
                   {match?.pair1Id?.player1?.fullName} &{" "}

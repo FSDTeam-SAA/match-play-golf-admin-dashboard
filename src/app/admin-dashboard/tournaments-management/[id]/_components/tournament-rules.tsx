@@ -30,8 +30,8 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-const TournamentRulesPage = ({ data }: { data: TournamentResponseData }) => {
-  const tournamentId = (data as unknown as {_id:string})?._id;
+const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
+  const tournamentId = (data?.data?.tournament as unknown as {_id:string})?._id;
   console.log(data)
   const { data: session } = useSession()
   const token = (session?.user as { accessToken: string })?.accessToken
@@ -51,9 +51,9 @@ const TournamentRulesPage = ({ data }: { data: TournamentResponseData }) => {
     if (!data) return
 
     form.reset({
-      entryConditions: (data as unknown as { entryConditions?: string[] })?.entryConditions || ["", "", ""],
-      range: (data as unknown as { range?: string[] })?.range || ["", "", ""],
-      rules: (data as unknown as { rules?: string })?.rules || "",
+      entryConditions: (data?.data?.tournament as unknown as { entryConditions?: string[] })?.entryConditions || ["", "", ""],
+      range: (data?.data?.tournament as unknown as { range?: string[] })?.range || ["", "", ""],
+      rules: (data?.data?.tournament as unknown as { rules?: string })?.rules || "",
     })
   }, [data, form])
 
