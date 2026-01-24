@@ -162,7 +162,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                 <FormItem>
                   <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Event Name <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
-                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Enter your tournament name" {...field} />
+                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]" placeholder="Enter your tournament name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,7 +175,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                 <FormItem>
                   <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Sport *</FormLabel>
                   <FormControl>
-                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Golf" {...field} />
+                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]" placeholder="Golf" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -195,7 +195,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]">
                         <SelectValue placeholder="Select Sport name" />
                       </SelectTrigger>
                       <SelectContent>
@@ -258,7 +258,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]">
                         <SelectValue placeholder="Pairs" />
                       </SelectTrigger>
                       <SelectContent>
@@ -286,7 +286,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                       value={String(field.value)}
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
-                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]">
                         <SelectValue placeholder="Parallel Unique  Club" />
                       </SelectTrigger>
                       <SelectContent>
@@ -311,7 +311,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                 <FormItem>
                   <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Number of Seeds (optional) </FormLabel>
                   <FormControl>
-                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Completed" value={String(field.value)} onChange={(e) => field.onChange(Number(e.target.value))} />
+                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]" placeholder="Completed" value={String(field.value)} onChange={(e) => field.onChange(Number(e.target.value))} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -419,7 +419,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                 <FormItem>
                   <FormLabel className="text-base text-[#343A40] leading-[150%] font-medium">Location</FormLabel>
                   <FormControl>
-                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]" placeholder="Home V Away" {...field} />
+                    <Input className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]" placeholder="Home V Away" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

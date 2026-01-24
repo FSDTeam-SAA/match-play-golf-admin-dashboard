@@ -10,7 +10,7 @@ const TournamentsHeader = ({tournamentName}:{tournamentName:string}) => {
       {/* Header */}
       <div className="bg-white p-3">
         <h2 className="text-2xl lg:text-3xl pl-4 font-bold text-[#181818] leading-[150%]">
-          Tournament Name : {tournamentName || "N/A"}
+          {tournamentName || "N/A"}
         </h2>
         {/* <h1 className="text-2xl lg:text-3xl font-bold text-[#181818] leading-[150%]">
           <Link href="/organizer/tournaments-management">
