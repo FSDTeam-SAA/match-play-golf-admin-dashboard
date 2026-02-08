@@ -15,11 +15,12 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea" // Added for rules
+// import { Textarea } from "@/components/ui/textarea"
 import { useSession } from "next-auth/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { TournamentResponseData } from "./single-tournament-data-type"
+import QuillEditor from "@/components/ui/quill-editor"
 
 // Updated schema to match actual data structure
 const formSchema = z.object({
@@ -29,6 +30,12 @@ const formSchema = z.object({
 })
 
 type FormValues = z.infer<typeof formSchema>
+
+const normalizeRules = (rules: unknown): string => {
+  if (typeof rules === "string") return rules
+  if (Array.isArray(rules)) return rules.join("")
+  return ""
+}
 
 const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
   const tournamentId = (data?.data?.tournament as unknown as {_id:string})?._id;
@@ -53,7 +60,10 @@ const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
     form.reset({
       entryConditions: (data?.data?.tournament as unknown as { entryConditions?: string[] })?.entryConditions || ["", "", ""],
       range: (data?.data?.tournament as unknown as { range?: string[] })?.range || ["", "", ""],
-      rules: (data?.data?.tournament as unknown as { rules?: string })?.rules || "",
+      // rules: (data?.data?.tournament as unknown as { rules?: string })?.rules || "",
+      rules : normalizeRules(data?.data?.tournament?.rules)
+
+
     })
   }, [data, form])
 
@@ -103,7 +113,7 @@ const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="e.g. Handicap Limit (Playing)"
+                        placeholder="Enter Entry Condition"
                         className="h-[48px] text-base"
                         {...field}
                       />
@@ -119,7 +129,7 @@ const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="e.g. Every Player must have played"
+                        placeholder="Enter Entry Condition"
                         className="h-[48px] text-base"
                         {...field}
                       />
@@ -135,7 +145,7 @@ const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="e.g. Every Player must have played"
+                        placeholder="Enter Entry Condition"
                         className="h-[48px] text-base"
                         {...field}
                       />
@@ -158,7 +168,7 @@ const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="e.g. 24 for Men / 36 for Ladies"
+                        placeholder="Enter Range"
                         className="h-[48px] text-base"
                         {...field}
                       />
@@ -174,7 +184,7 @@ const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="e.g. 8 rounds in 12 Months"
+                        placeholder="Enter Range"
                         className="h-[48px] text-base"
                         {...field}
                       />
@@ -190,7 +200,7 @@ const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="e.g. 8 rounds in 12 Months"
+                        placeholder="Enter Range"
                         className="h-[48px] text-base"
                         {...field}
                       />
@@ -213,11 +223,17 @@ const TournamentRulesPage = (data: { data: TournamentResponseData }) => {
                   Rules Text
                 </FormLabel>
                 <FormControl>
-                  <Textarea
+                  {/* <Textarea
                     placeholder="Enter the full rules text here..."
                     className="min-h-[200px] resize-none"
                     {...field}
-                  />
+                  /> */}
+
+                    <QuillEditor
+                  id="rules"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
                 </FormControl>
                 <FormMessage />
               </FormItem>
