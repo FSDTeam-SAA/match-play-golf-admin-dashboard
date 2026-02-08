@@ -66,6 +66,11 @@ const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail
 
   console.log(data?.data)
 
+    const startDate = data?.data?.tournament?.startDate
+  ? new Date(data.data.tournament.startDate)
+  : null;
+
+
 
   useEffect(() => {
     if (!data?.data) return;
@@ -114,6 +119,22 @@ const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+         if (!startDate) {
+    toast.error("Tournament start date not found");
+    return;
+  }
+
+  // 🔴 Validate rounds date
+  const invalidRound = values.rounds.find(
+    (round) => round.date && round.date <= startDate
+  );
+
+  if (invalidRound) {
+    toast.error(
+      `Round deadline must be after ${format(startDate, "dd-MM-yyyy")}`
+    );
+    return;
+  }
     const payload = {
       rememberEmail: (values.rememberEmail ?? 0),
       rounds: values.rounds.map((round, index) => ({
@@ -221,8 +242,8 @@ const TournamentRounds = (data: { data: TournamentResponseData & { rememberEmail
                                 }`}
                             >
                               {field.value instanceof Date && !isNaN(field.value.getTime())
-                                ? format(field.value, "yyyy-MM-dd")
-                                : "mm/dd/yyyy"}
+                                ? format(field.value, "dd-MM-yyyy")
+                                : "dd/mm/yyyy"}
                               <CalendarIcon className="ml-auto h-4 w-4" />
                             </Button>
                           </PopoverTrigger>

@@ -133,7 +133,7 @@ const CreateTournament = () => {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Spring Championship 2023"
+                      placeholder="Enter Tournament Name"
                       {...field}
                     />
                   </FormControl>
@@ -152,7 +152,7 @@ const CreateTournament = () => {
                   <FormControl>
                     <Input
                       className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Spring Championship 2023"
+                      placeholder="Enter Sport Name"
                       {...field}
                     />
                   </FormControl>
@@ -206,7 +206,7 @@ const CreateTournament = () => {
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Pairs" />
+                        <SelectValue placeholder="Selete Format" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Single">Single</SelectItem>
@@ -234,7 +234,7 @@ const CreateTournament = () => {
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
-                        <SelectValue placeholder="Parallel Unique  Club" />
+                        <SelectValue placeholder="Selete Total Draw Size" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="8">8</SelectItem>
