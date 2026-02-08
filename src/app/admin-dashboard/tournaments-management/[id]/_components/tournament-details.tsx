@@ -192,10 +192,11 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                   </FormLabel>
                   <FormControl>
                     <Select
+                      key={field.value}
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45]">
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45] ">
                         <SelectValue placeholder="Select Sport name" />
                       </SelectTrigger>
                       <SelectContent>
@@ -255,6 +256,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                   </FormLabel>
                   <FormControl>
                     <Select
+                      key={field.value}
                       value={field.value}
                       onValueChange={field.onChange}
                     >
@@ -283,6 +285,7 @@ const TournamentDetailsPage = (data: { data: TournamentResponseData }) => {
                   </FormLabel>
                   <FormControl>
                     <Select
+                      key={String(field.value)}
                       value={String(field.value)}
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
