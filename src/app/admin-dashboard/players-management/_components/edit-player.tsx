@@ -304,10 +304,9 @@ export default function EditPlayerModal({
         <div className="p-6 space-y-4">
           <DialogHeader className="space-y-1 ">
             <div className="flex items-center justify-between gap-3">
-              <DialogTitle className="text-lg">Edit Player</DialogTitle>
-              {/* <span className="text-sm text-[#131313] font-medium">
+              <DialogTitle className="text-lg">Edit Player ( <span className="text-base text-[#131313] font-semibold">
                 {mode === "single" ? "Single" : mode === "pair" ? "Pair" : "Loading..."}
-              </span> */}
+              </span> )</DialogTitle>
             </div>
             <p className="text-sm text-muted-foreground">Update info and save changes.</p>
           </DialogHeader>
