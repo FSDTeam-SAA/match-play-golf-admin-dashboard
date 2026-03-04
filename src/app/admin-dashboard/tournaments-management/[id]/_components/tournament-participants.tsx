@@ -1,6 +1,5 @@
 
 
-
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -34,6 +33,7 @@ const playerSchema = z.object({
   seed: z.string().optional(),
 })
 
+
 const formSchema = z
   .object({
     players: z.array(playerSchema),
@@ -46,10 +46,8 @@ const formSchema = z
   })
   .refine(
     (data) => {
-      // Check if CSV file exists
       const hasCsvFile = !!data.csvFile
 
-      // Check if any player has filled data
       const hasPlayerData = data.players.some(
         (player) =>
           player.fullName ||
@@ -59,7 +57,6 @@ const formSchema = z
           player.seed
       )
 
-      // At least one of them must be present
       return hasCsvFile || hasPlayerData
     },
     {
@@ -69,7 +66,6 @@ const formSchema = z
   )
   .refine(
     (data) => {
-      // If no CSV file, validate that players with data are complete
       if (!data.csvFile) {
         const playersWithData = data.players.filter(
           (player) =>
@@ -80,7 +76,7 @@ const formSchema = z
             player.seed
         )
 
-        // Check if all filled players have complete data
+        // ✅ Seed is optional, so removed from required validation
         return playersWithData.every(
           (player) =>
             player.fullName &&
@@ -89,10 +85,8 @@ const formSchema = z
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(player.email) &&
             player.phone &&
             player.phone.length >= 6 &&
-            player.captainName && 
-            player.captainName.length >=2 &&
-            player.seed &&
-            player.seed.length >= 1
+            player.captainName &&
+            player.captainName.length >= 2
         )
       }
       return true
@@ -463,6 +457,7 @@ export default TournamentParticipantsPage
 //   fullName: z.string().optional(),
 //   email: z.string().optional(),
 //   phone: z.string().optional(),
+//   captainName: z.string().optional(),
 //   seed: z.string().optional(),
 // })
 
@@ -487,6 +482,7 @@ export default TournamentParticipantsPage
 //           player.fullName ||
 //           player.email ||
 //           player.phone ||
+//           player.captainName ||
 //           player.seed
 //       )
 
@@ -507,6 +503,7 @@ export default TournamentParticipantsPage
 //             player.fullName ||
 //             player.email ||
 //             player.phone ||
+//             player.captainName ||
 //             player.seed
 //         )
 
@@ -519,6 +516,8 @@ export default TournamentParticipantsPage
 //             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(player.email) &&
 //             player.phone &&
 //             player.phone.length >= 6 &&
+//             player.captainName && 
+//             player.captainName.length >=2 &&
 //             player.seed &&
 //             player.seed.length >= 1
 //         )
@@ -558,10 +557,10 @@ export default TournamentParticipantsPage
 //       csvFile: undefined,
 //       players: isPair
 //         ? [
-//             { fullName: "", email: "", phone: "", seed: "" },
-//             { fullName: "", email: "", phone: "", seed: "" },
+//             { fullName: "", email: "", phone: "", captainName: "", seed: "" },
+//             { fullName: "", email: "", phone: "", captainName: "", seed: "" },
 //           ]
-//         : [{ fullName: "", email: "", phone: "", seed: "" }],
+//         : [{ fullName: "", email: "", phone: "", captainName: "", seed: "" }],
 //     },
 //   })
 
@@ -580,6 +579,7 @@ export default TournamentParticipantsPage
 //         player.fullName ||
 //         player.email ||
 //         player.phone ||
+//         player.captainName ||
 //         player.seed
 //     )
 
@@ -688,12 +688,12 @@ export default TournamentParticipantsPage
 //                   render={({ field }) => (
 //                     <FormItem>
 //                       <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
-//                         Player {index + 1} Name
+//                         Team Name
 //                       </FormLabel>
 //                       <FormControl>
 //                         <Input
 //                           className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:text-[#8E938F] font-semibold leading-[150%]"
-//                           placeholder="Liam Davies(Collingtree Park GC)"
+//                           placeholder="Enter Team Name"
 //                           {...field}
 //                         />
 //                       </FormControl>
@@ -708,12 +708,12 @@ export default TournamentParticipantsPage
 //                   render={({ field }) => (
 //                     <FormItem>
 //                       <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
-//                         Player {index + 1} Email
+//                         Team Captain Email
 //                       </FormLabel>
 //                       <FormControl>
 //                         <Input
 //                           className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:text-[#8E938F] font-semibold leading-[150%]"
-//                           placeholder="yx04lbn@yahoo.co.uk"
+//                           placeholder="Enter Team Captain Email"
 //                           {...field}
 //                         />
 //                       </FormControl>
@@ -728,12 +728,12 @@ export default TournamentParticipantsPage
 //                   render={({ field }) => (
 //                     <FormItem>
 //                       <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
-//                         Player {index + 1} Phone
+//                         Team Captain Phone
 //                       </FormLabel>
 //                       <FormControl>
 //                         <Input
 //                           className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:text-[#8E938F] font-semibold leading-[150%]"
-//                           placeholder="Collingtree Park GC"
+//                           placeholder="Enter Team Captain Phone number"
 //                           {...field}
 //                         />
 //                       </FormControl>
@@ -743,7 +743,26 @@ export default TournamentParticipantsPage
 //                 />
 //               </div>
 
-//               <div className="mt-4">
+//               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+//                 <FormField
+//                   control={form.control}
+//                   name={`players.${index}.captainName`}
+//                   render={({ field }) => (
+//                     <FormItem>
+//                       <FormLabel className="text-base text-[#343A40] font-semibold leading-[150%]">
+//                         Team Captain Name
+//                       </FormLabel>
+//                       <FormControl>
+//                         <Input
+//                           className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base text-[#343A40] placeholder:text-[#8E938F] font-semibold leading-[150%]"
+//                           placeholder="Enter Team Captain Name"
+//                           {...field}
+//                         />
+//                       </FormControl>
+//                       <FormMessage />
+//                     </FormItem>
+//                   )}
+//                 />
 //                 <FormField
 //                   control={form.control}
 //                   name={`players.${index}.seed`}
@@ -816,4 +835,5 @@ export default TournamentParticipantsPage
 // }
 
 // export default TournamentParticipantsPage
+
 

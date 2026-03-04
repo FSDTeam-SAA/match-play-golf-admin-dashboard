@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Eye, Trash } from 'lucide-react'
+import { Eye, SquarePen, Trash } from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
 import DeleteModal from '@/components/modals/delete-modal'
@@ -28,23 +28,27 @@ import TableSkeleton from '@/components/reusable/TableSkeleton'
 import ErrorContainer from '@/components/ErrorContainer/ErrorContainer'
 import NotFound from '@/components/reusable/not-found-data'
 import MatchPlayGolfPagination from '@/components/ui/match-play-golf-pagination'
+import EditPlayerModal from './edit-player'
 
 const PlayersManagementContainer = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [search, setSearch] = useState('')
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [editPlayerModalOpen, setEditPlayerModalOpen] = useState(false);
   const [viewPlayer, setViewPlayer] = useState(false)
   const [playerId, setPlayerId] = useState('')
   const [selectedPlayer, setSelectedPlayer] =
     useState<TournamentPlayerItem | null>(null)
   const debouncedSearch = useDebounce(search, 500)
 
+
+
   const queryClient = useQueryClient()
   const session = useSession()
   const token = (session?.data?.user as { accessToken: string })?.accessToken
-  console.log(token)
+  // console.log("player id", playerId)
 
-  console.log(search)
+  // console.log(search)
 
   // get tournament api
   const { data, isLoading, isError, error } =
@@ -165,6 +169,16 @@ const PlayersManagementContainer = () => {
                   <TableCell className="flex items-center justify-center gap-6 py-4">
                     <button
                       onClick={() => {
+                        setPlayerId(item?.playerId)
+                        setEditPlayerModalOpen(true)
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <SquarePen  className="h-6 w-6 text-[#181818]" />
+                    </button>
+
+                    <button
+                      onClick={() => {
                         setViewPlayer(true)
                         setSelectedPlayer(item)
                       }}
@@ -282,6 +296,20 @@ const PlayersManagementContainer = () => {
               tournamentData={selectedPlayer}
             />
           )}
+        </div>
+
+        {/* player edit modal  */}
+
+        <div>
+          {
+            editPlayerModalOpen && (
+              <EditPlayerModal 
+              open={editPlayerModalOpen}
+              onOpenChange={setEditPlayerModalOpen}
+              playerId={playerId}
+              />
+            )
+          }
         </div>
       </div>
     </div>
