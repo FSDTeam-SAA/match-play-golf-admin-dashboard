@@ -14,6 +14,9 @@ const PlayersView = ({
 }) => {
   if (!tournamentData) return null
 
+
+  console.log("tournamentData", tournamentData)
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-6 space-y-4">
@@ -41,7 +44,7 @@ const PlayersView = ({
           </p>
           <p>
             <strong>Player Email :</strong>{' '}
-            {tournamentData?.playerDetails?.fullName || 'N/A'}
+            {tournamentData?.playerDetails?.email || 'N/A'}
           </p>
           <p>
             <strong>Phone :</strong>{' '}

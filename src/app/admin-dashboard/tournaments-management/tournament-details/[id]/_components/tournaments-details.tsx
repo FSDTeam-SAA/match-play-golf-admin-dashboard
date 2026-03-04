@@ -5,8 +5,13 @@ import React, { useState } from "react";
 import Rules from "./rules";
 import Details from "./details";
 import Draw from "./draw";
+import TournamentsHeader from "../../../[id]/_components/tournament-header";
+import { TournamentApiResponse } from "../../../[id]/_components/single-tournament-data-type";
+import { useSession } from "next-auth/react";
 
 const TournamentsDetails = () => {
+   const session = useSession();
+    const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const params = useParams();
   const id = params?.id;
 
@@ -16,7 +21,7 @@ const TournamentsDetails = () => {
     queryKey: ["tournaments"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}`,
       );
 
       const data = await res.json();
@@ -25,11 +30,30 @@ const TournamentsDetails = () => {
     },
   });
 
-  return (
-    <div className="p-6">
+    // get api call 
+    const { data:tournamentData } = useQuery<TournamentApiResponse>({
+      queryKey: ["single-tournament", id],
+      queryFn: async () => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/${id}`,{
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+        return res.json();
+      },
+      enabled: !!token
+    })
+  
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tournamentName = tournamentData && tournamentData?.data && tournamentData?.data?.tournament?.tournamentName || "N/A"
 
+  return (
+    <div>
+      <TournamentsHeader tournamentName={tournamentName} />
       {/* sub-pages */}
-      <div>
+      <div className="p-6">
         <div className="flex items-center gap-8 border-b-[1px] border-gray-300">
           <button
             className={`text-gray-500 py-2 px-4 rounded-t-lg ${
