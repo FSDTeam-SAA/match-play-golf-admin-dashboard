@@ -46,6 +46,8 @@ const ARTICLE_TYPES = [
 ]
 
 const ARTICLE_STATUS = ['draft', 'published']
+const MAX_IMAGE_SIZE_MB = 10
+const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024
 
 export function ArticleFormModal({
   mode,
@@ -95,14 +97,35 @@ export function ArticleFormModal({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      setImageFile(file)
-      setImagePreview(URL.createObjectURL(file))
+    if (!file) return
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      toast.error(
+        `Image size must be ${MAX_IMAGE_SIZE_MB}MB or smaller. Please choose a smaller file.`,
+      )
+      e.target.value = ''
+      setImageFile(null)
+      if (mode === 'create') {
+        setImagePreview('')
+      } else if (article) {
+        setImagePreview(article.coverImage)
+      }
+      return
     }
+
+    setImageFile(file)
+    setImagePreview(URL.createObjectURL(file))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (imageFile && imageFile.size > MAX_IMAGE_SIZE_BYTES) {
+      toast.error(
+        `Image size must be ${MAX_IMAGE_SIZE_MB}MB or smaller. Please choose a smaller file.`,
+      )
+      return
+    }
 
     if (mode === 'create') {
       if (!imageFile) {
