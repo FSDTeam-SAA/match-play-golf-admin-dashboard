@@ -99,7 +99,7 @@ const TournamentsDetails = () => {
             {data.rounds.map((round) => (
               <button
                 key={round._id}
-                className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 ${
+                className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 hover:bg-primary ${
                   roundNumber === round?.roundNumber
                     ? "bg-primary text-white"
                     : "bg-inherit border border-primary text-primary"
