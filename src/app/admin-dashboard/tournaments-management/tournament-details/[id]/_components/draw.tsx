@@ -1,112 +1,125 @@
-import React, { useState } from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
-import Image from 'next/image'
-import MomentsModal from './moments-modal'
-import VsModal from './vs-modal'
-import PairCard from './pair-card'
-import EnterResultModal from './enter-result-modal'
+"use client";
+
+import React, { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
+import MomentsModal from "./moments-modal";
+import VsModal from "./vs-modal";
+import PairCard from "./pair-card";
+import EnterResultModal from "./enter-result-modal";
 
 interface PairId {
-  _id: string
-  tournamentId: string
-  teamName: string
+  _id: string;
+  tournamentId: string;
+  teamName: string;
   player1: {
-    _id: string
-    fullName: string
-    email: string
-    profileImage: string
-  }
+    _id: string;
+    fullName: string;
+    email: string;
+    profileImage: string;
+  };
   player2: {
-    _id: string
-    fullName: string
-    email: string
-    profileImage: string
-  }
+    _id: string;
+    fullName: string;
+    email: string;
+    profileImage: string;
+  };
 }
 
 export interface Match {
-  _id: string
-  winnerColor: string
-  winner: string
-  matchType: 'Single' | 'Pairs' | 'Team'
+  _id: string;
+  winnerColor?: string;
+  winner?: string;
+  matchType: "Single" | "Pairs" | "Team";
   player1Id: {
-    _id: string
-    fullName: string
-    profileImage: string
-    email: string
-  }
+    _id: string;
+    fullName: string;
+    profileImage: string;
+    email: string;
+  };
   player2Id: {
-    _id: string
-    fullName: string
-    profileImage: string
-    email: string
-  }
-  player1Score: string
-  player2Score: string
-  pair1Score: string
-  pair2Score: string
-  date: string
-  status: string
-  pair1Id: PairId
-  pair2Id: PairId
-  comments: string
-  matchPhoto: string[]
-  venue?: string
+    _id: string;
+    fullName: string;
+    profileImage: string;
+    email: string;
+  };
+  player1Score: string | number;
+  player2Score: string | number;
+  pair1Score: string | number;
+  pair2Score: string | number;
+  date: string | null;
+  status: string;
+  pair1Id?: PairId | null;
+  pair2Id?: PairId | null;
+  comments?: string;
+  matchPhoto: string[];
+  venue?: string;
+  tournamentId?: string;
+  knockoutStageId?: string;
+  matchNumber?: number;
+  round?: number;
+  winnerModel?: string;
+  createdBy?: string;
+  verifyToken?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface Props {
-  matches: Match[]
-  isLoading: boolean
-  refetchMatches?: () => void
+  matches?: Match[];
+  isLoading: boolean;
+  refetchMatches?: () => void;
+  roundNumber?: number;
+  setRoundNumber?: (round: number) => void;
 }
 
-const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isVsModalOpen, setIsVsModalOpen] = useState(false)
-  const [isEnterResultModalOpen, setIsEnterResultModalOpen] = useState(false)
-  const [matchInfo, setMatchInfo] = useState<Match | null>(null)
-  const [winner1, setWinner1] = useState<boolean>(false)
-  const [isEditMode, setIsEditMode] = useState(false)
+const Draw = ({ matches = [], isLoading, refetchMatches }: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVsModalOpen, setIsVsModalOpen] = useState(false);
+  const [isEnterResultModalOpen, setIsEnterResultModalOpen] = useState(false);
+  const [matchInfo, setMatchInfo] = useState<Match | null>(null);
+  const [winner1, setWinner1] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const handleOpenModal = (match: Match, winner1: boolean) => {
-    setIsModalOpen(true)
-    setMatchInfo(match)
-    setWinner1(winner1)
-  }
+    setIsModalOpen(true);
+    setMatchInfo(match);
+    setWinner1(winner1);
+  };
 
   const handleVsOpen = (match: Match) => {
-    setIsVsModalOpen(true)
-    setMatchInfo(match)
-  }
+    setIsVsModalOpen(true);
+    setMatchInfo(match);
+  };
 
   const handleEnterResultOpen = (match: Match, editMode: boolean = false) => {
-    setIsEnterResultModalOpen(true)
-    setMatchInfo(match)
-    setIsEditMode(editMode)
-  }
+    setIsEnterResultModalOpen(true);
+    setMatchInfo(match);
+    setIsEditMode(editMode);
+  };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   const handleVsCloseModal = () => {
-    setIsVsModalOpen(false)
-  }
+    setIsVsModalOpen(false);
+  };
 
   const handleEnterResultClose = () => {
-    setIsEnterResultModalOpen(false)
-    setIsEditMode(false)
-  }
+    setIsEnterResultModalOpen(false);
+    setIsEditMode(false);
+  };
 
   const handleResultSuccess = () => {
-    refetchMatches?.()
-  }
+    refetchMatches?.();
+  };
 
   // Skeleton loader
   if (isLoading) {
     return (
       <div className="space-y-6">
-        {[1, 2, 3].map(item => (
+        {[1, 2, 3].map((item) => (
           <div key={item} className="flex items-start gap-5 space-y-8">
             <Skeleton className="h-6 w-8 rounded-md" />
             <div className="flex-1 shadow-lg rounded-lg overflow-hidden ">
@@ -152,7 +165,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
           </div>
         ))}
       </div>
-    )
+    );
   }
 
   if (!matches || matches.length === 0) {
@@ -161,18 +174,18 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
         <div className="text-gray-500 text-lg">No matches found</div>
         <p className="text-gray-400 mt-2">Create a match to get started</p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="space-y-6">
       {matches.map((item, index) => {
-        const winner1 = item?.winner === item?.player1Id?._id
-        const winner2 = item?.winner === item?.player2Id?._id
+        const winner1 = item?.winner === item?.player1Id?._id;
+        const winner2 = item?.winner === item?.player2Id?._id;
 
         return (
           <div key={item._id}>
-            {item?.matchType === 'Single' || item?.matchType === 'Team' ? (
+            {item?.matchType === "Single" || item?.matchType === "Team" ? (
               <div className="flex items-center gap-5 space-y-5">
                 <div className="font-medium text-gray-500 pt-5">
                   {index + 1 < 10 ? `0${index + 1}` : index + 1}
@@ -183,7 +196,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                     {/* winner 1 card */}
                     <div
                       className={`border-r border-gray-300 lg:w-1/2 p-6 ${
-                        winner1 ? `bg-[#39674b] text-white` : ''
+                        winner1 ? `bg-[#39674b] text-white` : ""
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -198,13 +211,13 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                             />
                           ) : (
                             <span className="text-lg font-semibold text-red-800">
-                              {item.player1Id?.fullName?.charAt(0) || 'P1'}
+                              {item.player1Id?.fullName?.charAt(0) || "P1"}
                             </span>
                           )}
                         </div>
                         <div>
                           <h1 className="font-semibold">
-                            {item.player1Id?.fullName || 'Player 1'}
+                            {item.player1Id?.fullName || "Player 1"}
                           </h1>
                         </div>
                       </div>
@@ -213,7 +226,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                     {/* vs button */}
                     <div
                       className={`px-8 flex items-center gap-2 ${
-                        winner1 && 'flex-row-reverse'
+                        winner1 && "flex-row-reverse"
                       }`}
                     >
                       <div
@@ -222,10 +235,10 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                       >
                         VS
                       </div>
-                      {item.status === 'completed' && (
+                      {item.status === "completed" && (
                         <div className="text-sm font-medium text-gray-600">
                           <span className="text-red-700 font-bold text-xl flex">
-                            <span>{item.player1Score}</span> <span> /</span>{' '}
+                            <span>{item.player1Score}</span> <span> /</span>{" "}
                             <span> {item.player2Score}</span>
                           </span>
                         </div>
@@ -241,7 +254,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                       <div className="flex items-center gap-3">
                         <div className="text-right">
                           <h1 className="font-semibold">
-                            {item.player2Id?.fullName || 'Player 2'}
+                            {item.player2Id?.fullName || "Player 2"}
                           </h1>
                         </div>
                         <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
@@ -255,7 +268,7 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                             />
                           ) : (
                             <span className="text-lg font-semibold text-red-800">
-                              {item.player2Id?.fullName?.charAt(0) || 'P2'}
+                              {item.player2Id?.fullName?.charAt(0) || "P2"}
                             </span>
                           )}
                         </div>
@@ -266,9 +279,9 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                   <div className="bg-[#eaeaeecb] py-2 px-4">
                     <div
                       className={`flex flex-col sm:flex-row ${
-                        item.status === 'completed'
-                          ? 'justify-between'
-                          : 'justify-center'
+                        item.status === "completed"
+                          ? "justify-between"
+                          : "justify-center"
                       } items-start sm:items-center gap-4`}
                     >
                       <div></div>
@@ -277,27 +290,27 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                           <span className="text-gray-700 text-sm">
                             {item?.date
                               ? new Date(item?.date).toLocaleDateString(
-                                  'en-US',
+                                  "en-US",
                                   {
-                                    weekday: 'short',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric',
+                                    weekday: "short",
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
                                   },
                                 )
-                              : 'Date not set'}
+                              : "Date not set"}
                           </span>
                           <span>, </span>
                           <span className="text-gray-700 text-sm">
                             {item?.date
                               ? new Date(item?.date).toLocaleTimeString(
-                                  'en-US',
+                                  "en-US",
                                   {
-                                    hour: '2-digit',
-                                    minute: '2-digit',
+                                    hour: "2-digit",
+                                    minute: "2-digit",
                                   },
                                 )
-                              : ''}
+                              : ""}
                           </span>
                         </div>
                         <div className="flex items-center gap-3 justify-end">
@@ -306,14 +319,14 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                               item.status,
                             )}`}
                           >
-                            {item.status || 'upcoming'}
+                            {item.status || "upcoming"}
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3">
-                        {item.status === 'completed' ||
-                        item.status === 'Completed' ? (
+                        {item.status === "completed" ||
+                        item.status === "Completed" ? (
                           <>
                             <button
                               onClick={() => handleOpenModal(item, winner1)}
@@ -347,11 +360,11 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
                 item={item as Match}
                 getStatusColor={getStatusColor}
                 index={index}
-                refetchMatches={refetchMatches} // Add this line
+                refetchMatches={refetchMatches}
               />
             )}
           </div>
-        )
+        );
       })}
 
       {isModalOpen && matchInfo && (
@@ -381,24 +394,24 @@ const Draw = ({ matches, isLoading, refetchMatches }: Props) => {
         />
       )}
     </div>
-  )
-}
+  );
+};
 
 // Helper function for status styling
 const getStatusColor = (status: string) => {
   switch (status?.toLowerCase()) {
-    case 'upcoming':
-      return 'bg-blue-100 text-blue-800'
-    case 'in progress':
-    case 'in_progress':
-      return 'bg-yellow-100 text-yellow-800'
-    case 'completed':
-      return 'bg-green-100 text-green-800'
-    case 'cancelled':
-      return 'bg-red-100 text-red-800'
+    case "upcoming":
+      return "bg-blue-100 text-blue-800";
+    case "in progress":
+    case "in_progress":
+      return "bg-yellow-100 text-yellow-800";
+    case "completed":
+      return "bg-green-100 text-green-800";
+    case "cancelled":
+      return "bg-red-100 text-red-800";
     default:
-      return 'bg-gray-100 text-gray-800'
+      return "bg-gray-100 text-gray-800";
   }
-}
+};
 
-export default Draw
+export default Draw;
