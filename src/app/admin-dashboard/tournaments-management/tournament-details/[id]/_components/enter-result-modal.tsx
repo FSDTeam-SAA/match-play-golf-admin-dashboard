@@ -1,50 +1,52 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { X, Upload } from 'lucide-react'
-import { useSession } from 'next-auth/react'
-import { toast } from 'sonner'
-import Image from 'next/image'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState, useEffect } from "react";
+import { X, Upload } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import Image from "next/image";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Player {
-  _id: string
-  fullName: string
-  email: string
-  profileImage?: string
+  _id: string;
+  fullName: string;
+  email: string;
+  profileImage?: string;
 }
 
 interface PairInfo {
-  _id: string
-  teamName: string
-  player1: Player
-  player2: Player
+  _id: string;
+  teamName: string;
+  player1: Player;
+  player2: Player;
 }
 
+// Updated Match interface to match the one in Draw component
 interface Match {
-  _id: string
-  matchType: 'Single' | 'Pairs' | 'Team'
-  player1Id?: Player
-  player2Id?: Player
-  pair1Id?: PairInfo
-  pair2Id?: PairInfo
-  player1Score?: string
-  player2Score?: string
-  pair1Score?: string
-  pair2Score?: string
-  date?: string
-  winner?: string
-  venue?: string
-  comments?: string
-  matchPhoto?: string[]
+  _id: string;
+  matchType: "Single" | "Pairs" | "Team";
+  player1Id?: Player;
+  player2Id?: Player;
+  pair1Id?: PairInfo | null; // Allow null
+  pair2Id?: PairInfo | null; // Allow null
+  player1Score?: string | number;
+  player2Score?: string | number;
+  pair1Score?: string | number;
+  pair2Score?: string | number;
+  date?: string | null;
+  winner?: string;
+  venue?: string;
+  comments?: string;
+  matchPhoto?: string[];
+  status?: string;
 }
 
 interface EnterResultModalProps {
-  isOpen: boolean
-  onClose: () => void
-  match: Match | null
-  onSuccess?: () => void
-  isEditMode?: boolean
+  isOpen: boolean;
+  onClose: () => void;
+  match: Match | null;
+  onSuccess?: () => void;
+  isEditMode?: boolean;
 }
 
 export default function EnterResultModal({
@@ -54,229 +56,231 @@ export default function EnterResultModal({
   onSuccess,
   isEditMode = false,
 }: EnterResultModalProps) {
-  const { data: session } = useSession()
-  const queryClient = useQueryClient()
+  const { data: session } = useSession();
+  const queryClient = useQueryClient();
 
-  const [selectedWinner, setSelectedWinner] = useState<string>('')
-  const [player1Score, setPlayer1Score] = useState('')
-  const [player2Score, setPlayer2Score] = useState('')
-  const [location, setLocation] = useState('')
-  const [dateTime, setDateTime] = useState('')
-  const [comments, setComments] = useState('')
-  const [photos, setPhotos] = useState<File[]>([])
-  const [photoPreviews, setPhotoPreviews] = useState<string[]>([])
-  const [existingPhotos, setExistingPhotos] = useState<string[]>([])
+  const [selectedWinner, setSelectedWinner] = useState<string>("");
+  const [player1Score, setPlayer1Score] = useState("");
+  const [player2Score, setPlayer2Score] = useState("");
+  const [location, setLocation] = useState("");
+  const [dateTime, setDateTime] = useState("");
+  const [comments, setComments] = useState("");
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
 
   // Check if this is a Pairs match
-  const isPairMatch = match?.matchType === 'Pairs'
+  const isPairMatch = match?.matchType === "Pairs";
 
   // Load existing data when in edit mode
   useEffect(() => {
     if (isOpen && match && isEditMode) {
-      setSelectedWinner(match.winner || '')
+      setSelectedWinner(match.winner || "");
 
       // Load scores based on match type
       if (isPairMatch) {
-        setPlayer1Score(match.pair1Score || '')
-        setPlayer2Score(match.pair2Score || '')
+        setPlayer1Score(String(match.pair1Score || ""));
+        setPlayer2Score(String(match.pair2Score || ""));
       } else {
-        setPlayer1Score(match.player1Score || '')
-        setPlayer2Score(match.player2Score || '')
+        setPlayer1Score(String(match.player1Score || ""));
+        setPlayer2Score(String(match.player2Score || ""));
       }
 
-      setLocation(match.venue || '')
-      setComments(match.comments || '')
-      setExistingPhotos(match.matchPhoto || [])
+      setLocation(match.venue || "");
+      setComments(match.comments || "");
+      setExistingPhotos(match.matchPhoto || []);
 
       if (match.date) {
-        const date = new Date(match.date)
-        const formattedDate = date.toISOString().slice(0, 16)
-        setDateTime(formattedDate)
+        const date = new Date(match.date);
+        const formattedDate = date.toISOString().slice(0, 16);
+        setDateTime(formattedDate);
       }
     } else if (isOpen && !isEditMode) {
       // Reset form for new entry
-      setSelectedWinner('')
-      setPlayer1Score('')
-      setPlayer2Score('')
-      setLocation('')
-      setDateTime('')
-      setComments('')
-      setPhotos([])
-      setPhotoPreviews([])
-      setExistingPhotos([])
+      setSelectedWinner("");
+      setPlayer1Score("");
+      setPlayer2Score("");
+      setLocation("");
+      setDateTime("");
+      setComments("");
+      setPhotos([]);
+      setPhotoPreviews([]);
+      setExistingPhotos([]);
     }
-  }, [isOpen, match, isEditMode, isPairMatch])
+  }, [isOpen, match, isEditMode, isPairMatch]);
 
   const updateMatchMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const token = session?.user?.accessToken || ''
+      const token = session?.user?.accessToken || "";
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/match/${match?._id}`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
           },
           body: formData,
         },
-      )
+      );
 
-      const data = await res.json()
+      const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data?.message || 'Failed to update match')
+        throw new Error(data?.message || "Failed to update match");
       }
 
-      return data
+      return data;
     },
     onSuccess: () => {
-      toast.success('Match result saved successfully!')
+      toast.success("Match result saved successfully!");
 
       // Invalidate matches queries to refetch data
-      queryClient.invalidateQueries({ queryKey: ['tournaments'] })
-      queryClient.invalidateQueries({ queryKey: ['match', match?._id] })
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+      queryClient.invalidateQueries({ queryKey: ["match", match?._id] });
 
-      onSuccess?.()
-      onClose()
+      onSuccess?.();
+      onClose();
 
       // Reset form
-      setSelectedWinner('')
-      setPlayer1Score('')
-      setPlayer2Score('')
-      setLocation('')
-      setDateTime('')
-      setComments('')
-      setPhotos([])
-      setPhotoPreviews([])
-      setExistingPhotos([])
+      setSelectedWinner("");
+      setPlayer1Score("");
+      setPlayer2Score("");
+      setLocation("");
+      setDateTime("");
+      setComments("");
+      setPhotos([]);
+      setPhotoPreviews([]);
+      setExistingPhotos([]);
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Something went wrong. Please try again.')
+      toast.error(error.message || "Something went wrong. Please try again.");
     },
-  })
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
+    const files = Array.from(e.target.files || []);
     if (files.length > 0) {
-      addPhotos(files)
+      addPhotos(files);
     }
-  }
+  };
 
   const addPhotos = (newFiles: File[]) => {
-    const validFiles = newFiles.filter(file => file.type.startsWith('image/'))
+    const validFiles = newFiles.filter((file) =>
+      file.type.startsWith("image/"),
+    );
 
-    setPhotos(prev => [...prev, ...validFiles])
+    setPhotos((prev) => [...prev, ...validFiles]);
 
-    validFiles.forEach(file => {
-      const reader = new FileReader()
+    validFiles.forEach((file) => {
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setPhotoPreviews(prev => [...prev, reader.result as string])
-      }
-      reader.readAsDataURL(file)
-    })
-  }
+        setPhotoPreviews((prev) => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
 
   const removePhoto = (index: number) => {
-    setPhotos(prev => prev.filter((_, i) => i !== index))
-    setPhotoPreviews(prev => prev.filter((_, i) => i !== index))
-  }
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+    setPhotoPreviews((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const removeExistingPhoto = (index: number) => {
-    setExistingPhotos(prev => prev.filter((_, i) => i !== index))
-  }
+    setExistingPhotos((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-  }
+    e.preventDefault();
+  };
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    const files = Array.from(e.dataTransfer.files)
-    const imageFiles = files.filter(file => file.type.startsWith('image/'))
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
     if (imageFiles.length > 0) {
-      addPhotos(imageFiles)
+      addPhotos(imageFiles);
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!match) {
-      toast.error('Match information is missing')
-      return
+      toast.error("Match information is missing");
+      return;
     }
 
     if (!session?.user?.accessToken) {
-      toast.error('You must be logged in')
-      return
+      toast.error("You must be logged in");
+      return;
     }
 
     if (!selectedWinner) {
-      toast.error('Please select a winner')
-      return
+      toast.error("Please select a winner");
+      return;
     }
 
     if (!player1Score || !player2Score) {
-      toast.error('Please enter both scores')
-      return
+      toast.error("Please enter both scores");
+      return;
     }
 
     // Validate scores
-    const score1 = parseInt(player1Score)
-    const score2 = parseInt(player2Score)
+    const score1 = parseInt(player1Score);
+    const score2 = parseInt(player2Score);
 
     // Get the correct winner ID based on match type
     const contestant1Id = isPairMatch
       ? match?.pair1Id?._id
-      : match?.player1Id?._id
+      : match?.player1Id?._id;
     const contestant2Id = isPairMatch
       ? match?.pair2Id?._id
-      : match?.player2Id?._id
+      : match?.player2Id?._id;
 
     if (selectedWinner === contestant1Id && score1 <= score2) {
-      toast.error('Winner score must be higher than opponent')
-      return
+      toast.error("Winner score must be higher than opponent");
+      return;
     }
 
     if (selectedWinner === contestant2Id && score2 <= score1) {
-      toast.error('Winner score must be higher than opponent')
-      return
+      toast.error("Winner score must be higher than opponent");
+      return;
     }
 
     // Create FormData for file upload
-    const formData = new FormData()
+    const formData = new FormData();
 
     // Add scores based on match type
     if (isPairMatch) {
-      formData.append('pair1Score', player1Score)
-      formData.append('pair2Score', player2Score)
+      formData.append("pair1Score", player1Score);
+      formData.append("pair2Score", player2Score);
     } else {
-      formData.append('player1Score', player1Score)
-      formData.append('player2Score', player2Score)
+      formData.append("player1Score", player1Score);
+      formData.append("player2Score", player2Score);
     }
 
-    formData.append('winner', selectedWinner)
-    formData.append('status', 'completed')
+    formData.append("winner", selectedWinner);
+    formData.append("status", "completed");
 
-    if (location) formData.append('venue', location)
-    if (dateTime) formData.append('date', new Date(dateTime).toISOString())
-    if (comments) formData.append('comments', comments)
+    if (location) formData.append("venue", location);
+    if (dateTime) formData.append("date", new Date(dateTime).toISOString());
+    if (comments) formData.append("comments", comments);
 
     // Append all new photos to matchPhotos field
-    photos.forEach(photo => {
-      formData.append('matchPhotos', photo)
-    })
+    photos.forEach((photo) => {
+      formData.append("matchPhotos", photo);
+    });
 
     // If in edit mode and there are existing photos
     if (isEditMode && existingPhotos.length > 0) {
-      formData.append('existingPhotos', JSON.stringify(existingPhotos))
+      formData.append("existingPhotos", JSON.stringify(existingPhotos));
     }
 
-    updateMatchMutation.mutate(formData)
-  }
+    updateMatchMutation.mutate(formData);
+  };
 
-  if (!isOpen || !match) return null
+  if (!isOpen || !match) return null;
 
   // Get contestant names based on match type
   const getContestantName = (position: 1 | 2) => {
@@ -285,28 +289,28 @@ export default function EnterResultModal({
         return (
           match?.pair1Id?.teamName ||
           `${match?.pair1Id?.player1?.fullName} & ${match?.pair1Id?.player2?.fullName}` ||
-          'Team 1'
-        )
+          "Team 1"
+        );
       } else {
         return (
           match?.pair2Id?.teamName ||
           `${match?.pair2Id?.player1?.fullName} & ${match?.pair2Id?.player2?.fullName}` ||
-          'Team 2'
-        )
+          "Team 2"
+        );
       }
     } else {
       return position === 1
-        ? match?.player1Id?.fullName || 'Player 1'
-        : match?.player2Id?.fullName || 'Player 2'
+        ? match?.player1Id?.fullName || "Player 1"
+        : match?.player2Id?.fullName || "Player 2";
     }
-  }
+  };
 
   const contestant1Id = isPairMatch
     ? match?.pair1Id?._id
-    : match?.player1Id?._id
+    : match?.player1Id?._id;
   const contestant2Id = isPairMatch
     ? match?.pair2Id?._id
-    : match?.player2Id?._id
+    : match?.player2Id?._id;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -316,7 +320,7 @@ export default function EnterResultModal({
           <div className="flex items-center justify-between p-8 border-b">
             <div className="flex-1"></div>
             <h2 className="text-2xl font-bold text-red-700 flex-1 text-center">
-              {isEditMode ? 'Edit Result' : 'Enter Result'}
+              {isEditMode ? "Edit Result" : "Enter Result"}
             </h2>
             <div className="flex-1 flex justify-end">
               <button
@@ -345,18 +349,18 @@ export default function EnterResultModal({
                   <div className="space-y-3">
                     {/* Contestant 1 */}
                     <div
-                      onClick={() => setSelectedWinner(contestant1Id || '')}
+                      onClick={() => setSelectedWinner(contestant1Id || "")}
                       className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
                         selectedWinner === contestant1Id
-                          ? 'border-green-600 bg-green-50'
-                          : 'border-gray-300 hover:border-gray-400'
+                          ? "border-green-600 bg-green-50"
+                          : "border-gray-300 hover:border-gray-400"
                       }`}
                     >
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                           selectedWinner === contestant1Id
-                            ? 'border-green-600 bg-green-600'
-                            : 'border-gray-300'
+                            ? "border-green-600 bg-green-600"
+                            : "border-gray-300"
                         }`}
                       >
                         {selectedWinner === contestant1Id && (
@@ -370,18 +374,18 @@ export default function EnterResultModal({
 
                     {/* Contestant 2 */}
                     <div
-                      onClick={() => setSelectedWinner(contestant2Id || '')}
+                      onClick={() => setSelectedWinner(contestant2Id || "")}
                       className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
                         selectedWinner === contestant2Id
-                          ? 'border-green-600 bg-green-50'
-                          : 'border-gray-300 hover:border-gray-400'
+                          ? "border-green-600 bg-green-50"
+                          : "border-gray-300 hover:border-gray-400"
                       }`}
                     >
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                           selectedWinner === contestant2Id
-                            ? 'border-green-600 bg-green-600'
-                            : 'border-gray-300'
+                            ? "border-green-600 bg-green-600"
+                            : "border-gray-300"
                         }`}
                       >
                         {selectedWinner === contestant2Id && (
@@ -410,7 +414,7 @@ export default function EnterResultModal({
                     type="number"
                     min="0"
                     value={player1Score}
-                    onChange={e => setPlayer1Score(e.target.value)}
+                    onChange={(e) => setPlayer1Score(e.target.value)}
                     className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-center font-semibold"
                     placeholder="0"
                     required
@@ -426,7 +430,7 @@ export default function EnterResultModal({
                     type="number"
                     min="0"
                     value={player2Score}
-                    onChange={e => setPlayer2Score(e.target.value)}
+                    onChange={(e) => setPlayer2Score(e.target.value)}
                     className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-center font-semibold"
                     placeholder="0"
                     required
@@ -444,7 +448,7 @@ export default function EnterResultModal({
                 <input
                   type="text"
                   value={location}
-                  onChange={e => setLocation(e.target.value)}
+                  onChange={(e) => setLocation(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                   placeholder="Collingtree Park GC"
                 />
@@ -456,7 +460,7 @@ export default function EnterResultModal({
                 <input
                   type="datetime-local"
                   value={dateTime}
-                  onChange={e => setDateTime(e.target.value)}
+                  onChange={(e) => setDateTime(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                 />
               </div>
@@ -469,7 +473,7 @@ export default function EnterResultModal({
               </label>
               <textarea
                 value={comments}
-                onChange={e => setComments(e.target.value)}
+                onChange={(e) => setComments(e.target.value)}
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
                 placeholder="Very Close match played against 2 great players"
@@ -585,11 +589,11 @@ export default function EnterResultModal({
               disabled={updateMatchMutation.isPending}
               className="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
             >
-              {updateMatchMutation.isPending ? 'Saving...' : 'Save'}
+              {updateMatchMutation.isPending ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }

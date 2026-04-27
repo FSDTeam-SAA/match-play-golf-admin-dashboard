@@ -2,7 +2,7 @@ import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface RulesProps {
-  rules: string;
+  rules?: string[];
   isLoading: boolean;
 }
 
@@ -27,8 +27,14 @@ const Rules = ({ rules, isLoading }: RulesProps) => {
     <div>
       <h4 className="text-2xl font-semibold">Event Rules</h4>
 
-      <div className="text-gray-500 mt-3">
-        <div dangerouslySetInnerHTML={{ __html: rules }} />
+      <div className="text-gray-500 mt-3 space-y-3">
+        {rules && rules.length > 0 ? (
+          rules.map((rule, index) => (
+            <div key={index} dangerouslySetInnerHTML={{ __html: rule }} />
+          ))
+        ) : (
+          <p>No rules defined for this tournament.</p>
+        )}
       </div>
     </div>
   );
