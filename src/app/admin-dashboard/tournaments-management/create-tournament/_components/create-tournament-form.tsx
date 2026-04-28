@@ -83,7 +83,7 @@ const CreateTournament = () => {
       const payload = {
         tournamentName: values.tournamentName,
         sportName: values.sportName,
-        totalDrawSize: values.totalDrawSize,
+        drawSize: parseInt(values.totalDrawSize),
         drawFormat: values.drawFormat,
         format: values.format,
       }
@@ -242,7 +242,7 @@ const CreateTournament = () => {
                         <SelectItem value="32">32</SelectItem>
                         <SelectItem value="64">64</SelectItem>
                         <SelectItem value="128">128</SelectItem>
-                        <SelectItem value="128">256</SelectItem>
+                        <SelectItem value="256">256</SelectItem>
                         <SelectItem value="512">512</SelectItem>
                       </SelectContent>
                     </Select>
