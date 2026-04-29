@@ -131,7 +131,7 @@ export function ActivityChart() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-xl font-semibold leading-[150%] text-[#343A40] font-hexco">
-              Tournament Activity <CircleAlert className="w-5 h-5" />
+              Tournament Revenue <CircleAlert className="w-5 h-5" />
             </CardTitle>
 
             {/* Year Filter Dropdown */}
