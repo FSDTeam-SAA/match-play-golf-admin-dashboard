@@ -21,10 +21,12 @@ type SwapPlayerContainerProps = {
 }
 
 const slotOptions = [
-  { label: 'pair1Id', value: 'pair1Id' },
-  { label: 'pair2Id', value: 'pair2Id' },
-  { label: 'player1Id', value: 'player1Id' },
-  { label: 'player2Id', value: 'player2Id' },
+  { key: 'player1', label: 'Player1', apiValue: 'player1Id' },
+  { key: 'player2', label: 'Player2', apiValue: 'player2Id' },
+  { key: 'pair1', label: 'Pair1', apiValue: 'pair1Id' },
+  { key: 'pair2', label: 'Pair2', apiValue: 'pair2Id' },
+  { key: 'team1', label: 'Team1', apiValue: 'player1Id' },
+  { key: 'team2', label: 'Team2', apiValue: 'player2Id' },
 ]
 
 const SwapPlayerContainer = ({ onSuccess, onCancel }: SwapPlayerContainerProps) => {
@@ -51,8 +53,12 @@ const SwapPlayerContainer = ({ onSuccess, onCancel }: SwapPlayerContainerProps) 
           body: JSON.stringify({
             match1Id,
             match2Id,
-            match1Slot,
-            match2Slot,
+            match1Slot:
+              slotOptions.find(option => option.key === match1Slot)?.apiValue ||
+              '',
+            match2Slot:
+              slotOptions.find(option => option.key === match2Slot)?.apiValue ||
+              '',
           }),
         },
       )
@@ -120,7 +126,7 @@ const SwapPlayerContainer = ({ onSuccess, onCancel }: SwapPlayerContainerProps) 
             </SelectTrigger>
             <SelectContent>
               {slotOptions.map(option => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem key={option.key} value={option.key}>
                   {option.label}
                 </SelectItem>
               ))}
@@ -136,7 +142,7 @@ const SwapPlayerContainer = ({ onSuccess, onCancel }: SwapPlayerContainerProps) 
             </SelectTrigger>
             <SelectContent>
               {slotOptions.map(option => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem key={option.key} value={option.key}>
                   {option.label}
                 </SelectItem>
               ))}
