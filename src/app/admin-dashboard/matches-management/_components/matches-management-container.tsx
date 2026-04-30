@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Plus, Trash } from 'lucide-react'
+import { Eye, Plus, SquarePen, Trash } from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
 import DeleteModal from '@/components/modals/delete-modal'
@@ -97,13 +97,16 @@ const MatchesManagementContainer = () => {
                 Score
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
+                Match Type
+              </TableHead>
+              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Date
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Status
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4">
-                Action
+                Action 
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -128,6 +131,9 @@ const MatchesManagementContainer = () => {
                       </div>
                     )}
                   </TableCell>
+                  <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
+                    {item?.matchType}
+                  </TableCell>
                   <TableCell className="text-base font-medium text-[#343A40] leading-[150%] text-center py-4">
                     {moment(item?.createdAt).format('MMM DD YYYY')}
                   </TableCell>
@@ -146,11 +152,18 @@ const MatchesManagementContainer = () => {
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
-                    {/* <Link href={`/organizer/matches-management/${item?._id}`}>
+                    <Link href={`/organizer/matches-management/${item?._id}`}>
                     <button className="cursor-pointer">
                       <SquarePen />
                     </button>
-                    </Link> */}
+                    </Link>
+                    <Link
+                      href={`/admin-dashboard/matches-management/view-match/${item?._id}`}
+                    >
+                      <button className="cursor-pointer">
+                        <Eye className="h-6 w-6 " />
+                      </button>
+                    </Link>
                     <button
                       onClick={() => {
                         setDeleteModalOpen(true)
