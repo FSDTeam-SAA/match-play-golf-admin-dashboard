@@ -79,7 +79,7 @@ const ALLOWED_STATUSES = [
 ] as const;
 
 const formSchema = z.object({
-  date: z.union([z.date(), z.string()]),
+  date: z.date().nullable(),
   venue: z.string().min(1, "Venue is required"),
   status: z.enum(ALLOWED_STATUSES, { message: "Match status is required" }),
 });
@@ -137,9 +137,9 @@ const EditMatchForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date: new Date(),
-      venue: "",
-      status: "scheduled",
+      date: match?.date ? new Date(match?.date) : null,
+      venue: match?.venue || "",
+      status: normalizeStatus(match?.status),
     },
   });
 
@@ -212,7 +212,7 @@ const EditMatchForm = () => {
   useEffect(() => {
     if (!match) return;
     form.reset({
-      date: match.date ? new Date(match.date) : new Date(),
+      date: match.date ? new Date(match.date) : null,
       venue: match.venue || "",
       status: normalizeStatus(match.status),
     });
@@ -244,53 +244,63 @@ const EditMatchForm = () => {
     );
   }
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const selectedDate =
-      values.date instanceof Date ? values.date : new Date(values.date);
+const onSubmit = (values: z.infer<typeof formSchema>) => {
+  // Check if values.date is null or an invalid date
+  const selectedDate =
+    values.date instanceof Date && !isNaN(values.date.getTime())
+      ? values.date
+      : values.date !== null
+      ? new Date(values.date)
+      : new Date();  // Fallback to current date if values.date is null
 
-    if (Number.isNaN(selectedDate.getTime())) {
-      toast.error("Please select a valid date");
+  if (Number.isNaN(selectedDate.getTime())) {
+    toast.error("Please select a valid date");
+    return;
+  }
+
+  const roundsByNumber =
+    tournamentDetails?.rounds
+      ?.slice()
+      .sort((a, b) => a.roundNumber - b.roundNumber) ?? [];
+
+  const currentRoundIndex = roundsByNumber.findIndex(
+    (round) => round.roundNumber === match.round,
+  );
+
+  if (currentRoundIndex !== -1) {
+    const currentRound = roundsByNumber[currentRoundIndex];
+    const nextRound = roundsByNumber[currentRoundIndex + 1];
+
+    const roundStartDate = new Date(currentRound.date);
+    const nextRoundDate = nextRound ? new Date(nextRound.date) : null;
+
+    selectedDate.setHours(0, 0, 0, 0);
+    roundStartDate.setHours(0, 0, 0, 0);
+    if (nextRoundDate) nextRoundDate.setHours(0, 0, 0, 0);
+
+    if (selectedDate < roundStartDate) {
+      toast.error(
+        `Round ${match.round} match date must be on or after ${format(
+          roundStartDate,
+          "MMM dd, yyyy",
+        )}.`,
+      );
       return;
     }
 
-    const roundsByNumber =
-      tournamentDetails?.rounds
-        ?.slice()
-        .sort((a, b) => a.roundNumber - b.roundNumber) ?? [];
-
-    const currentRoundIndex = roundsByNumber.findIndex(
-      (round) => round.roundNumber === match.round,
-    );
-
-    if (currentRoundIndex !== -1) {
-      const currentRound = roundsByNumber[currentRoundIndex];
-      const nextRound = roundsByNumber[currentRoundIndex + 1];
-
-      const roundStartDate = new Date(currentRound.date);
-      const nextRoundDate = nextRound ? new Date(nextRound.date) : null;
-
-      const selected = new Date(selectedDate);
-      selected.setHours(0, 0, 0, 0);
-      roundStartDate.setHours(0, 0, 0, 0);
-      if (nextRoundDate) nextRoundDate.setHours(0, 0, 0, 0);
-
-      if (selected < roundStartDate) {
-        toast.error(
-          `Round ${match.round} match date must be on or after ${format(roundStartDate, "MMM dd, yyyy")}.`,
-        );
-        return;
-      }
-
-      if (nextRoundDate && selected >= nextRoundDate) {
-        toast.error(
-          `Round ${match.round} match date must be before ${format(nextRoundDate, "MMM dd, yyyy")}.`,
-        );
-        return;
-      }
+    if (nextRoundDate && selectedDate >= nextRoundDate) {
+      toast.error(
+        `Round ${match.round} match date must be before ${format(
+          nextRoundDate,
+          "MMM dd, yyyy",
+        )}.`,
+      );
+      return;
     }
+  }
 
-    mutate(values);
-  };
+  mutate(values);
+};
 
   return (
     <div className="p-6">
@@ -358,44 +368,33 @@ const EditMatchForm = () => {
               name="date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-                    Date
+                  <FormLabel className="text-base font-semibold text-black leading-[120%]">
+                    Start Date
                   </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <FormControl>
                         <Button
                           variant="outline"
-                          className={`w-full justify-start text-left h-12 ${
-                            !field.value && "text-muted-foreground"
-                          }`}
+                          className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
+                            }`}
                         >
-                          {field.value
-                            ? format(
-                                typeof field.value === "string"
-                                  ? new Date(field.value)
-                                  : field.value,
-                                "MMM dd, yyyy",
-                              )
-                            : "Pick date"}
+                          {field.value instanceof Date && !isNaN(field.value.getTime())
+                            ? format(field.value, "MMM dd, yyyy")
+                            : "mm/dd/yyyy"}
+
                           <CalendarIcon className="ml-auto h-4 w-4" />
                         </Button>
-                      </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={
-                          typeof field.value === "string"
-                            ? new Date(field.value)
-                            : field.value
-                        }
-                        onSelect={field.onChange}
+                        selected={field.value ?? undefined}
+                        onSelect={(date) => field.onChange(date ?? null)}
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
-                  <FormMessage className="text-red-500" />
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -477,9 +476,6 @@ const EditMatchForm = () => {
 };
 
 export default EditMatchForm;
-
-
-
 
 
 
