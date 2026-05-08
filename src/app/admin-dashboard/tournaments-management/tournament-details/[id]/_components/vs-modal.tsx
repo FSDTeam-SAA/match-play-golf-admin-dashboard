@@ -66,8 +66,7 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
               <div className="h-24 w-24 md:h-32 md:w-32 rounded-full mb-4 overflow-hidden border-4 border-white shadow-lg">
                 <Image
                   src={
-                    matchInfo?.player1Id?.profileImage ||
-                    '/images/common/user_placeholder.png'
+                    matchInfo?.player1Id?.profileImage || '/images/demoUser.png'
                   }
                   alt="Player 1"
                   width={200}
@@ -130,8 +129,7 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
               <div className="h-24 w-24 md:h-32 md:w-32 rounded-full mb-4 overflow-hidden border-4 border-white shadow-lg">
                 <Image
                   src={
-                    matchInfo?.player2Id?.profileImage ||
-                    '/images/common/user_placeholder.png'
+                    matchInfo?.player2Id?.profileImage || '/images/demoUser.png'
                   }
                   alt="Player 2"
                   width={200}
