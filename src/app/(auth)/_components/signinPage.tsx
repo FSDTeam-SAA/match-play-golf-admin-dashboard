@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
-import { signIn } from 'next-auth/react'
+import { getSession, signIn, signOut } from 'next-auth/react'
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from 'sonner'
 
@@ -51,6 +51,15 @@ const LoginForm = () => {
       if (res?.error) {
         toast.error(res.error)
       } else {
+        const session = await getSession()
+        const role = session?.user?.role?.toLowerCase()
+
+        if (role !== 'admin') {
+          await signOut({ redirect: false })
+          toast.error('You do not have permission to access the admin dashboard.')
+          return
+        }
+
         toast.success('Login successful!')
         window.location.href = '/'
       }
