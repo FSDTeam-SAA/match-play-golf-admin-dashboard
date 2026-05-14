@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -46,6 +46,34 @@ type MatchParticipant = {
   teamName?: string;
 };
 
+type MatchPlayer = {
+  _id: string;
+  name: string;
+};
+
+type SelectablePlayer = {
+  _id: string;
+  name: string;
+};
+
+const getParticipantId = (participant: MatchParticipant | string | null | undefined) => {
+  if (!participant) return "";
+  if (typeof participant === "string") return participant;
+  return participant._id || "";
+};
+
+const getParticipantDisplayName = (
+  participant: MatchParticipant | string | null | undefined,
+) => {
+  if (!participant || typeof participant === "string") return "";
+  return (
+    participant.fullName?.trim() ||
+    participant.teamName?.trim() ||
+    participant.email?.trim() ||
+    ""
+  );
+};
+
 type SingleMatchResponse = {
   success: boolean;
   message?: string;
@@ -68,6 +96,7 @@ type SingleMatchResponse = {
     venue?: string;
     status: string;
   };
+  players: MatchPlayer[];
 };
 
 const ALLOWED_STATUSES = [
@@ -82,6 +111,8 @@ const formSchema = z.object({
   date: z.date().nullable(),
   venue: z.string().min(1, "Venue is required"),
   status: z.enum(ALLOWED_STATUSES, { message: "Match status is required" }),
+  player1Id: z.string().min(1, "Player / Pair 1 is required"),
+  player2Id: z.string().min(1, "Player / Pair 2 is required"),
 });
 
 const normalizeStatus = (
@@ -109,6 +140,7 @@ const EditMatchForm = () => {
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const queryClient = useQueryClient();
+  const isParticipantValueHydratedRef = useRef(false);
 
   const {
     data: matchData,
@@ -134,12 +166,42 @@ const EditMatchForm = () => {
 
   const match = matchData?.data;
 
+  const players = matchData?.players ?? [];
+  const selectablePlayers = useMemo<SelectablePlayer[]>(() => {
+    const options = new Map<string, SelectablePlayer>();
+
+    players.forEach((player) => {
+      options.set(player._id, player);
+    });
+
+    const player1 = match?.player1Id ?? match?.pair1Id;
+    const player2 = match?.player2Id ?? match?.pair2Id;
+
+    [player1, player2].forEach((participant) => {
+      const participantId = getParticipantId(participant);
+      if (!participantId) return;
+
+      const fallbackName = getParticipantDisplayName(participant) || "Selected participant";
+
+      if (!options.has(participantId)) {
+        options.set(participantId, {
+          _id: participantId,
+          name: fallbackName,
+        });
+      }
+    });
+
+    return Array.from(options.values());
+  }, [players, match?.player1Id, match?.pair1Id, match?.player2Id, match?.pair2Id]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       date: match?.date ? new Date(match?.date) : null,
       venue: match?.venue || "",
       status: normalizeStatus(match?.status),
+      player1Id: getParticipantId(match?.player1Id ?? match?.pair1Id),
+      player2Id: getParticipantId(match?.player2Id ?? match?.pair2Id),
     },
   });
 
@@ -162,10 +224,7 @@ const EditMatchForm = () => {
       enabled: !!match?.tournamentId?._id && !!token,
     });
 
-  const participantOneName =
-    match?.pair1Id?.teamName || match?.player1Id?.fullName || "N/A";
-  const participantTwoName =
-    match?.pair2Id?.teamName || match?.player2Id?.fullName || "N/A";
+
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["edit-match", matchId],
@@ -177,6 +236,8 @@ const EditMatchForm = () => {
             : values.date,
         venue: values.venue,
         status: values.status,
+        player1Id: values.player1Id,
+        player2Id: values.player2Id,
       };
 
       const res = await fetch(
@@ -211,12 +272,27 @@ const EditMatchForm = () => {
 
   useEffect(() => {
     if (!match) return;
+    isParticipantValueHydratedRef.current = false;
     form.reset({
       date: match.date ? new Date(match.date) : null,
       venue: match.venue || "",
       status: normalizeStatus(match.status),
+      player1Id: getParticipantId(match.player1Id ?? match.pair1Id),
+      player2Id: getParticipantId(match.player2Id ?? match.pair2Id),
     });
   }, [match, form]);
+
+  useEffect(() => {
+    if (!match || isParticipantValueHydratedRef.current) return;
+    if (selectablePlayers.length === 0) return;
+
+    const player1Id = getParticipantId(match.player1Id ?? match.pair1Id);
+    const player2Id = getParticipantId(match.player2Id ?? match.pair2Id);
+
+    form.setValue("player1Id", player1Id, { shouldDirty: false, shouldValidate: false });
+    form.setValue("player2Id", player2Id, { shouldDirty: false, shouldValidate: false });
+    isParticipantValueHydratedRef.current = true;
+  }, [match, selectablePlayers, form]);
 
   if (isLoading) {
     return (
@@ -340,26 +416,64 @@ const onSubmit = (values: z.infer<typeof formSchema>) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-                Player / Pair 1
-              </FormLabel>
-              <Input
-                value={participantOneName}
-                disabled
-                className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium text-[#434C45]"
-              />
-            </div>
-            <div className="space-y-2">
-              <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-                Player / Pair 2
-              </FormLabel>
-              <Input
-                value={participantTwoName}
-                disabled
-                className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium text-[#434C45]"
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="player1Id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Player / Pair 1
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value || undefined}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium text-[#434C45]">
+                        <SelectValue placeholder="Select player / pair 1" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {selectablePlayers.map((player) => (
+                          <SelectItem key={player._id} value={player._id}>
+                            {player.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="player2Id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
+                    Player / Pair 2
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value || undefined}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium text-[#434C45]">
+                        <SelectValue placeholder="Select player / pair 2" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {selectablePlayers.map((player) => (
+                          <SelectItem key={player._id} value={player._id}>
+                            {player.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -481,21 +595,6 @@ export default EditMatchForm;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // "use client";
 
 // import { useEffect } from "react";
@@ -568,20 +667,35 @@ export default EditMatchForm;
 //   };
 // };
 
+// const ALLOWED_STATUSES = [
+//   "pending",
+//   "scheduled",
+//   "in-progress",
+//   "completed",
+//   "rescheduled",
+// ] as const;
+
 // const formSchema = z.object({
-//   date: z.union([z.date(), z.string()]),
+//   date: z.date().nullable(),
 //   venue: z.string().min(1, "Venue is required"),
-//   status: z.string().min(1, "Match status is required"),
+//   status: z.enum(ALLOWED_STATUSES, { message: "Match status is required" }),
 // });
 
-// const normalizeStatus = (status?: string) => {
+// const normalizeStatus = (
+//   status?: string,
+// ): (typeof ALLOWED_STATUSES)[number] => {
 //   const value = status?.trim().toLowerCase();
 
 //   if (!value) return "scheduled";
-//   if (value === "ongoing") return "in progress";
+//   if (value === "ongoing" || value === "in progress") return "in-progress";
 //   if (value === "upcoming") return "scheduled";
+//   if (value === "cancelled") return "rescheduled"; // legacy fallback
 
-//   return value;
+//   if (ALLOWED_STATUSES.includes(value as (typeof ALLOWED_STATUSES)[number])) {
+//     return value as (typeof ALLOWED_STATUSES)[number];
+//   }
+
+//   return "scheduled";
 // };
 
 // const EditMatchForm = () => {
@@ -617,14 +731,12 @@ export default EditMatchForm;
 
 //   const match = matchData?.data;
 
-//   console.log("Fetched match data for editing:", match);
-
 //   const form = useForm<z.infer<typeof formSchema>>({
 //     resolver: zodResolver(formSchema),
 //     defaultValues: {
-//       date: new Date(),
-//       venue: "",
-//       status: "",
+//       date: match?.date ? new Date(match?.date) : null,
+//       venue: match?.venue || "",
+//       status: normalizeStatus(match?.status),
 //     },
 //   });
 
@@ -697,7 +809,7 @@ export default EditMatchForm;
 //   useEffect(() => {
 //     if (!match) return;
 //     form.reset({
-//       date: match.date ? new Date(match.date) : new Date(),
+//       date: match.date ? new Date(match.date) : null,
 //       venue: match.venue || "",
 //       status: normalizeStatus(match.status),
 //     });
@@ -729,55 +841,63 @@ export default EditMatchForm;
 //     );
 //   }
 
-//   const onSubmit = (values: z.infer<typeof formSchema>) => {
-//     const selectedDate =
-//       values.date instanceof Date ? values.date : new Date(values.date);
+// const onSubmit = (values: z.infer<typeof formSchema>) => {
+//   // Check if values.date is null or an invalid date
+//   const selectedDate =
+//     values.date instanceof Date && !isNaN(values.date.getTime())
+//       ? values.date
+//       : values.date !== null
+//       ? new Date(values.date)
+//       : new Date();  // Fallback to current date if values.date is null
 
-//     if (Number.isNaN(selectedDate.getTime())) {
-//       toast.error("Please select a valid date");
+//   if (Number.isNaN(selectedDate.getTime())) {
+//     toast.error("Please select a valid date");
+//     return;
+//   }
+
+//   const roundsByNumber =
+//     tournamentDetails?.rounds
+//       ?.slice()
+//       .sort((a, b) => a.roundNumber - b.roundNumber) ?? [];
+
+//   const currentRoundIndex = roundsByNumber.findIndex(
+//     (round) => round.roundNumber === match.round,
+//   );
+
+//   if (currentRoundIndex !== -1) {
+//     const currentRound = roundsByNumber[currentRoundIndex];
+//     const nextRound = roundsByNumber[currentRoundIndex + 1];
+
+//     const roundStartDate = new Date(currentRound.date);
+//     const nextRoundDate = nextRound ? new Date(nextRound.date) : null;
+
+//     selectedDate.setHours(0, 0, 0, 0);
+//     roundStartDate.setHours(0, 0, 0, 0);
+//     if (nextRoundDate) nextRoundDate.setHours(0, 0, 0, 0);
+
+//     if (selectedDate < roundStartDate) {
+//       toast.error(
+//         `Round ${match.round} match date must be on or after ${format(
+//           roundStartDate,
+//           "MMM dd, yyyy",
+//         )}.`,
+//       );
 //       return;
 //     }
 
-//     const roundsByNumber =
-//       tournamentDetails?.rounds
-//         ?.slice()
-//         .sort((a, b) => a.roundNumber - b.roundNumber) ?? [];
-
-//     const currentRoundIndex = roundsByNumber.findIndex(
-//       (round) => round.roundNumber === match.round,
-//     );
-
-//     if (currentRoundIndex !== -1) {
-//       const currentRound = roundsByNumber[currentRoundIndex];
-//       const nextRound = roundsByNumber[currentRoundIndex + 1];
-
-//       const roundStartDate = new Date(currentRound.date);
-//       const nextRoundDate = nextRound ? new Date(nextRound.date) : null;
-
-//       const selected = new Date(selectedDate);
-//       selected.setHours(0, 0, 0, 0);
-//       roundStartDate.setHours(0, 0, 0, 0);
-//       if (nextRoundDate) {
-//         nextRoundDate.setHours(0, 0, 0, 0);
-//       }
-
-//       if (selected < roundStartDate) {
-//         toast.error(
-//           `Round ${match.round} match date must be on or after ${format(roundStartDate, "MMM dd, yyyy")}.`,
-//         );
-//         return;
-//       }
-
-//       if (nextRoundDate && selected >= nextRoundDate) {
-//         toast.error(
-//           `Round ${match.round} match date must be before ${format(nextRoundDate, "MMM dd, yyyy")}.`,
-//         );
-//         return;
-//       }
+//     if (nextRoundDate && selectedDate >= nextRoundDate) {
+//       toast.error(
+//         `Round ${match.round} match date must be before ${format(
+//           nextRoundDate,
+//           "MMM dd, yyyy",
+//         )}.`,
+//       );
+//       return;
 //     }
+//   }
 
-//     mutate(values);
-//   };
+//   mutate(values);
+// };
 
 //   return (
 //     <div className="p-6">
@@ -845,44 +965,33 @@ export default EditMatchForm;
 //               name="date"
 //               render={({ field }) => (
 //                 <FormItem>
-//                   <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-//                     Date
+//                   <FormLabel className="text-base font-semibold text-black leading-[120%]">
+//                     Start Date
 //                   </FormLabel>
 //                   <Popover>
 //                     <PopoverTrigger asChild>
-//                       <FormControl>
 //                         <Button
 //                           variant="outline"
-//                           className={`w-full justify-start text-left h-12 ${
-//                             !field.value && "text-muted-foreground"
-//                           }`}
+//                           className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
+//                             }`}
 //                         >
-//                           {field.value
-//                             ? format(
-//                                 typeof field.value === "string"
-//                                   ? new Date(field.value)
-//                                   : field.value,
-//                                 "MMM dd, yyyy",
-//                               )
-//                             : "Pick date"}
+//                           {field.value instanceof Date && !isNaN(field.value.getTime())
+//                             ? format(field.value, "MMM dd, yyyy")
+//                             : "mm/dd/yyyy"}
+
 //                           <CalendarIcon className="ml-auto h-4 w-4" />
 //                         </Button>
-//                       </FormControl>
 //                     </PopoverTrigger>
 //                     <PopoverContent className="w-auto p-0" align="start">
 //                       <Calendar
 //                         mode="single"
-//                         selected={
-//                           typeof field.value === "string"
-//                             ? new Date(field.value)
-//                             : field.value
-//                         }
-//                         onSelect={field.onChange}
+//                         selected={field.value ?? undefined}
+//                         onSelect={(date) => field.onChange(date ?? null)}
 //                         initialFocus
 //                       />
 //                     </PopoverContent>
 //                   </Popover>
-//                   <FormMessage className="text-red-500" />
+//                   <FormMessage />
 //                 </FormItem>
 //               )}
 //             />
@@ -924,11 +1033,13 @@ export default EditMatchForm;
 //                         <SelectValue placeholder="Select status" />
 //                       </SelectTrigger>
 //                       <SelectContent>
-//                         <SelectItem value="upcoming">Upcoming</SelectItem>
+//                         <SelectItem value="pending">Pending</SelectItem>
+//                         <SelectItem value="scheduled">Scheduled</SelectItem>
 //                         <SelectItem value="in-progress">In Progress</SelectItem>
 //                         <SelectItem value="completed">Completed</SelectItem>
-//                         <SelectItem value="cancelled">Cancelled</SelectItem>
-//                         <SelectItem value="scheduled">Scheduled</SelectItem>
+//                         <SelectItem value="rescheduled">
+//                           Rescheduled
+//                         </SelectItem>
 //                       </SelectContent>
 //                     </Select>
 //                   </FormControl>
