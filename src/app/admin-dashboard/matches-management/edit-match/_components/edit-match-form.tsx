@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -49,6 +49,29 @@ type MatchParticipant = {
 type MatchPlayer = {
   _id: string;
   name: string;
+};
+
+type SelectablePlayer = {
+  _id: string;
+  name: string;
+};
+
+const getParticipantId = (participant: MatchParticipant | string | null | undefined) => {
+  if (!participant) return "";
+  if (typeof participant === "string") return participant;
+  return participant._id || "";
+};
+
+const getParticipantDisplayName = (
+  participant: MatchParticipant | string | null | undefined,
+) => {
+  if (!participant || typeof participant === "string") return "";
+  return (
+    participant.fullName?.trim() ||
+    participant.teamName?.trim() ||
+    participant.email?.trim() ||
+    ""
+  );
 };
 
 type SingleMatchResponse = {
@@ -117,6 +140,7 @@ const EditMatchForm = () => {
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const queryClient = useQueryClient();
+  const isParticipantValueHydratedRef = useRef(false);
 
   const {
     data: matchData,
@@ -143,6 +167,32 @@ const EditMatchForm = () => {
   const match = matchData?.data;
 
   const players = matchData?.players ?? [];
+  const selectablePlayers = useMemo<SelectablePlayer[]>(() => {
+    const options = new Map<string, SelectablePlayer>();
+
+    players.forEach((player) => {
+      options.set(player._id, player);
+    });
+
+    const player1 = match?.player1Id ?? match?.pair1Id;
+    const player2 = match?.player2Id ?? match?.pair2Id;
+
+    [player1, player2].forEach((participant) => {
+      const participantId = getParticipantId(participant);
+      if (!participantId) return;
+
+      const fallbackName = getParticipantDisplayName(participant) || "Selected participant";
+
+      if (!options.has(participantId)) {
+        options.set(participantId, {
+          _id: participantId,
+          name: fallbackName,
+        });
+      }
+    });
+
+    return Array.from(options.values());
+  }, [players, match?.player1Id, match?.pair1Id, match?.player2Id, match?.pair2Id]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -150,8 +200,8 @@ const EditMatchForm = () => {
       date: match?.date ? new Date(match?.date) : null,
       venue: match?.venue || "",
       status: normalizeStatus(match?.status),
-      player1Id: match?.player1Id?._id || match?.pair1Id?._id || "",
-      player2Id: match?.player2Id?._id || match?.pair2Id?._id || "",
+      player1Id: getParticipantId(match?.player1Id ?? match?.pair1Id),
+      player2Id: getParticipantId(match?.player2Id ?? match?.pair2Id),
     },
   });
 
@@ -222,14 +272,27 @@ const EditMatchForm = () => {
 
   useEffect(() => {
     if (!match) return;
+    isParticipantValueHydratedRef.current = false;
     form.reset({
       date: match.date ? new Date(match.date) : null,
       venue: match.venue || "",
       status: normalizeStatus(match.status),
-      player1Id: match.player1Id?._id || match.pair1Id?._id || "",
-      player2Id: match.player2Id?._id || match.pair2Id?._id || "",
+      player1Id: getParticipantId(match.player1Id ?? match.pair1Id),
+      player2Id: getParticipantId(match.player2Id ?? match.pair2Id),
     });
   }, [match, form]);
+
+  useEffect(() => {
+    if (!match || isParticipantValueHydratedRef.current) return;
+    if (selectablePlayers.length === 0) return;
+
+    const player1Id = getParticipantId(match.player1Id ?? match.pair1Id);
+    const player2Id = getParticipantId(match.player2Id ?? match.pair2Id);
+
+    form.setValue("player1Id", player1Id, { shouldDirty: false, shouldValidate: false });
+    form.setValue("player2Id", player2Id, { shouldDirty: false, shouldValidate: false });
+    isParticipantValueHydratedRef.current = true;
+  }, [match, selectablePlayers, form]);
 
   if (isLoading) {
     return (
@@ -370,7 +433,7 @@ const onSubmit = (values: z.infer<typeof formSchema>) => {
                         <SelectValue placeholder="Select player / pair 1" />
                       </SelectTrigger>
                       <SelectContent>
-                        {players.map((player) => (
+                        {selectablePlayers.map((player) => (
                           <SelectItem key={player._id} value={player._id}>
                             {player.name}
                           </SelectItem>
@@ -399,7 +462,7 @@ const onSubmit = (values: z.infer<typeof formSchema>) => {
                         <SelectValue placeholder="Select player / pair 2" />
                       </SelectTrigger>
                       <SelectContent>
-                        {players.map((player) => (
+                        {selectablePlayers.map((player) => (
                           <SelectItem key={player._id} value={player._id}>
                             {player.name}
                           </SelectItem>
@@ -1010,5 +1073,3 @@ export default EditMatchForm;
 // };
 
 // export default EditMatchForm;
-
-
