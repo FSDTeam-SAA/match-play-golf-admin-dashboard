@@ -54,6 +54,10 @@ const PlayersView = ({
             <strong>Country :</strong>{' '}
             {tournamentData?.playerDetails?.country || 'N/A'}
           </p>
+           <p>
+            <strong>Club Name :</strong>{' '}
+            {tournamentData?.playerDetails?.clubName || 'N/A'}
+          </p>
           <p>
             <strong>Handicap :</strong>{' '}
             {tournamentData?.playerDetails?.handicap || 'N/A'}
