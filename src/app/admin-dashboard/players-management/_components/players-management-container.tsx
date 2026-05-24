@@ -1,5 +1,5 @@
-'use client'
-import React, { useState } from 'react'
+"use client";
+import React, { useState } from "react";
 
 import {
   Table,
@@ -8,44 +8,42 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Eye, SquarePen, Trash } from 'lucide-react'
+} from "@/components/ui/table";
+import { Eye, SquarePen, Trash } from "lucide-react";
 
-import { Input } from '@/components/ui/input'
-import DeleteModal from '@/components/modals/delete-modal'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useSession } from 'next-auth/react'
-import { toast } from 'sonner'
+import { Input } from "@/components/ui/input";
+import DeleteModal from "@/components/modals/delete-modal";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
-import { useDebounce } from '@/hooks/useDebounce'
-import PlayersView from './players-view'
+import { useDebounce } from "@/hooks/useDebounce";
+import PlayersView from "./players-view";
 import {
   TournamentPlayerApiResponse,
   TournamentPlayerItem,
-} from './players-management-data-type'
-import Image from 'next/image'
-import TableSkeleton from '@/components/reusable/TableSkeleton'
-import ErrorContainer from '@/components/ErrorContainer/ErrorContainer'
-import NotFound from '@/components/reusable/not-found-data'
-import MatchPlayGolfPagination from '@/components/ui/match-play-golf-pagination'
-import EditPlayerModal from './edit-player'
+} from "./players-management-data-type";
+import Image from "next/image";
+import TableSkeleton from "@/components/reusable/TableSkeleton";
+import ErrorContainer from "@/components/ErrorContainer/ErrorContainer";
+import NotFound from "@/components/reusable/not-found-data";
+import MatchPlayGolfPagination from "@/components/ui/match-play-golf-pagination";
+import EditPlayerModal from "./edit-player";
 
 const PlayersManagementContainer = () => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [search, setSearch] = useState('')
+  const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [editPlayerModalOpen, setEditPlayerModalOpen] = useState(false);
-  const [viewPlayer, setViewPlayer] = useState(false)
-  const [playerId, setPlayerId] = useState('')
+  const [viewPlayer, setViewPlayer] = useState(false);
+  const [playerId, setPlayerId] = useState("");
   const [selectedPlayer, setSelectedPlayer] =
-    useState<TournamentPlayerItem | null>(null)
-  const debouncedSearch = useDebounce(search, 500)
+    useState<TournamentPlayerItem | null>(null);
+  const debouncedSearch = useDebounce(search, 500);
 
-
-
-  const queryClient = useQueryClient()
-  const session = useSession()
-  const token = (session?.data?.user as { accessToken: string })?.accessToken
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
   // console.log("player id", playerId)
 
   // console.log(search)
@@ -53,45 +51,45 @@ const PlayersManagementContainer = () => {
   // get tournament api
   const { data, isLoading, isError, error } =
     useQuery<TournamentPlayerApiResponse>({
-      queryKey: ['all-players', currentPage, debouncedSearch],
+      queryKey: ["all-players", currentPage, debouncedSearch],
       queryFn: async () => {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/players/all?page=${currentPage}&limit=8&tournamentName=${debouncedSearch}`,
           {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           },
-        )
-        return res.json()
+        );
+        return res.json();
       },
       enabled: !!token,
-    })
+    });
 
-  console.log(data?.data)
+  console.log(data?.data);
 
-  let content
+  let content;
 
   if (isLoading) {
     content = (
       <div>
         <TableSkeleton />
       </div>
-    )
+    );
   } else if (isError) {
     content = (
       <div>
-        <ErrorContainer message={error?.message || 'Something went wrong'} />
+        <ErrorContainer message={error?.message || "Something went wrong"} />
       </div>
-    )
+    );
   } else if (data && data?.data && data?.data?.length === 0) {
     content = (
       <div>
         <NotFound message="Oops! No data available. Modify your filters or check your internet connection." />
       </div>
-    )
+    );
   } else if (data && data?.data && data?.data?.length > 0) {
     content = (
       <div>
@@ -111,6 +109,10 @@ const PlayersManagementContainer = () => {
                 Country
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
+                Club Name
+              </TableHead>
+
+              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Number
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
@@ -126,14 +128,14 @@ const PlayersManagementContainer = () => {
               return (
                 <TableRow key={index} className="">
                   <TableCell className="w-[267px] text-base font-medium text-[#68706A] leading-[150%] pl-6 py-4">
-                    {item?.tournamentDetails?.tournamentName || 'N/A'}
+                    {item?.tournamentDetails?.tournamentName || "N/A"}
                   </TableCell>
                   <TableCell className="flex items-center justify-start gap-2 text-base font-normal text-[#68706A] leading-[150%] py-4">
                     <div>
                       <Image
                         src={
                           item?.playerDetails?.profileImage ||
-                          '/images/demoUser.png'
+                          "/images/demoUser.png"
                         }
                         alt="Profile"
                         width={40}
@@ -142,45 +144,48 @@ const PlayersManagementContainer = () => {
                       />
                     </div>
                     <div>
-                      {item?.playerDetails?.fullName || 'N/A'} <br />{' '}
-                      {item?.playerDetails?.email || 'N/A'}
+                      {item?.playerDetails?.fullName || "N/A"} <br />{" "}
+                      {item?.playerDetails?.email || "N/A"}
                     </div>
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.playerDetails?.handicap || 'N/A'}
+                    {item?.playerDetails?.handicap || "N/A"}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.playerDetails?.country || 'N/A'}
+                    {item?.playerDetails?.country || "N/A"}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.playerDetails?.phone || 'N/A'}
+                    {item?.playerDetails?.clubName || "N/A"}
+                  </TableCell>
+                  <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
+                    {item?.playerDetails?.phone || "N/A"}
                   </TableCell>
                   <TableCell className="text-base font-medium text-[#68706A] leading-[150%] text-center py-4">
                     <button
                       className={`w-[140px] h-[40px] ${
-                        item?.playerDetails?.status === 'active'
-                          ? 'bg-[#E6FAEE] text-[#27BE69] py-2 px-4'
-                          : 'bg-[#E7E7E7] text-[#616161] py-2 px-4'
+                        item?.playerDetails?.status === "active"
+                          ? "bg-[#E6FAEE] text-[#27BE69] py-2 px-4"
+                          : "bg-[#E7E7E7] text-[#616161] py-2 px-4"
                       }`}
                     >
-                      {item?.playerDetails?.status || 'N/A'}
+                      {item?.playerDetails?.status || "N/A"}
                     </button>
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-6 py-4">
                     <button
                       onClick={() => {
-                        setPlayerId(item?.playerId)
-                        setEditPlayerModalOpen(true)
+                        setPlayerId(item?.playerId);
+                        setEditPlayerModalOpen(true);
                       }}
                       className="cursor-pointer"
                     >
-                      <SquarePen  className="h-6 w-6 text-[#181818]" />
+                      <SquarePen className="h-6 w-6 text-[#181818]" />
                     </button>
 
                     <button
                       onClick={() => {
-                        setViewPlayer(true)
-                        setSelectedPlayer(item)
+                        setViewPlayer(true);
+                        setSelectedPlayer(item);
                       }}
                       className="cursor-pointer"
                     >
@@ -188,8 +193,8 @@ const PlayersManagementContainer = () => {
                     </button>
                     <button
                       onClick={() => {
-                        setDeleteModalOpen(true)
-                        setPlayerId(item?.playerId)
+                        setDeleteModalOpen(true);
+                        setPlayerId(item?.playerId);
                       }}
                       className="cursor-pointer"
                     >
@@ -197,48 +202,48 @@ const PlayersManagementContainer = () => {
                     </button>
                   </TableCell>
                 </TableRow>
-              )
+              );
             })}
           </TableBody>
         </Table>
       </div>
-    )
+    );
   }
 
-  console.log(data)
+  console.log(data);
 
   // delete tournament api
   const { mutate } = useMutation({
-    mutationKey: ['delete-player'],
+    mutationKey: ["delete-player"],
     mutationFn: async (id: string) => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/players/${id}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         },
-      )
-      return res.json()
+      );
+      return res.json();
     },
-    onSuccess: data => {
+    onSuccess: (data) => {
       if (!data?.success) {
-        toast.error(data?.message || 'Something went wrong')
-        return
+        toast.error(data?.message || "Something went wrong");
+        return;
       }
-      toast.success(data?.message || 'Player deleted successfully')
-      queryClient.invalidateQueries({ queryKey: ['all-players'] })
+      toast.success(data?.message || "Player deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["all-players"] });
     },
-  })
+  });
 
   const handleDelete = () => {
     if (playerId) {
-      mutate(playerId)
+      mutate(playerId);
     }
-    setDeleteModalOpen(false)
-  }
+    setDeleteModalOpen(false);
+  };
   return (
     <div>
       {/* table container */}
@@ -250,7 +255,7 @@ const PlayersManagementContainer = () => {
               type="search"
               className="w-[300px] lg:w-[479px] h-[48px] border border-[#C0C3C1] rounded-[4px] outline-none right-0 text-base font-medium leading-[120%] text-[#343A40]"
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search..."
             />
           </div>
@@ -263,14 +268,14 @@ const PlayersManagementContainer = () => {
         {data && data?.pagination && data?.pagination?.totalPages > 1 && (
           <div className="w-full flex items-center justify-between pb-6">
             <p className="text-base font-normal text-[#68706A] leading-[150%]">
-              Showing {data?.pagination?.page} to 8 of{' '}
+              Showing {data?.pagination?.page} to 8 of{" "}
               {data?.pagination?.totalRecords} results
             </p>
             <div>
               <MatchPlayGolfPagination
                 currentPage={currentPage}
                 totalPages={data?.pagination?.totalPages}
-                onPageChange={page => setCurrentPage(page)}
+                onPageChange={(page) => setCurrentPage(page)}
               />
             </div>
           </div>
@@ -301,19 +306,17 @@ const PlayersManagementContainer = () => {
         {/* player edit modal  */}
 
         <div>
-          {
-            editPlayerModalOpen && (
-              <EditPlayerModal 
+          {editPlayerModalOpen && (
+            <EditPlayerModal
               open={editPlayerModalOpen}
               onOpenChange={setEditPlayerModalOpen}
               playerId={playerId}
-              />
-            )
-          }
+            />
+          )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PlayersManagementContainer
+export default PlayersManagementContainer;
