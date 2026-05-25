@@ -107,3 +107,6 @@ next-env.d.ts
 # .next
 config.bat
 >>>>>>> 9870ead6ccb9c189a8a04f08735095d1b978c181
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat

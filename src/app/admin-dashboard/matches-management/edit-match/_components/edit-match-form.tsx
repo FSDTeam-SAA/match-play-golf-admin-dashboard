@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -48,7 +48,10 @@ type MatchParticipant = {
 
 type MatchPlayer = {
   _id: string;
-  name: string;
+  name?: string;
+  team?: string;
+  player1?: string;
+  player2?: string;
 };
 
 type SelectablePlayer = {
@@ -113,6 +116,9 @@ const formSchema = z.object({
   status: z.enum(ALLOWED_STATUSES, { message: "Match status is required" }),
   player1Id: z.string().min(1, "Player / Pair 1 is required"),
   player2Id: z.string().min(1, "Player / Pair 2 is required"),
+}).refine((data) => data.player1Id !== data.player2Id, {
+  message: "Player / Pair 1 and Player / Pair 2 cannot be the same",
+  path: ["player2Id"],
 });
 
 const normalizeStatus = (
@@ -134,13 +140,9 @@ const normalizeStatus = (
 
 const EditMatchForm = () => {
   const params = useParams();
-  const router = useRouter();
   const matchId = params?.id as string;
-
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
-  const queryClient = useQueryClient();
-  const isParticipantValueHydratedRef = useRef(false);
 
   const {
     data: matchData,
@@ -163,17 +165,55 @@ const EditMatchForm = () => {
     },
     enabled: !!matchId && !!token,
   });
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        <TableSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <ErrorContainer
+          message={(error as Error)?.message || "Something went wrong"}
+        />
+      </div>
+    );
+  }
+
+  if (!matchData?.success || !matchData?.data) {
+    return (
+      <div className="p-6">
+        <NotFound message="Match not found" />
+      </div>
+    );
+  }
+
+  return <EditMatchFormInner matchData={matchData} matchId={matchId} token={token} />;
+};
+
+const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMatchResponse, matchId: string, token: string | undefined }) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const match = matchData?.data;
 
   const players = matchData?.players ?? [];
+  // const isPairs = match?.matchType === "Pairs";
+
   const selectablePlayers = useMemo<SelectablePlayer[]>(() => {
     const options = new Map<string, SelectablePlayer>();
 
+    // Map players from the API response — handles both Single (name) and Pairs (team) formats
     players.forEach((player) => {
-      options.set(player._id, player);
+      const displayName = player.name || player.team || "Unknown";
+      options.set(player._id, { _id: player._id, name: displayName });
     });
 
+    // Ensure the currently assigned participants are always in the list
+    // (in case they're somehow missing from the players array)
     const player1 = match?.player1Id ?? match?.pair1Id;
     const player2 = match?.player2Id ?? match?.pair2Id;
 
@@ -181,9 +221,8 @@ const EditMatchForm = () => {
       const participantId = getParticipantId(participant);
       if (!participantId) return;
 
-      const fallbackName = getParticipantDisplayName(participant) || "Selected participant";
-
       if (!options.has(participantId)) {
+        const fallbackName = getParticipantDisplayName(participant) || "Selected participant";
         options.set(participantId, {
           _id: participantId,
           name: fallbackName,
@@ -229,16 +268,23 @@ const EditMatchForm = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["edit-match", matchId],
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const payload = {
+      const isPairsMatch = match?.matchType === "Pairs";
+      const payload: Record<string, string | null> = {
         date:
           values.date instanceof Date
             ? format(values.date, "yyyy-MM-dd")
             : values.date,
         venue: values.venue,
         status: values.status,
-        player1Id: values.player1Id,
-        player2Id: values.player2Id,
       };
+
+      if (isPairsMatch) {
+        payload.pair1Id = values.player1Id;
+        payload.pair2Id = values.player2Id;
+      } else {
+        payload.player1Id = values.player1Id;
+        payload.player2Id = values.player2Id;
+      }
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/match/${matchId}`,
@@ -271,112 +317,77 @@ const EditMatchForm = () => {
   });
 
   useEffect(() => {
-    if (!match) return;
-    isParticipantValueHydratedRef.current = false;
-    form.reset({
-      date: match.date ? new Date(match.date) : null,
-      venue: match.venue || "",
-      status: normalizeStatus(match.status),
-      player1Id: getParticipantId(match.player1Id ?? match.pair1Id),
-      player2Id: getParticipantId(match.player2Id ?? match.pair2Id),
-    });
-  }, [match, form]);
-
-  useEffect(() => {
-    if (!match || isParticipantValueHydratedRef.current) return;
-    if (selectablePlayers.length === 0) return;
-
-    const player1Id = getParticipantId(match.player1Id ?? match.pair1Id);
-    const player2Id = getParticipantId(match.player2Id ?? match.pair2Id);
-
-    form.setValue("player1Id", player1Id, { shouldDirty: false, shouldValidate: false });
-    form.setValue("player2Id", player2Id, { shouldDirty: false, shouldValidate: false });
-    isParticipantValueHydratedRef.current = true;
+    if (match && selectablePlayers.length > 0) {
+      form.reset({
+        date: match.date ? new Date(match.date) : null,
+        venue: match.venue || "",
+        status: normalizeStatus(match.status),
+        player1Id: getParticipantId(match?.player1Id ?? match?.pair1Id),
+        player2Id: getParticipantId(match?.player2Id ?? match?.pair2Id),
+      });
+    }
   }, [match, selectablePlayers, form]);
 
-  if (isLoading) {
-    return (
-      <div className="p-6">
-        <TableSkeleton />
-      </div>
-    );
-  }
 
-  if (isError) {
-    return (
-      <div className="p-6">
-        <ErrorContainer
-          message={(error as Error)?.message || "Something went wrong"}
-        />
-      </div>
-    );
-  }
 
-  if (!matchData?.success || !match) {
-    return (
-      <div className="p-6">
-        <NotFound message="Match not found" />
-      </div>
-    );
-  }
 
-const onSubmit = (values: z.infer<typeof formSchema>) => {
-  // Check if values.date is null or an invalid date
-  const selectedDate =
-    values.date instanceof Date && !isNaN(values.date.getTime())
-      ? values.date
-      : values.date !== null
-      ? new Date(values.date)
-      : new Date();  // Fallback to current date if values.date is null
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    // Check if values.date is null or an invalid date
+    const selectedDate =
+      values.date instanceof Date && !isNaN(values.date.getTime())
+        ? values.date
+        : values.date !== null
+          ? new Date(values.date)
+          : new Date();  // Fallback to current date if values.date is null
 
-  if (Number.isNaN(selectedDate.getTime())) {
-    toast.error("Please select a valid date");
-    return;
-  }
-
-  const roundsByNumber =
-    tournamentDetails?.rounds
-      ?.slice()
-      .sort((a, b) => a.roundNumber - b.roundNumber) ?? [];
-
-  const currentRoundIndex = roundsByNumber.findIndex(
-    (round) => round.roundNumber === match.round,
-  );
-
-  if (currentRoundIndex !== -1) {
-    const currentRound = roundsByNumber[currentRoundIndex];
-    const nextRound = roundsByNumber[currentRoundIndex + 1];
-
-    const roundStartDate = new Date(currentRound.date);
-    const nextRoundDate = nextRound ? new Date(nextRound.date) : null;
-
-    selectedDate.setHours(0, 0, 0, 0);
-    roundStartDate.setHours(0, 0, 0, 0);
-    if (nextRoundDate) nextRoundDate.setHours(0, 0, 0, 0);
-
-    if (selectedDate < roundStartDate) {
-      toast.error(
-        `Round ${match.round} match date must be on or after ${format(
-          roundStartDate,
-          "MMM dd, yyyy",
-        )}.`,
-      );
+    if (Number.isNaN(selectedDate.getTime())) {
+      toast.error("Please select a valid date");
       return;
     }
 
-    if (nextRoundDate && selectedDate >= nextRoundDate) {
-      toast.error(
-        `Round ${match.round} match date must be before ${format(
-          nextRoundDate,
-          "MMM dd, yyyy",
-        )}.`,
-      );
-      return;
-    }
-  }
+    const roundsByNumber =
+      tournamentDetails?.rounds
+        ?.slice()
+        .sort((a, b) => a.roundNumber - b.roundNumber) ?? [];
 
-  mutate(values);
-};
+    const currentRoundIndex = roundsByNumber.findIndex(
+      (round) => round.roundNumber === match.round,
+    );
+
+    if (currentRoundIndex !== -1) {
+      const currentRound = roundsByNumber[currentRoundIndex];
+      const nextRound = roundsByNumber[currentRoundIndex + 1];
+
+      const roundStartDate = new Date(currentRound.date);
+      const nextRoundDate = nextRound ? new Date(nextRound.date) : null;
+
+      selectedDate.setHours(0, 0, 0, 0);
+      roundStartDate.setHours(0, 0, 0, 0);
+      if (nextRoundDate) nextRoundDate.setHours(0, 0, 0, 0);
+
+      if (selectedDate < roundStartDate) {
+        toast.error(
+          `Round ${match.round} match date must be on or after ${format(
+            roundStartDate,
+            "MMM dd, yyyy",
+          )}.`,
+        );
+        return;
+      }
+
+      if (nextRoundDate && selectedDate >= nextRoundDate) {
+        toast.error(
+          `Round ${match.round} match date must be before ${format(
+            nextRoundDate,
+            "MMM dd, yyyy",
+          )}.`,
+        );
+        return;
+      }
+    }
+
+    mutate(values);
+  };
 
   return (
     <div className="p-6">
@@ -487,17 +498,17 @@ const onSubmit = (values: z.infer<typeof formSchema>) => {
                   </FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
-                            }`}
-                        >
-                          {field.value instanceof Date && !isNaN(field.value.getTime())
-                            ? format(field.value, "MMM dd, yyyy")
-                            : "mm/dd/yyyy"}
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-start text-left h-12 ${!field.value && "text-muted-foreground"
+                          }`}
+                      >
+                        {field.value instanceof Date && !isNaN(field.value.getTime())
+                          ? format(field.value, "MMM dd, yyyy")
+                          : "mm/dd/yyyy"}
 
-                          <CalendarIcon className="ml-auto h-4 w-4" />
-                        </Button>
+                        <CalendarIcon className="ml-auto h-4 w-4" />
+                      </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar

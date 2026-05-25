@@ -31,7 +31,7 @@ const createEmptyPlayer = () => ({
   email: "",
   phone: "",
   captainName: "",
-  seed: "",
+  seeder: undefined as number | undefined,
 });
 
 const getDefaultPlayers = (format?: string) => {
@@ -49,7 +49,7 @@ const playerSchema = z.object({
   email: z.string().optional(),
   phone: z.string().optional(),
   captainName: z.string().optional(),
-  seed: z.string().optional(),
+  seeder: z.number().optional(),
 });
 
 const formSchema = z
@@ -72,7 +72,7 @@ const formSchema = z
           player.email ||
           player.phone ||
           player.captainName ||
-          player.seed,
+          player.seeder !== undefined,
       );
 
       return hasCsvFile || hasPlayerData;
@@ -93,7 +93,7 @@ const formSchema = z
         !!player.email ||
         !!player.phone ||
         !!player.captainName ||
-        !!player.seed;
+        player.seeder !== undefined;
 
       if (!hasAnyValue) return;
 
@@ -129,6 +129,17 @@ const formSchema = z
             path: ["players", index, "captainName"],
           });
         }
+      }
+
+      if (
+        player.seeder === undefined ||
+        Number.isNaN(player.seeder)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Seed number is required",
+          path: ["players", index, "seeder"],
+        });
       }
     });
   });
@@ -178,7 +189,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
           player.email ||
           player.phone ||
           player.captainName ||
-          player.seed,
+          player.seeder !== undefined,
       );
 
       if (!values.csvFile) {
@@ -368,20 +379,27 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
 
                   <FormField
                     control={form.control}
-                    name={`players.${index}.seed`}
+                    name={`players.${index}.seeder`}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-base font-semibold leading-[150%] text-[#343A40]">
-                          Seed (optional)
+                          Seed
                         </FormLabel>
                         <FormControl>
                           <Input
+                            type="number"
                             className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base font-semibold leading-[150%] text-[#343A40] placeholder:text-[#8E938F]"
                             placeholder="Enter Seed"
-                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              field.onChange(
+                                value === "" ? undefined : Number(value),
+                              );
+                            }}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-500"/>
                       </FormItem>
                     )}
                   />
@@ -406,7 +424,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                     }}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-500"/>
               </FormItem>
             )}
           />
@@ -939,5 +957,4 @@ export default TournamentParticipantsPage;
 // };
 
 // export default TournamentParticipantsPage;
-
 
