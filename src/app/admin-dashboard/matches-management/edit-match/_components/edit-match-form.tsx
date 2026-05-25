@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -140,13 +140,9 @@ const normalizeStatus = (
 
 const EditMatchForm = () => {
   const params = useParams();
-  const router = useRouter();
   const matchId = params?.id as string;
-
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
-  const queryClient = useQueryClient();
-  const isParticipantValueHydratedRef = useRef(false);
 
   const {
     data: matchData,
@@ -169,11 +165,43 @@ const EditMatchForm = () => {
     },
     enabled: !!matchId && !!token,
   });
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        <TableSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <ErrorContainer
+          message={(error as Error)?.message || "Something went wrong"}
+        />
+      </div>
+    );
+  }
+
+  if (!matchData?.success || !matchData?.data) {
+    return (
+      <div className="p-6">
+        <NotFound message="Match not found" />
+      </div>
+    );
+  }
+
+  return <EditMatchFormInner matchData={matchData} matchId={matchId} token={token} />;
+};
+
+const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMatchResponse, matchId: string, token: string | undefined }) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const match = matchData?.data;
 
   const players = matchData?.players ?? [];
-  const isPairs = match?.matchType === "Pairs";
+  // const isPairs = match?.matchType === "Pairs";
 
   const selectablePlayers = useMemo<SelectablePlayer[]>(() => {
     const options = new Map<string, SelectablePlayer>();
@@ -186,8 +214,8 @@ const EditMatchForm = () => {
 
     // Ensure the currently assigned participants are always in the list
     // (in case they're somehow missing from the players array)
-    const player1 = isPairs ? match?.pair1Id : match?.player1Id;
-    const player2 = isPairs ? match?.pair2Id : match?.player2Id;
+    const player1 = match?.player1Id ?? match?.pair1Id;
+    const player2 = match?.player2Id ?? match?.pair2Id;
 
     [player1, player2].forEach((participant) => {
       const participantId = getParticipantId(participant);
@@ -203,7 +231,7 @@ const EditMatchForm = () => {
     });
 
     return Array.from(options.values());
-  }, [players, isPairs, match?.player1Id, match?.pair1Id, match?.player2Id, match?.pair2Id]);
+  }, [players, match?.player1Id, match?.pair1Id, match?.player2Id, match?.pair2Id]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -211,8 +239,8 @@ const EditMatchForm = () => {
       date: match?.date ? new Date(match?.date) : null,
       venue: match?.venue || "",
       status: normalizeStatus(match?.status),
-      player1Id: getParticipantId(isPairs ? match?.pair1Id : match?.player1Id),
-      player2Id: getParticipantId(isPairs ? match?.pair2Id : match?.player2Id),
+      player1Id: getParticipantId(match?.player1Id ?? match?.pair1Id),
+      player2Id: getParticipantId(match?.player2Id ?? match?.pair2Id),
     },
   });
 
@@ -240,16 +268,23 @@ const EditMatchForm = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["edit-match", matchId],
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const payload = {
+      const isPairsMatch = match?.matchType === "Pairs";
+      const payload: Record<string, string | null> = {
         date:
           values.date instanceof Date
             ? format(values.date, "yyyy-MM-dd")
             : values.date,
         venue: values.venue,
         status: values.status,
-        player1Id: values.player1Id,
-        player2Id: values.player2Id,
       };
+
+      if (isPairsMatch) {
+        payload.pair1Id = values.player1Id;
+        payload.pair2Id = values.player2Id;
+      } else {
+        payload.player1Id = values.player1Id;
+        payload.player2Id = values.player2Id;
+      }
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/match/${matchId}`,
@@ -282,54 +317,19 @@ const EditMatchForm = () => {
   });
 
   useEffect(() => {
-    if (!match) return;
-    isParticipantValueHydratedRef.current = false;
-    form.reset({
-      date: match.date ? new Date(match.date) : null,
-      venue: match.venue || "",
-      status: normalizeStatus(match.status),
-      player1Id: getParticipantId(isPairs ? match?.pair1Id : match?.player1Id),
-      player2Id: getParticipantId(isPairs ? match?.pair2Id : match?.player2Id),
-    });
-  }, [match, form, isPairs]);
+    if (match && selectablePlayers.length > 0) {
+      form.reset({
+        date: match.date ? new Date(match.date) : null,
+        venue: match.venue || "",
+        status: normalizeStatus(match.status),
+        player1Id: getParticipantId(match?.player1Id ?? match?.pair1Id),
+        player2Id: getParticipantId(match?.player2Id ?? match?.pair2Id),
+      });
+    }
+  }, [match, selectablePlayers, form]);
 
-  useEffect(() => {
-    if (!match || isParticipantValueHydratedRef.current) return;
-    if (selectablePlayers.length === 0) return;
 
-    const player1Id = getParticipantId(isPairs ? match?.pair1Id : match?.player1Id);
-    const player2Id = getParticipantId(isPairs ? match?.pair2Id : match?.player2Id);
 
-    form.setValue("player1Id", player1Id, { shouldDirty: false, shouldValidate: false });
-    form.setValue("player2Id", player2Id, { shouldDirty: false, shouldValidate: false });
-    isParticipantValueHydratedRef.current = true;
-  }, [match, selectablePlayers, form, isPairs]);
-
-  if (isLoading) {
-    return (
-      <div className="p-6">
-        <TableSkeleton />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="p-6">
-        <ErrorContainer
-          message={(error as Error)?.message || "Something went wrong"}
-        />
-      </div>
-    );
-  }
-
-  if (!matchData?.success || !match) {
-    return (
-      <div className="p-6">
-        <NotFound message="Match not found" />
-      </div>
-    );
-  }
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     // Check if values.date is null or an invalid date
