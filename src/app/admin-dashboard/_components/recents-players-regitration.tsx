@@ -10,6 +10,8 @@ import TableSkeleton from '@/components/reusable/TableSkeleton'
 import ErrorContainer from '@/components/ErrorContainer/ErrorContainer'
 import NotFound from '@/components/reusable/not-found-data'
 
+import NoUser from "../../../../public/user.png"
+
 type Registration = {
   id: string
   user: {
@@ -96,11 +98,11 @@ export function RecentRegistrations() {
                 <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
                   {item?.user?.profileImage ? (
                     <Image
-                      src={item?.user?.profileImage}
+                      src={item?.user?.profileImage || NoUser}
                       alt={item?.user?.name}
                       width={40}
                       height={40}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-[#DF1020] text-white font-semibold">
