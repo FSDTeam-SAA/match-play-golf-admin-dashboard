@@ -50,6 +50,17 @@ const TournamentsDetails = () => {
     enabled: !!token,
   });
 
+  // Helper function to format round date
+  const formatRoundDate = (dateString?: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const tournamentName =
     (tournamentData &&
@@ -93,22 +104,36 @@ const TournamentsDetails = () => {
           </button>
         </div>
 
-        {/* Round Filters */}
+        {/* Round Filters with Dates */}
         {isActive === "draw" && data?.rounds && data.rounds.length > 0 && (
-          <div className="flex items-center gap-4 mt-6 mb-6 flex-wrap">
-            {data.rounds.map((round) => (
-              <button
-                key={round._id}
-                className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl hover:text-white transition-all duration-200 hover:bg-primary ${
-                  roundNumber === round?.roundNumber
-                    ? "bg-primary text-white"
-                    : "bg-inherit border border-primary text-primary"
-                }`}
-                onClick={() => setRoundNumber(round.roundNumber)}
-              >
-                {round.roundName}
-              </button>
-            ))}
+          <div className="mt-6 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-10 gap-3 sm:gap-5">
+              {data.rounds.map((round) => (
+                <div
+                  key={round._id}
+                  className="flex flex-col items-center gap-2"
+                >
+                  <button
+                    className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl transition-all duration-200 ${
+                      roundNumber === round?.roundNumber
+                        ? "bg-primary text-white hover:bg-primary/90"
+                        : "bg-inherit border border-primary text-primary hover:bg-primary/10"
+                    }`}
+                    onClick={() => setRoundNumber(round.roundNumber)}
+                  >
+                    <span className="text-xs sm:text-sm truncate">
+                      {round.roundName}
+                    </span>
+                  </button>
+                  {/* Display round date */}
+                  {round.date && (
+                    <span className="text-xs text-gray-500 whitespace-nowrap">
+                      {formatRoundDate(round.date)}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
