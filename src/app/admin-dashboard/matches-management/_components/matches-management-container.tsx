@@ -59,6 +59,8 @@ const MatchesManagementContainer = () => {
     },
   });
 
+  console.log(data);
+
   let content;
 
   if (isLoading) {
