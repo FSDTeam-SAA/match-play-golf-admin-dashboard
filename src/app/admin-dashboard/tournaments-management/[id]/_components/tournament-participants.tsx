@@ -131,13 +131,10 @@ const formSchema = z
         }
       }
 
-      if (
-        player.seeder === undefined ||
-        Number.isNaN(player.seeder)
-      ) {
+      if (player.seeder !== undefined && Number.isNaN(player.seeder)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Seed number is required",
+          message: "Valid seed number is required",
           path: ["players", index, "seeder"],
         });
       }
@@ -300,7 +297,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                          <FormMessage className="text-red-500"/>
                       </FormItem>
                     )}
                   />
@@ -324,7 +321,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                          <FormMessage className="text-red-500"/>
                       </FormItem>
                     )}
                   />
@@ -348,7 +345,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                          <FormMessage className="text-red-500"/>
                       </FormItem>
                     )}
                   />
@@ -371,7 +368,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage />
+                            <FormMessage className="text-red-500"/>
                         </FormItem>
                       )}
                     />
@@ -815,7 +812,7 @@ export default TournamentParticipantsPage;
 //                             {...field}
 //                           />
 //                         </FormControl>
-//                         <FormMessage />
+//                           <FormMessage className="text-red-500"/>
 //                       </FormItem>
 //                     )}
 //                   />
@@ -835,7 +832,7 @@ export default TournamentParticipantsPage;
 //                             {...field}
 //                           />
 //                         </FormControl>
-//                         <FormMessage />
+//                           <FormMessage className="text-red-500"/>
 //                       </FormItem>
 //                     )}
 //                   />
@@ -855,7 +852,7 @@ export default TournamentParticipantsPage;
 //                             {...field}
 //                           />
 //                         </FormControl>
-//                         <FormMessage />
+//                           <FormMessage className="text-red-500"/>
 //                       </FormItem>
 //                     )}
 //                   />
@@ -878,7 +875,7 @@ export default TournamentParticipantsPage;
 //                               {...field}
 //                             />
 //                           </FormControl>
-//                           <FormMessage />
+//                             <FormMessage className="text-red-500"/>
 //                         </FormItem>
 //                       )}
 //                     />
@@ -899,7 +896,7 @@ export default TournamentParticipantsPage;
 //                           {...field}
 //                         />
 //                       </FormControl>
-//                       <FormMessage />
+//                         <FormMessage className="text-red-500"/>
 //                     </FormItem>
 //                     )}
 //                   />
@@ -925,7 +922,7 @@ export default TournamentParticipantsPage;
 //                     }}
 //                   />
 //                 </FormControl>
-//                 <FormMessage />
+//                   <FormMessage className="text-red-500"/>
 //               </FormItem>
 //             )}
 //           />
@@ -957,4 +954,3 @@ export default TournamentParticipantsPage;
 // };
 
 // export default TournamentParticipantsPage;
-
