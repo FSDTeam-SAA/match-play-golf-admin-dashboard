@@ -114,7 +114,7 @@ const TournamentsDetails = () => {
                   className="flex flex-col items-center gap-2"
                 >
                   <button
-                    className={`h-[40px] sm:h-[45px] w-full rounded-3xl transition-all duration-200 ${
+                    className={`h-[40px] sm:h-[45px] w-full min-w-[80px] sm:w-[130px] rounded-3xl transition-all duration-200 ${
                       roundNumber === round?.roundNumber
                         ? "bg-primary text-white hover:bg-primary/90"
                         : "bg-inherit border border-primary text-primary hover:bg-primary/10"
