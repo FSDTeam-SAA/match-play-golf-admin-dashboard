@@ -103,6 +103,10 @@ const MatchesManagementContainer = () => {
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Round
               </TableHead>
+               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
+                Match Number
+              </TableHead>
+              
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Score
               </TableHead>
@@ -127,9 +131,13 @@ const MatchesManagementContainer = () => {
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
                     {item?.tournamentId?.tournamentName}
                   </TableCell>
-                  <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
+                     <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
                     {item?.round}
                   </TableCell>
+                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
+                    {item?.matchNumber}
+                  </TableCell>
+               
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
                     {item?.matchType === "Pairs" ? (
                       <div>
