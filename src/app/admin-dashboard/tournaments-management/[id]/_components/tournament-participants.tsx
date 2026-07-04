@@ -121,7 +121,7 @@ const formSchema = z
         });
       }
 
-      if (!isPairFormat) {
+      if (!isPairFormat && data.players.length !== 1) {
         if (!player.captainName || player.captainName.trim().length < 2) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -152,6 +152,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
     ?._id;
   const format = data?.data?.tournament?.format;
   const isPair = format === "Pairs";
+  const isSingle = format === "Single";
 
   const { data: session } = useSession();
   const token = (session?.user as { accessToken: string })?.accessToken;
@@ -271,8 +272,16 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
           {fields.map((field, index) => {
-            const participantLabel = isPair ? `Player ${index + 1}` : "Team";
-            const contactLabel = isPair ? participantLabel : "Team Captain";
+            const participantLabel = isPair
+              ? `Player ${index + 1}`
+              : isSingle
+                ? "Player"
+                : "Team";
+            const contactLabel = isPair
+              ? `Player ${index + 1}`
+              : isSingle
+                ? "Player"
+                : "Team Captain";
 
             return (
               <div
@@ -292,7 +301,11 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                           <Input
                             className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base font-semibold leading-[150%] text-[#343A40] placeholder:text-[#8E938F]"
                             placeholder={
-                              isPair ? `Enter Player ${index + 1} Name` : "Enter Team Name"
+                              isPair
+                                ? `Enter Player ${index + 1} Name`
+                                : isSingle
+                                  ? "Enter Player Name"
+                                  : "Enter Team Name"
                             }
                             {...field}
                           />
@@ -316,7 +329,9 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                             placeholder={
                               isPair
                                 ? `Enter Player ${index + 1} Email`
-                                : "Enter Team Captain Email"
+                                : isSingle
+                                  ? "Enter Player Email"
+                                  : "Enter Team Captain Email"
                             }
                             {...field}
                           />
@@ -340,7 +355,9 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                             placeholder={
                               isPair
                                 ? `Enter Player ${index + 1} Phone`
-                                : "Enter Team Captain Phone number"
+                                : isSingle
+                                  ? "Enter Player Phone"
+                                  : "Enter Team Captain Phone number"
                             }
                             {...field}
                           />
@@ -352,7 +369,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                 </div>
 
                 <div className="mt-4 grid grid-cols-1 gap-8 md:grid-cols-2">
-                  {!isPair && (
+                  {!isPair && !isSingle && (
                     <FormField
                       control={form.control}
                       name={`players.${index}.captainName`}

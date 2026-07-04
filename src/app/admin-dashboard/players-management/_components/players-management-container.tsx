@@ -288,7 +288,7 @@ const PlayersManagementContainer = () => {
             onClose={() => setDeleteModalOpen(false)}
             onConfirm={handleDelete}
             title="Are You Sure?"
-            desc="Are you sure you want to delete this tournaments?"
+            desc="Are you sure you want to delete this Player?"
           />
         )}
 
