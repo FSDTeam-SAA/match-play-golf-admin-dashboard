@@ -33,6 +33,38 @@ import {
   Globe,
 } from 'lucide-react'
 
+function normalizeLinkValue(value: string) {
+  const trimmed = value.trim()
+
+  if (!trimmed) {
+    return {
+      isValid: false,
+      normalizedValue: '',
+      error: 'Link value is required',
+    }
+  }
+
+  let normalizedValue = trimmed
+  if (normalizedValue.startsWith('www.')) {
+    normalizedValue = `https://${normalizedValue}`
+  }
+
+  const isValidUrl =
+    /^(https?:\/\/|mailto:|tel:|\/|#)/i.test(normalizedValue)
+
+  return {
+    isValid: isValidUrl,
+    normalizedValue,
+    error: isValidUrl ? '' : 'Please enter a valid URL like https://example.com',
+  }
+}
+
+function getLinkDisplayLabel(url: string) {
+  if (url.startsWith('mailto:')) return url.replace(/^mailto:/i, '')
+  if (url.startsWith('tel:')) return url.replace(/^tel:/i, '')
+  return url
+}
+
 /* ─────────────────────────────────────────────
    Link Popover Component
    ───────────────────────────────────────────── */
@@ -58,7 +90,6 @@ function LinkPopover({
 }: LinkPopoverProps) {
   const [url, setUrl] = useState(initialUrl)
   const [text, setText] = useState(initialText)
-  const [openInNewTab, setOpenInNewTab] = useState(true)
   const [urlError, setUrlError] = useState('')
   const popoverRef = useRef<HTMLDivElement>(null)
   const urlInputRef = useRef<HTMLInputElement>(null)
@@ -90,32 +121,15 @@ function LinkPopover({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isOpen, onClose])
 
-  const validateUrl = (value: string): boolean => {
-    if (!value.trim()) {
-      setUrlError('URL is required')
-      return false
-    }
-    // Allow common URL patterns
-    const urlPattern =
-      /^(https?:\/\/|www\.|mailto:|tel:|\/|#).*/i
-    if (!urlPattern.test(value.trim())) {
-      setUrlError('Please enter a valid URL (e.g. https://example.com)')
-      return false
-    }
-    setUrlError('')
-    return true
-  }
-
   const handleSubmit = () => {
-    if (!validateUrl(url)) return
-
-    let finalUrl = url.trim()
-    // Auto-prepend https:// if URL starts with www.
-    if (finalUrl.startsWith('www.')) {
-      finalUrl = 'https://' + finalUrl
+    const result = normalizeLinkValue(url)
+    if (!result.isValid) {
+      setUrlError(result.error)
+      return
     }
 
-    onSubmit(finalUrl, text.trim(), openInNewTab)
+    setUrlError('')
+    onSubmit(result.normalizedValue, text.trim(), true)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -196,17 +210,6 @@ function LinkPopover({
             className="tiptap-link-popover__input"
           />
         </div>
-
-        {/* Open in new tab toggle */}
-        <label className="tiptap-link-popover__checkbox-label">
-          <input
-            type="checkbox"
-            checked={openInNewTab}
-            onChange={e => setOpenInNewTab(e.target.checked)}
-            className="tiptap-link-popover__checkbox"
-          />
-          <span>Open in new tab</span>
-        </label>
       </div>
 
       {/* Footer */}
@@ -282,12 +285,14 @@ const Toolbar = ({ editor }: { editor: any }) => {
     url: string
     text: string
     position: { top: number; left: number }
+    selection: { from: number; to: number }
   }>({
     isOpen: false,
     mode: 'add',
     url: '',
     text: '',
     position: { top: 0, left: 0 },
+    selection: { from: 0, to: 0 },
   })
 
   const toolbarRef = useRef<HTMLDivElement>(null)
@@ -299,6 +304,7 @@ const Toolbar = ({ editor }: { editor: any }) => {
     let text = ''
 
     if (mode === 'edit' && editor.isActive('link')) {
+      editor.chain().focus().extendMarkRange('link').run()
       url = editor.getAttributes('link').href || ''
       const { from, to } = editor.state.selection
       text = editor.state.doc.textBetween(from, to, ' ')
@@ -320,6 +326,10 @@ const Toolbar = ({ editor }: { editor: any }) => {
       url,
       text,
       position: pos,
+      selection: {
+        from: editor.state.selection.from,
+        to: editor.state.selection.to,
+      },
     })
   }
 
@@ -333,24 +343,34 @@ const Toolbar = ({ editor }: { editor: any }) => {
       target: openInNewTab ? '_blank' : null,
       rel: openInNewTab ? 'noopener noreferrer' : null,
     }
+    const { from, to } = linkPopover.selection
+    const selectedText = editor.state.doc.textBetween(from, to, ' ').trim()
+    const linkText = text || selectedText || getLinkDisplayLabel(url)
 
-    if (text) {
-      // If display text is provided, replace selection or insert
-      const { from, to } = editor.state.selection
-      if (from === to) {
-        // No selection – insert the link text
-        editor
-          .chain()
-          .focus()
-          .insertContent(`<a href="${url}" ${openInNewTab ? 'target="_blank" rel="noopener noreferrer"' : ''}>${text}</a>`)
-          .run()
-      } else {
-        // Has selection – apply link to selection
-        editor.chain().focus().setLink(attrs).run()
-      }
+    editor.chain().focus().setTextSelection({ from, to }).run()
+
+    if (from === to) {
+      editor
+        .chain()
+        .focus()
+        .insertContent({
+          type: 'text',
+          text: linkText,
+          marks: [{ type: 'link', attrs }],
+        })
+        .run()
+    } else if (text && text !== selectedText) {
+      editor
+        .chain()
+        .focus()
+        .insertContentAt({ from, to }, {
+          type: 'text',
+          text: text,
+          marks: [{ type: 'link', attrs }],
+        })
+        .run()
     } else {
-      // No display text – just set link on selection
-      editor.chain().focus().setLink(attrs).run()
+      editor.chain().focus().extendMarkRange('link').setLink(attrs).run()
     }
 
     setLinkPopover(prev => ({ ...prev, isOpen: false }))
@@ -525,6 +545,19 @@ const Toolbar = ({ editor }: { editor: any }) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function FloatingLinkTooltip({ editor }: { editor: any }) {
+  const [linkPopover, setLinkPopover] = useState<{
+    isOpen: boolean
+    url: string
+    text: string
+    selection: { from: number; to: number }
+    position: { top: number; left: number }
+  }>({
+    isOpen: false,
+    url: '',
+    text: '',
+    selection: { from: 0, to: 0 },
+    position: { top: 0, left: 0 },
+  })
   const [tooltipState, setTooltipState] = useState<{
     visible: boolean
     href: string
@@ -573,64 +606,108 @@ function FloatingLinkTooltip({ editor }: { editor: any }) {
 
   if (!tooltipState.visible || !tooltipState.href) return null
 
-  return (
-    <div
-      ref={tooltipRef}
-      className="tiptap-floating-tooltip"
-      style={{
-        top: tooltipState.position.top,
+  const openEditPopover = () => {
+    editor.chain().focus().extendMarkRange('link').run()
+    const { from, to } = editor.state.selection
+    setLinkPopover({
+      isOpen: true,
+      url: editor.getAttributes('link').href || '',
+      text: editor.state.doc.textBetween(from, to, ' '),
+      selection: { from, to },
+      position: {
+        top: tooltipState.position.top + 34,
         left: tooltipState.position.left,
-      }}
-    >
-      <Globe size={12} className="tiptap-floating-tooltip__icon" />
-      <a
-        href={tooltipState.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tiptap-floating-tooltip__url"
-        title={tooltipState.href}
-      >
-        {tooltipState.href.length > 45
-          ? tooltipState.href.slice(0, 45) + '…'
-          : tooltipState.href}
-      </a>
-      <div className="tiptap-floating-tooltip__divider" />
-      <button
-        type="button"
-        className="tiptap-floating-tooltip__btn"
-        title="Edit Link"
-        onClick={() => {
-          const url = editor.getAttributes('link').href || ''
-          const newUrl = prompt('Edit link URL:', url)
-          if (newUrl !== null) {
-            if (newUrl === '') {
-              editor.chain().focus().unsetLink().run()
-            } else {
-              let finalUrl = newUrl.trim()
-              if (finalUrl.startsWith('www.')) {
-                finalUrl = 'https://' + finalUrl
-              }
-              editor
-                .chain()
-                .focus()
-                .extendMarkRange('link')
-                .setLink({ href: finalUrl, target: '_blank' })
-                .run()
-            }
-          }
+      },
+    })
+  }
+
+  const handleLinkUpdate = (
+    url: string,
+    text: string,
+    openInNewTab: boolean,
+  ) => {
+    const attrs = {
+      href: url,
+      target: openInNewTab ? '_blank' : null,
+      rel: openInNewTab ? 'noopener noreferrer' : null,
+    }
+    const { from, to } = linkPopover.selection
+    const selectedText = editor.state.doc.textBetween(from, to, ' ').trim()
+    const linkText = text || selectedText || getLinkDisplayLabel(url)
+
+    editor.chain().focus().setTextSelection({ from, to }).run()
+
+    if (text && text !== selectedText) {
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(
+          { from, to },
+          {
+            type: 'text',
+            text: linkText,
+            marks: [{ type: 'link', attrs }],
+          },
+        )
+        .run()
+    } else {
+      editor.chain().focus().extendMarkRange('link').setLink(attrs).run()
+    }
+
+    setLinkPopover(prev => ({ ...prev, isOpen: false }))
+  }
+
+  return (
+    <>
+      <div
+        ref={tooltipRef}
+        className="tiptap-floating-tooltip"
+        style={{
+          top: tooltipState.position.top,
+          left: tooltipState.position.left,
         }}
       >
-        <Pencil size={12} />
-      </button>
-      <button
-        type="button"
-        className="tiptap-floating-tooltip__btn tiptap-floating-tooltip__btn--danger"
-        title="Remove Link"
-        onClick={() => editor.chain().focus().unsetLink().run()}
-      >
-        <Trash2 size={12} />
-      </button>
-    </div>
+        <Globe size={12} className="tiptap-floating-tooltip__icon" />
+        <a
+          href={tooltipState.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="tiptap-floating-tooltip__url"
+          title={tooltipState.href}
+        >
+          {tooltipState.href.length > 45
+            ? tooltipState.href.slice(0, 45) + '…'
+            : tooltipState.href}
+        </a>
+        <div className="tiptap-floating-tooltip__divider" />
+        <button
+          type="button"
+          className="tiptap-floating-tooltip__btn"
+          title="Edit Link"
+          onClick={openEditPopover}
+        >
+          <Pencil size={12} />
+        </button>
+        <button
+          type="button"
+          className="tiptap-floating-tooltip__btn tiptap-floating-tooltip__btn--danger"
+          title="Remove Link"
+          onClick={() => editor.chain().focus().unsetLink().run()}
+        >
+          <Trash2 size={12} />
+        </button>
+      </div>
+
+      <LinkPopover
+        isOpen={linkPopover.isOpen}
+        onClose={() => setLinkPopover(prev => ({ ...prev, isOpen: false }))}
+        onSubmit={handleLinkUpdate}
+        initialUrl={linkPopover.url}
+        initialText={linkPopover.text}
+        position={linkPopover.position}
+        mode="edit"
+      />
+    </>
   )
 }
 

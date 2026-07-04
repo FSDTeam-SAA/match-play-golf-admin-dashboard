@@ -22,6 +22,7 @@ export interface MatchItem {
   pair1Score: string;
   pair2Score: string
   round: string;
+  matchNumber: number;
   createdBy: PlayerInfo;
   players: PlayerInfo[];
 //   teams: any[];
