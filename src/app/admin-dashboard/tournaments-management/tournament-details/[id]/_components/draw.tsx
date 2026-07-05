@@ -39,6 +39,7 @@ export interface Match {
     profileImage: string;
     email: string;
     clubName?: string;
+    captainName?: string;
   };
   player2Id: {
     _id: string;
@@ -46,6 +47,7 @@ export interface Match {
     profileImage: string;
     email: string;
     clubName?: string;
+    captainName?: string;
   };
   player1Score: string | number;
   player2Score: string | number;

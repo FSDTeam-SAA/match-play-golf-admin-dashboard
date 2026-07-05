@@ -87,6 +87,8 @@ type SingleMatchResponse = {
       tournamentName: string;
       sportName: string;
       format: string;
+      startDate: Date;
+      endDate: Date;
     };
     round: number;
     matchNumber: number;
@@ -100,6 +102,12 @@ type SingleMatchResponse = {
     status: string;
   };
   players: MatchPlayer[];
+  rounds?: {
+    _id: string;
+    roundName: string;
+    roundNumber: number;
+    date: string;
+  }[];
 };
 
 const ALLOWED_STATUSES = [
@@ -263,7 +271,39 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
       enabled: !!match?.tournamentId?._id && !!token,
     });
 
+  const matchRounds = useMemo(() => {
+    return (matchData?.rounds || tournamentDetails?.rounds || [])
+      .slice()
+      .sort((a, b) => a.roundNumber - b.roundNumber);
+  }, [matchData?.rounds, tournamentDetails?.rounds]);
 
+  const { minDate, maxDate } = useMemo(() => {
+    if (!match) return { minDate: undefined, maxDate: undefined };
+    
+    const tournamentStartDate = match.tournamentId?.startDate ? new Date(match.tournamentId.startDate) : undefined;
+    const tournamentEndDate = match.tournamentId?.endDate ? new Date(match.tournamentId.endDate) : undefined;
+
+    const currentRoundIndex = matchRounds.findIndex((r) => r.roundNumber === match.round);
+    
+    let min: Date | undefined = undefined;
+    let max: Date | undefined = undefined;
+
+    if (currentRoundIndex === 0) {
+      min = tournamentStartDate;
+      max = new Date(matchRounds[0].date);
+    } else if (currentRoundIndex > 0) {
+      min = new Date(matchRounds[currentRoundIndex - 1].date);
+      max = new Date(matchRounds[currentRoundIndex].date);
+    } else {
+      min = tournamentStartDate;
+      max = tournamentEndDate;
+    }
+
+    if (min) min.setHours(0, 0, 0, 0);
+    if (max) max.setHours(0, 0, 0, 0);
+
+    return { minDate: min, maxDate: max };
+  }, [match, matchRounds]);
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["edit-match", matchId],
@@ -345,45 +385,26 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
       return;
     }
 
-    const roundsByNumber =
-      tournamentDetails?.rounds
-        ?.slice()
-        .sort((a, b) => a.roundNumber - b.roundNumber) ?? [];
+    selectedDate.setHours(0, 0, 0, 0);
 
-    const currentRoundIndex = roundsByNumber.findIndex(
-      (round) => round.roundNumber === match.round,
-    );
+    if (minDate && selectedDate < minDate) {
+      toast.error(
+        `Round ${match.round} match date must be on or after ${format(
+          minDate,
+          "MMM dd, yyyy",
+        )}.`,
+      );
+      return;
+    }
 
-    if (currentRoundIndex !== -1) {
-      const currentRound = roundsByNumber[currentRoundIndex];
-      const nextRound = roundsByNumber[currentRoundIndex + 1];
-
-      const roundStartDate = new Date(currentRound.date);
-      const nextRoundDate = nextRound ? new Date(nextRound.date) : null;
-
-      selectedDate.setHours(0, 0, 0, 0);
-      roundStartDate.setHours(0, 0, 0, 0);
-      if (nextRoundDate) nextRoundDate.setHours(0, 0, 0, 0);
-
-      if (selectedDate < roundStartDate) {
-        toast.error(
-          `Round ${match.round} match date must be on or after ${format(
-            roundStartDate,
-            "MMM dd, yyyy",
-          )}.`,
-        );
-        return;
-      }
-
-      if (nextRoundDate && selectedDate >= nextRoundDate) {
-        toast.error(
-          `Round ${match.round} match date must be before ${format(
-            nextRoundDate,
-            "MMM dd, yyyy",
-          )}.`,
-        );
-        return;
-      }
+    if (maxDate && selectedDate > maxDate) {
+      toast.error(
+        `Round ${match.round} match date must be on or before ${format(
+          maxDate,
+          "MMM dd, yyyy",
+        )}.`,
+      );
+      return;
     }
 
     mutate(values);
@@ -515,6 +536,14 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
                         mode="single"
                         selected={field.value ?? undefined}
                         onSelect={(date) => field.onChange(date ?? null)}
+                        disabled={(date) => {
+                          const d = new Date(date);
+                          d.setHours(0, 0, 0, 0);
+                          let isDisabled = false;
+                          if (minDate && d < minDate) isDisabled = true;
+                          if (maxDate && d > maxDate) isDisabled = true;
+                          return isDisabled;
+                        }}
                         initialFocus
                       />
                     </PopoverContent>
