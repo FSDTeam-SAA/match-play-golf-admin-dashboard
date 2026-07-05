@@ -76,7 +76,7 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
               </div>
 
               <h1 className="text-lg md:text-xl font-semibold text-gray-800 mt-2 line-clamp-2">
-                {matchInfo?.player1Id?.fullName || 'N/A'}
+                {matchInfo?.player1Id?.captainName ? matchInfo?.player1Id?.captainName : matchInfo?.player1Id?.fullName || 'N/A'}
               </h1>
               <p className="text-sm md:text-base text-gray-600 mt-1 break-words max-w-full">
                 {matchInfo?.player1Id?.email || 'No email'}
@@ -139,7 +139,7 @@ const VsModal = ({ isModalOpen, handleCloseModal, matchInfo }: Props) => {
               </div>
 
               <h1 className="text-lg md:text-xl font-semibold text-gray-800 mt-2 line-clamp-2">
-                {matchInfo?.player2Id?.fullName || 'N/A'}
+                {matchInfo?.player2Id?.captainName ? matchInfo?.player2Id?.captainName : matchInfo?.player2Id?.fullName || 'N/A'}
               </h1>
               <p className="text-sm md:text-base text-gray-600 mt-1 break-words max-w-full">
                 {matchInfo?.player2Id?.email || 'No email'}
