@@ -57,6 +57,7 @@ const singleSchema = z.object({
   entryType: z.literal("single"),
   fullName: z.string().trim().min(2, "Full name is required"),
   email: z.string().trim().email("Valid email is required").optional().or(z.literal("")),
+  captainName: z.string().optional().or(z.literal("")),
   phone: z.string().trim().min(6, "Phone is required"),
   clubName: z.string().trim().min(1, "Club name is required"),
   seeder: optionalSeederString,
@@ -81,6 +82,7 @@ const pairSchema = z.object({
   // not used in pair, keep optional
   fullName: z.string().optional().or(z.literal("")),
   email: z.string().optional().or(z.literal("")),
+  captainName: z.string().optional().or(z.literal("")),
   phone: z.string().optional().or(z.literal("")),
   clubName: z.string().optional().or(z.literal("")),
   seeder: optionalSeederString,
@@ -114,10 +116,12 @@ export default function EditPlayerModal({
   open,
   onOpenChange,
   playerId,
+  tournamentFormat,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   playerId: string | null;
+  tournamentFormat?: string;
 }) {
   const { data: session } = useSession();
   const token =
@@ -157,12 +161,25 @@ export default function EditPlayerModal({
     return "unknown";
   }, [playerData]);
 
+  const isTeam = useMemo(() => {
+    if (tournamentFormat?.toLowerCase() === "team") return true;
+    if (!playerData) return false;
+
+    const tournament =
+      typeof playerData.tournamentId === "object"
+        ? playerData.tournamentId
+        : playerData.tournamentDetails;
+
+    return tournament?.format?.toLowerCase() === "team";
+  }, [playerData, tournamentFormat]);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       entryType: "single",
       fullName: "",
       email: "",
+      captainName: "",
       phone: "",
       clubName: "",
       seeder: "",
@@ -191,6 +208,7 @@ export default function EditPlayerModal({
         entryType: "single",
         fullName: playerData.playerId?.fullName ?? "",
         email: playerData.playerId?.email ?? "",
+        captainName: playerData.playerId?.captainName ?? "",
         phone: playerData.playerId?.phone ?? "",
         clubName: playerData.playerId?.clubName ?? "",
         seeder:
@@ -217,6 +235,7 @@ export default function EditPlayerModal({
         entryType: "pair",
         fullName: "",
         email: "",
+        captainName: "",
         phone: "",
         clubName: "",
         seeder: "",
@@ -257,6 +276,9 @@ export default function EditPlayerModal({
               userInfo: {
                 fullName: values.fullName.trim(),
                 email: values.email?.trim() || undefined,
+                ...(isTeam
+                  ? { captainName: values.captainName?.trim() || undefined }
+                  : {}),
                 phone: values.phone.trim(),
                 clubName: values.clubName?.trim() || undefined,
                 ...(singleSeeder !== undefined ? { seeder: singleSeeder } : {}),
@@ -323,7 +345,13 @@ export default function EditPlayerModal({
           <DialogHeader className="space-y-1 ">
             <div className="flex items-center justify-between gap-3">
               <DialogTitle className="text-lg">Edit Player ( <span className="text-base text-[#131313] font-semibold">
-                {mode === "single" ? "Single" : mode === "pair" ? "Pair" : "Loading..."}
+                {isTeam
+                  ? "Team"
+                  : mode === "single"
+                    ? "Single"
+                    : mode === "pair"
+                      ? "Pair"
+                      : "Loading..."}
               </span> )</DialogTitle>
             </div>
             <p className="text-sm text-muted-foreground">Update info and save changes.</p>
@@ -362,14 +390,33 @@ export default function EditPlayerModal({
                       name="fullName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Full Name</FormLabel>
+                          <FormLabel>{isTeam ? "Team Name" : "Full Name"}</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter full name" {...field} />
+                            <Input
+                              placeholder={isTeam ? "Enter team name" : "Enter full name"}
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+
+                    {isTeam && (
+                      <FormField
+                        control={form.control}
+                        name="captainName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Captain Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter captain name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField
@@ -377,9 +424,14 @@ export default function EditPlayerModal({
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel>{isTeam ? "Captain Email" : "Email"}</FormLabel>
                             <FormControl>
-                              <Input placeholder="Enter email" {...field} />
+                              <Input
+                                placeholder={
+                                  isTeam ? "Enter captain email" : "Enter email"
+                                }
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>

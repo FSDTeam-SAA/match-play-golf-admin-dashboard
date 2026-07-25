@@ -102,12 +102,15 @@ const PlayersManagementContainer = () => {
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-left py-4 ">
                 Player Name
               </TableHead>
+              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-left py-4 ">
+                Team Format
+              </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Handicap
               </TableHead>
-              <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
+              {/* <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Country
-              </TableHead>
+              </TableHead> */}
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-center py-4 ">
                 Club Name
               </TableHead>
@@ -149,11 +152,14 @@ const PlayersManagementContainer = () => {
                     </div>
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.playerDetails?.handicap || "N/A"}
+                    {item?.tournamentDetails?.format || "N/A"}
                   </TableCell>
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
-                    {item?.playerDetails?.country || "N/A"}
+                    {item?.playerDetails?.handicap || "N/A"}
                   </TableCell>
+                  {/* <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
+                    {item?.playerDetails?.country || "N/A"}
+                  </TableCell> */}
                   <TableCell className="text-base font-normal text-[#68706A] leading-[150%] text-center py-4">
                     {item?.playerDetails?.clubName || "N/A"}
                   </TableCell>
@@ -175,6 +181,7 @@ const PlayersManagementContainer = () => {
                     <button
                       onClick={() => {
                         setPlayerId(item?.playerId);
+                        setSelectedPlayer(item);
                         setEditPlayerModalOpen(true);
                       }}
                       className="cursor-pointer"
@@ -311,6 +318,7 @@ const PlayersManagementContainer = () => {
               open={editPlayerModalOpen}
               onOpenChange={setEditPlayerModalOpen}
               playerId={playerId}
+              tournamentFormat={selectedPlayer?.tournamentDetails?.format}
             />
           )}
         </div>
