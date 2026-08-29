@@ -26,12 +26,13 @@ import { TournamentResponseData } from "./single-tournament-data-type";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const createEmptyPlayer = () => ({
+const createEmptyPlayer = (isTeam = false) => ({
   fullName: "",
   email: "",
   phone: "",
   captainName: "",
   seeder: undefined as number | undefined,
+  ...(isTeam ? { teamName: "" } : {}),
 });
 
 const getDefaultPlayers = (format?: string) => {
@@ -39,12 +40,13 @@ const getDefaultPlayers = (format?: string) => {
     return [createEmptyPlayer(), createEmptyPlayer()];
   }
 
-  return [createEmptyPlayer()];
+  return [createEmptyPlayer(format === "Team")];
 };
 
 /* ---------------- ZOD SCHEMA ---------------- */
 
 const playerSchema = z.object({
+  teamName: z.string().optional(),
   fullName: z.string().optional(),
   email: z.string().optional(),
   phone: z.string().optional(),
@@ -68,6 +70,7 @@ const formSchema = z
 
       const hasPlayerData = data.players.some(
         (player) =>
+          player.teamName ||
           player.fullName ||
           player.email ||
           player.phone ||
@@ -85,10 +88,13 @@ const formSchema = z
   .superRefine((data, ctx) => {
     if (data.csvFile) return;
 
-    const isPairFormat = data.players.length === 2;
+    const isTeamFormat = data.players.some(
+      (player) => player.teamName !== undefined,
+    );
 
     data.players.forEach((player, index) => {
       const hasAnyValue =
+        !!player.teamName ||
         !!player.fullName ||
         !!player.email ||
         !!player.phone ||
@@ -97,11 +103,14 @@ const formSchema = z
 
       if (!hasAnyValue) return;
 
-      if (!player.fullName || player.fullName.trim().length < 2) {
+      const name = isTeamFormat ? player.teamName : player.fullName;
+      const nameField = isTeamFormat ? "teamName" : "fullName";
+
+      if (!name || name.trim().length < 2) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Full name is required",
-          path: ["players", index, "fullName"],
+          message: isTeamFormat ? "Team name is required" : "Full name is required",
+          path: ["players", index, nameField],
         });
       }
 
@@ -121,12 +130,12 @@ const formSchema = z
         });
       }
 
-      if (!isPairFormat && data.players.length !== 1) {
-        if (!player.captainName || player.captainName.trim().length < 2) {
+      if (isTeamFormat) {
+        if (!player.fullName || player.fullName.trim().length < 2) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Captain name is required",
-            path: ["players", index, "captainName"],
+            path: ["players", index, "fullName"],
           });
         }
       }
@@ -153,6 +162,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
   const format = data?.data?.tournament?.format;
   const isPair = format === "Pairs";
   const isSingle = format === "Single";
+  const isTeam = format === "Team";
 
   const { data: session } = useSession();
   const token = (session?.user as { accessToken: string })?.accessToken;
@@ -183,6 +193,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
     mutationFn: async (values: FormValues) => {
       const filledPlayers = values.players.filter(
         (player) =>
+          player.teamName ||
           player.fullName ||
           player.email ||
           player.phone ||
@@ -200,7 +211,15 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
-              players: filledPlayers,
+              players: isTeam
+                ? filledPlayers.map(({ teamName, email, phone, fullName, seeder }) => ({
+                    teamName,
+                    email,
+                    phone,
+                    fullName,
+                    seeder,
+                  }))
+                : filledPlayers,
             }),
           },
         );
@@ -281,7 +300,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
               ? `Player ${index + 1}`
               : isSingle
                 ? "Player"
-                : "Team Captain";
+                : "";
 
             return (
               <div
@@ -291,7 +310,11 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                   <FormField
                     control={form.control}
-                    name={`players.${index}.fullName`}
+                    name={
+                      isTeam
+                        ? `players.${index}.teamName`
+                        : `players.${index}.fullName`
+                    }
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-base font-semibold leading-[150%] text-[#343A40]">
@@ -305,7 +328,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                                 ? `Enter Player ${index + 1} Name`
                                 : isSingle
                                   ? "Enter Player Name"
-                                  : "Enter Team Name"
+                                : "Enter Team Name"
                             }
                             {...field}
                           />
@@ -321,7 +344,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-base font-semibold leading-[150%] text-[#343A40]">
-                          {contactLabel} Email
+                          {isTeam ? "Email" : `${contactLabel} Email`}
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -331,7 +354,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                                 ? `Enter Player ${index + 1} Email`
                                 : isSingle
                                   ? "Enter Player Email"
-                                  : "Enter Team Captain Email"
+                                : "Enter Team Email"
                             }
                             {...field}
                           />
@@ -347,7 +370,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-base font-semibold leading-[150%] text-[#343A40]">
-                          {contactLabel} Phone
+                          {isTeam ? "Phone" : `${contactLabel} Phone`}
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -357,7 +380,7 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                                 ? `Enter Player ${index + 1} Phone`
                                 : isSingle
                                   ? "Enter Player Phone"
-                                  : "Enter Team Captain Phone number"
+                                : "Enter Team Phone number"
                             }
                             {...field}
                           />
@@ -372,16 +395,16 @@ const TournamentParticipantsPage = (data: { data: TournamentResponseData }) => {
                   {!isPair && !isSingle && (
                     <FormField
                       control={form.control}
-                      name={`players.${index}.captainName`}
+                      name={`players.${index}.fullName`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-base font-semibold leading-[150%] text-[#343A40]">
-                            Team Captain Name
+                            Captain Name
                           </FormLabel>
                           <FormControl>
                             <Input
                               className="h-[48px] rounded-[4px] border border-[#C0C3C1] text-base font-semibold leading-[150%] text-[#343A40] placeholder:text-[#8E938F]"
-                              placeholder="Enter Team Captain Name"
+                              placeholder="Enter Captain Name"
                               {...field}
                             />
                           </FormControl>

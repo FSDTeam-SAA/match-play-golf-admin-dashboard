@@ -20,7 +20,16 @@ const TournamentDrawPage = (data: { data: TournamentResponseData }) => {
   const [eventLoading, setEventLoading] = useState(false);
   const [eventDrawnLoading, setEventDrawnLoading] = useState(false);
 
-  console.log(data);
+  const tournament = data?.data?.tournament;
+  const isPairsFormat = tournament?.format?.trim() === "Pairs";
+  const participantCount = isPairsFormat
+    ? (tournament?.totalParticipants || 0) * 2
+    : tournament?.totalParticipants || 0;
+  const requiredParticipants = isPairsFormat
+    ? (tournament?.drawSize || 0) * 2
+    : tournament?.drawSize || 0;
+
+  console.log(requiredParticipants , tournament?.drawSize, tournament?.format);
 
   // handle participant invite send email
 
@@ -132,16 +141,12 @@ const TournamentDrawPage = (data: { data: TournamentResponseData }) => {
       </h3>
       <ul className="py-4 md:py-5 lg:py-6">
         <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">
-          You have {data?.data?.tournament?.totalParticipants || 0} participants
-          added out of{" "}
-          {data?.data?.tournament?.format === "Pairs"
-            ? data?.data?.tournament?.drawSize * 2
-            : data?.data?.tournament?.drawSize}{" "}
+          You have {participantCount} participants added out
+          of {requiredParticipants}{" "}
           needed.
         </li>
         <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal py-3">
-          You have {data?.data?.tournament?.totalParticipants || 0} participants
-          registered.
+          You have {participantCount} participants registered.
         </li>
         <li className="text-sm md:text-base leading-[150%] text-[#181818] font-normal">
           You have {data?.data?.tournament?.numberOfSeeds || 0} of participants

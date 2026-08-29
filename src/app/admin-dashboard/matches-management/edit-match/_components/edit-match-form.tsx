@@ -464,9 +464,13 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium text-[#434C45]">
                         <SelectValue placeholder="Select player / pair 1" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-[400px] overflow-y-auto">
                         {selectablePlayers.map((player) => (
-                          <SelectItem key={player._id} value={player._id}>
+                          <SelectItem
+                            key={player._id}
+                            value={player._id}
+                            className="cursor-pointer rounded-md px-3 py-2.5 transition-colors hover:bg-[#FEECEE] hover:text-[#8E1020] focus:bg-[#FEECEE] focus:text-[#8E1020] data-[state=checked]:bg-[#FFF1F2] data-[state=checked]:text-[#8E1020]"
+                          >
                             {player.name}
                           </SelectItem>
                         ))}
@@ -493,9 +497,13 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
                       <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium text-[#434C45]">
                         <SelectValue placeholder="Select player / pair 2" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-[400px] overflow-y-auto">
                         {selectablePlayers.map((player) => (
-                          <SelectItem key={player._id} value={player._id}>
+                          <SelectItem
+                            key={player._id}
+                            value={player._id}
+                            className="cursor-pointer rounded-md px-3 py-2.5 transition-colors hover:bg-[#FEECEE] hover:text-[#8E1020] focus:bg-[#FEECEE] focus:text-[#8E1020] data-[state=checked]:bg-[#FFF1F2] data-[state=checked]:text-[#8E1020]"
+                          >
                             {player.name}
                           </SelectItem>
                         ))}
