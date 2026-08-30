@@ -147,14 +147,19 @@ const CreateTournament = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base text-[#434C45] leading-[150%] font-medium">
-                    Sport Name
+                    Sport Name <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]"
-                      placeholder="Enter Sport Name"
-                      {...field}
-                    />
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45] data-[placeholder]:text-[#929292]">
+                        <SelectValue placeholder="Select Sport name" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Golf">Golf</SelectItem>
+                        <SelectItem value="Football">Football</SelectItem>
+                        <SelectItem value="Tennis">Tennis</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage className="text-red-500" />
                 </FormItem>
@@ -205,7 +210,7 @@ const CreateTournament = () => {
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45] data-[placeholder]:text-[#929292]">
                         <SelectValue placeholder="Select Format" />
                       </SelectTrigger>
                       <SelectContent>
@@ -233,7 +238,7 @@ const CreateTournament = () => {
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger className="w-full h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45)]">
+                      <SelectTrigger className="w-full !h-[48px] py-2 px-3 rounded-[8px] border border-[#C0C3C1] text-base font-medium leading-[120%] text-[#434C45] data-[placeholder]:text-[#929292]">
                         <SelectValue placeholder="Select Total Draw Size" />
                       </SelectTrigger>
                       <SelectContent>
