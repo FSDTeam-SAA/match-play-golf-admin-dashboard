@@ -14,15 +14,16 @@ const TournamentsDetails = () => {
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const params = useParams();
   const id = params?.id;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [isActive, setIsActive] = useState("draw");
   const [roundNumber, setRoundNumber] = useState(1);
 
   const { data, isLoading, refetch } = useQuery<MatchesResponse>({
-    queryKey: ["tournaments", roundNumber],
+    queryKey: ["tournaments", roundNumber, currentPage],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}?roundNumber=${roundNumber}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}?page=${currentPage}&limit=100&roundNumber=${roundNumber}`,
       );
 
       const data = await res.json();
