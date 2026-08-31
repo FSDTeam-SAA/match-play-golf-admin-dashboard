@@ -13,9 +13,7 @@ const PlayersView = ({
   tournamentData: TournamentPlayerItem | null
 }) => {
   if (!tournamentData) return null
-
-
-  console.log("tournamentData", tournamentData)
+  const isTeam = tournamentData.tournamentDetails?.format?.toLowerCase() === 'team'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -25,6 +23,12 @@ const PlayersView = ({
             <strong>Tournament Name :</strong>{' '}
             {tournamentData?.tournamentDetails?.tournamentName || 'N/A'}
           </p>
+          {isTeam && (
+            <p>
+              <strong>Team Name :</strong>{' '}
+              {tournamentData?.playerDetails?.teamName || 'N/A'}
+            </p>
+          )}
           <p className="flex items-center gap-5">
             <strong>Player Profile :</strong>{' '}
             <Image
@@ -39,7 +43,7 @@ const PlayersView = ({
             />
           </p>
           <p>
-            <strong>Player Name :</strong>{' '}
+            <strong>{isTeam ? 'Captain Name' : 'Player Name'} :</strong>{' '}
             {tournamentData?.playerDetails?.fullName || 'N/A'}
           </p>
           <p>

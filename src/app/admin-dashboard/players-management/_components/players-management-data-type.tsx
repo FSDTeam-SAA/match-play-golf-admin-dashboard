@@ -31,7 +31,7 @@ export interface PlayerDetails {
   fullName: string
   email: string
   phone: string
-  captainName?: string | null
+  teamName?: string
   clubName: string
   country: string
   handicap: string

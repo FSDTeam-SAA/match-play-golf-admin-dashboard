@@ -56,8 +56,8 @@ const optionalSeederString = z
 const singleSchema = z.object({
   entryType: z.literal("single"),
   fullName: z.string().trim().min(2, "Full name is required"),
+  teamName: z.string().optional().or(z.literal("")),
   email: z.string().trim().email("Valid email is required").optional().or(z.literal("")),
-  captainName: z.string().optional().or(z.literal("")),
   phone: z.string().trim().min(6, "Phone is required"),
   clubName: z.string().trim().min(1, "Club name is required"),
   seeder: optionalSeederString,
@@ -81,8 +81,8 @@ const pairSchema = z.object({
 
   // not used in pair, keep optional
   fullName: z.string().optional().or(z.literal("")),
+  teamName: z.string().optional().or(z.literal("")),
   email: z.string().optional().or(z.literal("")),
-  captainName: z.string().optional().or(z.literal("")),
   phone: z.string().optional().or(z.literal("")),
   clubName: z.string().optional().or(z.literal("")),
   seeder: optionalSeederString,
@@ -178,8 +178,8 @@ export default function EditPlayerModal({
     defaultValues: {
       entryType: "single",
       fullName: "",
+      teamName: "",
       email: "",
-      captainName: "",
       phone: "",
       clubName: "",
       seeder: "",
@@ -207,8 +207,8 @@ export default function EditPlayerModal({
       form.reset({
         entryType: "single",
         fullName: playerData.playerId?.fullName ?? "",
+        teamName: playerData.playerId?.teamName ?? "",
         email: playerData.playerId?.email ?? "",
-        captainName: playerData.playerId?.captainName ?? "",
         phone: playerData.playerId?.phone ?? "",
         clubName: playerData.playerId?.clubName ?? "",
         seeder:
@@ -234,8 +234,8 @@ export default function EditPlayerModal({
       form.reset({
         entryType: "pair",
         fullName: "",
+        teamName: "",
         email: "",
-        captainName: "",
         phone: "",
         clubName: "",
         seeder: "",
@@ -275,10 +275,10 @@ export default function EditPlayerModal({
           ? {
               userInfo: {
                 fullName: values.fullName.trim(),
-                email: values.email?.trim() || undefined,
                 ...(isTeam
-                  ? { captainName: values.captainName?.trim() || undefined }
+                  ? { teamName: values.teamName?.trim() || undefined }
                   : {}),
+                email: values.email?.trim() || undefined,
                 phone: values.phone.trim(),
                 clubName: values.clubName?.trim() || undefined,
                 ...(singleSeeder !== undefined ? { seeder: singleSeeder } : {}),
@@ -325,7 +325,8 @@ export default function EditPlayerModal({
     },
     onSuccess: () => {
       toast.success("Updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["all-players", "single-player", playerId] });
+      queryClient.invalidateQueries({ queryKey: ["all-players"] });
+      queryClient.invalidateQueries({ queryKey: ["single-player", playerId] });
       onOpenChange(false);
     },
     onError: (err: unknown) => {
@@ -387,7 +388,7 @@ export default function EditPlayerModal({
 
                     <FormField
                       control={form.control}
-                      name="fullName"
+                      name={isTeam ? "teamName" : "fullName"}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{isTeam ? "Team Name" : "Full Name"}</FormLabel>
@@ -405,7 +406,7 @@ export default function EditPlayerModal({
                     {isTeam && (
                       <FormField
                         control={form.control}
-                        name="captainName"
+                        name="fullName"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Captain Name</FormLabel>

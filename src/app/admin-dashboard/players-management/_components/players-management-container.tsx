@@ -100,7 +100,7 @@ const PlayersManagementContainer = () => {
                 Tournament Name
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-left py-4 ">
-                Player Name
+                Team / Captain
               </TableHead>
               <TableHead className="text-sm font-normal leading-[150%] text-[#343A40] text-left py-4 ">
                 Team Format
@@ -147,7 +147,12 @@ const PlayersManagementContainer = () => {
                       />
                     </div>
                     <div>
-                      {item?.playerDetails?.fullName || "N/A"} <br />{" "}
+                      {item?.tournamentDetails?.format?.toLowerCase() === "team"
+                        ? item?.playerDetails?.teamName || "N/A"
+                        : item?.playerDetails?.fullName || "N/A"} <br />{" "}
+                      {/* {item?.tournamentDetails?.format?.toLowerCase() === "team" && (
+                        <>{item?.playerDetails?.fullName || "N/A"} <br /></>
+                      )} */}
                       {item?.playerDetails?.email || "N/A"}
                     </div>
                   </TableCell>
