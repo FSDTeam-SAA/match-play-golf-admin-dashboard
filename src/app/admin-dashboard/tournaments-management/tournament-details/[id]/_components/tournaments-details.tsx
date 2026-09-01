@@ -8,6 +8,9 @@ import Draw from "./draw";
 import TournamentsHeader from "../../../[id]/_components/tournament-header";
 import { TournamentApiResponse, MatchesResponse } from "./tournament-types";
 import { useSession } from "next-auth/react";
+import MatchPlayGolfPagination from "@/components/ui/match-play-golf-pagination";
+
+const MATCHES_PER_PAGE = 16;
 
 const TournamentsDetails = () => {
   const session = useSession();
@@ -20,10 +23,10 @@ const TournamentsDetails = () => {
   const [roundNumber, setRoundNumber] = useState(1);
 
   const { data, isLoading, refetch } = useQuery<MatchesResponse>({
-    queryKey: ["tournaments", roundNumber, currentPage],
+    queryKey: ["tournaments", id, roundNumber, currentPage],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}?page=${currentPage}&limit=100&roundNumber=${roundNumber}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tournament/getAllMatches/${id}?page=${currentPage}&limit=${MATCHES_PER_PAGE}&roundNumber=${roundNumber}`,
       );
 
       const data = await res.json();
@@ -120,7 +123,10 @@ const TournamentsDetails = () => {
                         ? "bg-primary text-white hover:bg-primary/90"
                         : "bg-inherit border border-primary text-primary hover:bg-primary/10"
                     }`}
-                    onClick={() => setRoundNumber(round.roundNumber)}
+                    onClick={() => {
+                      setRoundNumber(round.roundNumber);
+                      setCurrentPage(1);
+                    }}
                   >
                     <span className="text-xs sm:text-sm truncate">
                       {round.roundName}
@@ -148,6 +154,15 @@ const TournamentsDetails = () => {
                 isLoading={isLoading}
                 refetchMatches={refetch}
               />
+              {data && data?.pagination && data?.pagination?.totalPages > 1 && (
+                <div className="mt-8 flex justify-end">
+                  <MatchPlayGolfPagination
+                    currentPage={currentPage}
+                    totalPages={data.pagination.totalPages}
+                    onPageChange={setCurrentPage}
+                  />
+                </div>
+              )}
             </div>
           )}
 

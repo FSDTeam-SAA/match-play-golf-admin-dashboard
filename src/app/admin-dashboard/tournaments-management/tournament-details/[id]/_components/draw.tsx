@@ -38,6 +38,7 @@ export interface Match {
     fullName: string;
     profileImage: string;
     email: string;
+    teamName?: string;
     clubName?: string;
     captainName?: string;
   };
@@ -46,6 +47,7 @@ export interface Match {
     fullName: string;
     profileImage: string;
     email: string;
+    teamName?: string;
     clubName?: string;
     captainName?: string;
   };
@@ -188,6 +190,14 @@ const Draw = ({ matches = [], isLoading, refetchMatches }: Props) => {
       {matches.map((item, index) => {
         const winner1 = item?.winner === item?.player1Id?._id;
         const winner2 = item?.winner === item?.player2Id?._id;
+        const player1DisplayName =
+          item.matchType === "Team"
+            ? item.player1Id?.teamName
+            : item.player1Id?.fullName;
+        const player2DisplayName =
+          item.matchType === "Team"
+            ? item.player2Id?.teamName
+            : item.player2Id?.fullName;
 
         return (
           <div key={item._id}>
@@ -210,20 +220,20 @@ const Draw = ({ matches = [], isLoading, refetchMatches }: Props) => {
                           {item.player1Id?.profileImage ? (
                             <Image
                               src={item.player1Id.profileImage}
-                              alt={item.player1Id.fullName}
+                              alt={player1DisplayName || "Player 1"}
                               width={1000}
                               height={1000}
                               className="h-full w-full rounded-full object-cover"
                             />
                           ) : (
                             <span className="text-lg font-semibold text-red-800">
-                              {item.player1Id?.fullName?.charAt(0) || "P1"}
+                              {player1DisplayName?.charAt(0) || "P1"}
                             </span>
                           )}
                         </div>
                         <div>
                           <h1 className="font-semibold">
-                            {item.player1Id?.fullName || "Player 1"}
+                            {player1DisplayName || "N/A"}
                           </h1>
                         </div>
                       </div>
@@ -260,21 +270,21 @@ const Draw = ({ matches = [], isLoading, refetchMatches }: Props) => {
                       <div className="flex items-center gap-3">
                         <div className="text-right">
                           <h1 className="font-semibold">
-                            {item.player2Id?.fullName || "Player 2"}
+                            {player2DisplayName || "N/A"}
                           </h1>
                         </div>
                         <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-100">
                           {item.player2Id?.profileImage ? (
                             <Image
                               src={item.player2Id.profileImage}
-                              alt={item.player2Id.fullName}
+                              alt={player2DisplayName || "Player 2"}
                               width={1000}
                               height={1000}
                               className="h-full w-full rounded-full object-cover"
                             />
                           ) : (
                             <span className="text-lg font-semibold text-red-800">
-                              {item.player2Id?.fullName?.charAt(0) || "P2"}
+                              {player2DisplayName?.charAt(0) || "P2"}
                             </span>
                           )}
                         </div>
