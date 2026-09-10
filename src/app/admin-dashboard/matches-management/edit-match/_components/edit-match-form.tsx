@@ -50,6 +50,8 @@ type MatchPlayer = {
   _id: string;
   name?: string;
   team?: string;
+  fullName?: string;
+  teamName?: string;
   player1?: string;
   player2?: string;
 };
@@ -67,11 +69,16 @@ const getParticipantId = (participant: MatchParticipant | string | null | undefi
 
 const getParticipantDisplayName = (
   participant: MatchParticipant | string | null | undefined,
+  isTeamMatch: boolean,
 ) => {
   if (!participant || typeof participant === "string") return "";
+
+  if (isTeamMatch) {
+    return participant.teamName?.trim() || participant.email?.trim() || "";
+  }
+
   return (
     participant.fullName?.trim() ||
-    participant.teamName?.trim() ||
     participant.email?.trim() ||
     ""
   );
@@ -208,15 +215,18 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
 
   const match = matchData?.data;
 
-  const players = matchData?.players ?? [];
+  const players = useMemo(() => matchData?.players ?? [], [matchData?.players]);
+  const isTeamMatch = match?.matchType === "Team";
   // const isPairs = match?.matchType === "Pairs";
 
   const selectablePlayers = useMemo<SelectablePlayer[]>(() => {
     const options = new Map<string, SelectablePlayer>();
 
-    // Map players from the API response — handles both Single (name) and Pairs (team) formats
+    // Team matches display team names; every other match type displays player names.
     players.forEach((player) => {
-      const displayName = player.name || player.team || "Unknown";
+      const displayName = isTeamMatch
+        ? player.teamName || player.team || "Unknown"
+        : player.fullName || player.name || player.team || "Unknown";
       options.set(player._id, { _id: player._id, name: displayName });
     });
 
@@ -230,7 +240,9 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
       if (!participantId) return;
 
       if (!options.has(participantId)) {
-        const fallbackName = getParticipantDisplayName(participant) || "Selected participant";
+        const fallbackName =
+          getParticipantDisplayName(participant, isTeamMatch) ||
+          "Selected participant";
         options.set(participantId, {
           _id: participantId,
           name: fallbackName,
@@ -239,7 +251,14 @@ const EditMatchFormInner = ({ matchData, matchId, token }: { matchData: SingleMa
     });
 
     return Array.from(options.values());
-  }, [players, match?.player1Id, match?.pair1Id, match?.player2Id, match?.pair2Id]);
+  }, [
+    players,
+    isTeamMatch,
+    match?.player1Id,
+    match?.pair1Id,
+    match?.player2Id,
+    match?.pair2Id,
+  ]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
