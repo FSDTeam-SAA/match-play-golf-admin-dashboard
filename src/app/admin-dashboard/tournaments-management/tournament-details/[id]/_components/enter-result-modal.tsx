@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 interface Player {
   _id: string;
   fullName: string;
+  teamName?: string;
   email: string;
   profileImage?: string;
 }
@@ -71,6 +72,7 @@ export default function EnterResultModal({
 
   // Check if this is a Pairs match
   const isPairMatch = match?.matchType === "Pairs";
+  const isTeamMatch = match?.matchType === "Team";
 
   // Load existing data when in edit mode
   useEffect(() => {
@@ -298,11 +300,17 @@ export default function EnterResultModal({
           "Team 2"
         );
       }
-    } else {
-      return position === 1
-        ? match?.player1Id?.fullName || "Player 1"
-        : match?.player2Id?.fullName || "Player 2";
     }
+
+    if (isTeamMatch) {
+      return position === 1
+        ? match?.player1Id?.teamName || "Team 1"
+        : match?.player2Id?.teamName || "Team 2";
+    }
+
+    return position === 1
+      ? match?.player1Id?.fullName || "Player 1"
+      : match?.player2Id?.fullName || "Player 2";
   };
 
   const contestant1Id = isPairMatch
